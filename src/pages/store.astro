@@ -102,12 +102,16 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     /* SPOTLIGHT */
     .spot{position:relative;margin-top:1rem;border:1px solid var(--line);border-radius:24px;background:radial-gradient(700px 300px at 85% -10%, rgba(255,215,0,.12), transparent 60%),var(--glass);overflow:hidden}
     .spot-stage{min-height:220px;display:flex;align-items:stretch}
-    .spot-slide{display:none;grid-template-columns:1fr 1fr;gap:1.4rem;padding:1.4rem;width:100%;align-items:center}
-    .spot-slide.on{display:grid;animation:spotin .55s ease both}
+    :global(.spot-slide){display:none;grid-template-columns:250px 1fr;gap:1.6rem;padding:1.3rem;width:100%;align-items:center}
+    :global(.spot-slide.on){display:grid;animation:spotin .55s ease both}
     @keyframes spotin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
-    @media (max-width:640px){ .spot-slide{grid-template-columns:1fr;padding:1.1rem} }
+
     .spot-img{position:relative;perspective:800px}
-    .spot-img img{width:min(100%,250px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55);transition:transform .35s ease;animation:floaty 6s ease-in-out infinite}
+    .spot-img img{width:min(100%,250px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+    .spot-img{transform-style:preserve-3d}
+    .spot-slide.cube-in .spot-img{animation:cubein .8s cubic-bezier(.2,.7,.3,1.2) both}
+    @keyframes cubein{0%{transform:perspective(900px) rotateY(-72deg) rotateX(7deg) scale(.82);opacity:0}60%{opacity:1}100%{transform:perspective(900px) rotateY(0deg) rotateX(0deg) scale(1);opacity:1}}
+    @media (prefers-reduced-motion: reduce){ .spot-slide.cube-in .spot-img{animation:none} }
     @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
     @media (prefers-reduced-motion: reduce){ .spot-img img{animation:none} .spot-slide.on{animation:none} }
     .spot-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(10,10,10,.75);color:var(--gold2);font-size:1.4rem;cursor:pointer;line-height:1}
@@ -601,7 +605,7 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
       function esc(s){ return escTop(s); } function escUnused(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
       if (stage && featured.length){
         stage.innerHTML = featured.map(function(p, i){
-          return '<div class="spot-slide' + (i === 0 ? ' on' : '') + '" role="group" aria-label="' + esc(p.name) + '">' +
+          return '<div class="spot-slide' + (i === 0 ? ' on cube-in' : '') + '" role="group" aria-label="' + esc(p.name) + '">' +
             '<div class="spot-img"><img src="' + p.img + '" alt="' + esc(p.name) + '" width="640" height="640" ' + (i ? 'loading="lazy"' : '') + '><span class="badge b-off" style="top:12px;left:12px">-' + p.off + '% OFF</span></div>' +
             '<div><p class="pcat" style="margin-top:0">' + esc(p.catLabels) + '</p>' +
             '<h3 style="font-size:1.5rem;font-weight:900;margin:.2rem 0 .4rem;line-height:1.2">' + esc(p.name) + '</h3>' +
@@ -615,10 +619,10 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
         var slides = Array.prototype.slice.call(stage.querySelectorAll('.spot-slide'));
         function show(i){
           cur = (i + slides.length) % slides.length;
-          slides.forEach(function(s, j){ s.classList.toggle('on', j === cur); });
+          slides.forEach(function(s, j){ s.classList.toggle('on', j === cur); s.classList.toggle('cube-in', j === cur); });
           dots.querySelectorAll('button').forEach(function(d, j){ d.classList.toggle('on', j === cur); });
         }
-        function auto(){ clearInterval(timer); timer = setInterval(function(){ show(cur + 1); }, 6000); }
+        function auto(){ clearInterval(timer); timer = setInterval(function(){ show(cur + 1); }, 3000); }
         document.getElementById('spotPrev').addEventListener('click', function(){ show(cur - 1); auto(); });
         document.getElementById('spotNext').addEventListener('click', function(){ show(cur + 1); auto(); });
         dots.querySelectorAll('button').forEach(function(d){ d.addEventListener('click', function(){ show(+d.getAttribute('data-dot')); auto(); }); });
@@ -846,5 +850,6 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     .store-ad .adlbl{display:block;font-size:10px;letter-spacing:.22em;color:#8b8b90;margin-bottom:6px}
     .store-ad .adbox{min-height:60px;display:flex;align-items:center;justify-content:center}
     .store-ad iframe{max-width:100%}
+    @media (max-width:640px){ .spot-slide{grid-template-columns:1fr !important;padding:1.1rem} .spot-img img{width:min(100%,220px)} }
   </style>
 </StoreLayout>
