@@ -212,6 +212,14 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     </section>
 
     <!-- CIRCULAR MOVING SHOWCASE (owner order 2026-11-11: small products, circle shape, right-to-left) -->
+
+    <!-- ADSTERRA BANNER (Gate A) - consent-gated, loads only after Accept -->
+    <div class="store-ad" aria-label="Advertisement">
+      <span class="adlbl">ADVERTISEMENT</span>
+      <div class="adbox" data-store-ad data-ad-type="banner" data-ad-key="a218e5964a1209df7e6e5346b5e24c8e" data-ad-src="https://bauval.org/22/a218e5964a1209df7e6e5346b5e24c8e" data-ad-width="728" data-ad-height="90"></div>
+      <div class="adbox" data-store-ad data-ad-type="banner" data-ad-key="f67d660cd4c17a2c54f08acbdc4dc668" data-ad-src="https://bauval.org/22/f67d660cd4c17a2c54f08acbdc4dc668" data-ad-width="320" data-ad-height="50" style="display:none"></div>
+    </div>
+
     <section class="orbit-band" aria-label="Moving product showcase">
       <div class="orbit-title">&#10022; TRENDING SHOWCASE &#10022;</div>
       <div class="orbit-mask"><div class="orbit-track" id="orbitTrack"></div></div>
@@ -397,6 +405,13 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
         ))}
       </div>
     </section>
+
+
+    <!-- ADSTERRA NATIVE (Gate A) - consent-gated -->
+    <div class="store-ad" aria-label="Advertisement">
+      <span class="adlbl">ADVERTISEMENT</span>
+      <div data-store-ad data-ad-type="native" data-ad-src="https://bauval.org/21/974d01a39860bcd233c5e2a9404154b1" data-ad-container="container-974d01a39860bcd233c5e2a9404154b1"></div>
+    </div>
 
     <section class="sec" aria-label="Featured collections">
       <h2 class="sec-h">🗂️ Featured Collections</h2>
@@ -825,4 +840,11 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
       apply();
     })();
   </script>
+
+  <style is:inline>
+    .store-ad{max-width:880px;margin:22px auto 6px;text-align:center}
+    .store-ad .adlbl{display:block;font-size:10px;letter-spacing:.22em;color:#8b8b90;margin-bottom:6px}
+    .store-ad .adbox{min-height:60px;display:flex;align-items:center;justify-content:center}
+    .store-ad iframe{max-width:100%}
+  </style>
 </StoreLayout>

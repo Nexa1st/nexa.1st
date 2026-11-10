@@ -2,18 +2,20 @@
 /** Ad slot — renders at most ONE network per position (config conflict rule).
  *  Disabled / network 'none' / empty code -> NOTHING in production.
  *  Dev + showDevOutlines -> small labelled outline (flag defaults off). */
-import { adsConfig, adSlotActive, resolveAdCode, type AdPlacement, type AdPageType } from '../config/ads';
+import { adsConfig, adSlotActive, parseAdCode, resolveAdCode, type AdPlacement, type AdPageType } from '../config/ads';
 interface Props { placement?: AdPlacement; pageType?: AdPageType; variant?: string }
 const { placement = 'inArticle', pageType = 'article', variant = 'responsive' } = Astro.props as Props;
 const { network, code } = resolveAdCode(placement);
 const active = adSlotActive(placement, pageType);
 const devOutline = import.meta.env.DEV && adsConfig.showDevOutlines;
+const parsed = active ? parseAdCode(code) : null;
 ---
 <!-- Ad slot: renders nothing while ads are disabled in src/config/ads.ts (placement/page/variant come from props). -->
-{active ? (
-  <div class="ad-container" data-ad-placement={placement} data-ad-page={pageType} data-ad-network={network} role="complementary" aria-label="Advertisement">
+{active && parsed ? (
+  <div class="ad-container" data-ad-placement={placement} data-ad-page={pageType} data-ad-network={network} role="complementary" aria-label="Advertisement"
+    data-ad-slot data-ad-type={parsed.type} data-ad-key={parsed.key} data-ad-src={parsed.src}
+    data-ad-width={parsed.width || undefined} data-ad-height={parsed.height || undefined} data-ad-container={parsed.containerId || undefined}>
     <p class="ad-label">Advertisement</p>
-    <Fragment set:html={code} />
   </div>
 ) : devOutline ? (
   <div class="ad-dev-outline" aria-hidden="true">Advertisement — slot reserved ({placement} / {variant}) · ads disabled</div>

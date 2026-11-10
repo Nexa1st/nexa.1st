@@ -164,7 +164,7 @@ const ogImage = new URL(image, Astro.site).toString();
     </div>
   </footer>
   <div class="consent" id="consent" role="region" aria-label="Cookie notice">
-    <p><strong>Cookies on IRFAN-GD.</strong> We store your preferences on your device. If advertising is ever enabled in the future, third-party ad partners may use cookies — you can decline and still browse everything. Ads are currently <strong>not active</strong> on this site. See the <a href="/privacy/" style="text-decoration:underline">Privacy Policy</a>.</p>
+    <p><strong>Cookies on IRFAN-GD.</strong> We store your preferences on your device. This store shows advertising from Adsterra (labelled banner and native units only). Ad scripts load <strong>only if you accept</strong> — you can decline and still browse everything. See the <a href="/privacy/" style="text-decoration:underline">Privacy Policy</a>.</p>
     <div class="row">
       <button class="ok" id="consentOk" type="button">Accept</button>
       <button class="no" id="consentNo" type="button">Decline</button>
@@ -180,7 +180,36 @@ const ogImage = new URL(image, Astro.site).toString();
         if(c && !localStorage.getItem(key)){ c.classList.add('show'); }
         var ok=document.getElementById('consentOk'), no=document.getElementById('consentNo');
         function set(v){ try{ localStorage.setItem(key,v); }catch(e){} if(c) c.classList.remove('show'); }
-        if(ok) ok.addEventListener('click',function(){ set('accepted'); });
+        // ---- Adsterra (Gate A): consent-gated loader, banner + native only; NO popunder/social bar ----
+        function pickSlots(){
+          var mobile = window.innerWidth < 760;
+          document.querySelectorAll('[data-store-ad]').forEach(function(el){
+            if(el.getAttribute('data-ad-width')==='728') el.style.display = mobile ? 'none' : '';
+            if(el.getAttribute('data-ad-width')==='320') el.style.display = mobile ? '' : 'none';
+          });
+        }
+        var adsStarted=false;
+        function injectStoreAd(el){
+          return new Promise(function(resolve){
+            var type=el.getAttribute('data-ad-type'), src=el.getAttribute('data-ad-src');
+            if(!src){ resolve(); return; }
+            if(type==='native'){
+              var box=document.createElement('div'); box.id=el.getAttribute('data-ad-container')||''; el.appendChild(box);
+              var sc=document.createElement('script'); sc.async=true; sc.setAttribute('data-cfasync','false'); sc.src=src;
+              sc.onload=function(){resolve()}; sc.onerror=function(){resolve()}; el.appendChild(sc); return;
+            }
+            window.atOptions={key:el.getAttribute('data-ad-key')||'',format:'iframe',height:Number(el.getAttribute('data-ad-height')||0),width:Number(el.getAttribute('data-ad-width')||0),params:{}};
+            var s2=document.createElement('script'); s2.src=src;
+            s2.onload=function(){resolve()}; s2.onerror=function(){resolve()}; el.appendChild(s2);
+          });
+        }
+        function loadStoreAds(){
+          if(adsStarted) return; adsStarted=true; pickSlots();
+          var slots=Array.prototype.slice.call(document.querySelectorAll('[data-store-ad]')).filter(function(el){ return el.getClientRects().length>0; });
+          (async function(){ for(var i=0;i<slots.length;i++){ await injectStoreAd(slots[i]); } })();
+        }
+        try{ if(localStorage.getItem(key)==='accepted') loadStoreAds(); }catch(e){}
+        if(ok) ok.addEventListener('click',function(){ set('accepted'); loadStoreAds(); });
         if(no) no.addEventListener('click',function(){ set('declined'); });
       }catch(e){}
     })();
