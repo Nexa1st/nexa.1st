@@ -1,104 +1,377 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import StoreLayout from '../layouts/StoreLayout.astro';
 import store from '../data/store.json';
-const all = store.products.map(p => ({ ...p, off: Math.round((1 - p.price / p.oldPrice) * 100) }));
-const hot = all.filter(p => p.tag === 'HOT SALE');
-const trending = all.filter(p => p.tag === 'TRENDING');
-const fresh = all.filter(p => p.tag === 'NEW DEAL');
-const shelves = [
-  { icon: '🔥', title: 'Hot Sale', items: hot },
-  { icon: '📈', title: 'Trending Now', items: trending },
-  { icon: '✨', title: 'New Deals', items: fresh },
-];
----
-<BaseLayout title="IRFAN-GD Store — AliExpress Gadget Picks & Deals" description="IRFAN-GD Store: trending gadgets, new deals and hot-sale AliExpress picks with direct Shop Now links. Only trending, new-deal and hot-sale products — refreshed from daily research.">
-  <style>
-    .sf-hero { background: radial-gradient(1100px 480px at 15% -10%, rgba(245,179,1,.28), transparent 60%), radial-gradient(900px 500px at 95% 0%, rgba(20,184,166,.25), transparent 55%), linear-gradient(135deg, #0b1226, #12203a 55%, #0d2b2e); border: 1px solid rgba(255,255,255,.08); }
-    .sf-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-    .sf-track { display: flex; gap: 1rem; width: max-content; will-change: transform; animation: sf-scroll 18s linear infinite; }
-    .sf-marquee:hover .sf-track { animation-play-state: paused; }
-    @keyframes sf-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @keyframes sf-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-    .sf-live { animation: sf-pulse 1.6s ease-in-out infinite; }
-    @keyframes sf-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .sf-float { animation: sf-float 5s ease-in-out infinite; }
-  </style>
-  <div class="mx-auto" style="max-width:1200px;padding:1.2rem 1rem 0">
-    <!-- Storefront hero -->
-    <header class="sf-hero" style="border-radius:26px;padding:0 0 1.6rem;position:relative;overflow:hidden">
-      <img src="/store/banner.webp" alt="IRFAN-GD — Premium Electronics Accessories Store" width="1672" height="941" style="width:100%;height:auto;display:block" />
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:1.4rem 1.4rem 0">
-        <img class="sf-float" src="/store/avatar.webp" alt="IRFAN-GD avatar logo" width="512" height="512" style="width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.35)" />
-        <div style="min-width:240px;flex:1">
-          <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span style="font-size:1.9rem;font-weight:900;letter-spacing:.01em">IRFAN-GD</span>
-            <span class="sf-live" style="background:#e11d48;color:#fff;font-weight:800;font-size:.72rem;padding:.28rem .6rem;border-radius:999px">● 11.11 SALE LIVE</span>
-          </p>
-          <p class="text-dim" style="margin-top:.2rem">Official gadget store — trending products, new deals &amp; hot sales only.</p>
-        </div>
-      </div>
-      <p style="display:flex;gap:6px;flex-wrap:wrap;margin-top:1.1rem;padding:0 1.4rem">
-        <span class="chip">🛍️ {all.length} curated picks</span>
-        <span class="chip">🇺🇸 Ships to USA</span>
-        <span class="chip">🔄 Refreshed from daily research</span>
-        <span class="chip">Last updated {store.updated}</span>
-      </p>
-    </header>
 
-    <!-- Animated HOT SALE showcase -->
-    <section aria-label="Hot sale showcase" style="margin-top:1.6rem">
-      <h2 style="font-weight:900;font-size:1.45rem;display:flex;align-items:center;gap:.5rem">🔥 Hot Sale Showcase <span class="text-faint" style="font-size:.8rem;font-weight:600">— auto-scrolling, hover to pause</span></h2>
-      <div class="sf-marquee" style="margin-top:.8rem">
-        <div class="sf-track">
+const CATS: Record<string, string> = {
+  'car-tech': 'Car Electronics',
+  'phone-accessories': 'Smartphone Accessories',
+  'wireless-charging': 'Wireless Charging',
+  'computer-accessories': 'Computer Accessories',
+  'creator-equipment': 'Creator Equipment',
+};
+const all = (store.products as any[]).map(p => ({ ...p, off: Math.round((1 - p.price / p.oldPrice) * 100), catLabels: (p.categories || []).map((c: string) => CATS[c] || c).join(' · ') }));
+const vis = all.filter(p => p.visible);
+const hot = vis.filter(p => p.tag === 'HOT SALE');
+const trending = vis.filter(p => p.tag === 'TRENDING');
+const fresh = vis.filter(p => p.tag === 'NEW DEAL');
+const picks = vis.filter(p => p.editorsPick);
+const catList = Object.keys(CATS).map(slug => ({ slug, label: CATS[slug], count: vis.filter(p => (p.categories || []).includes(slug)).length })).filter(c => c.count > 0);
+const itemListLd = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'IRFAN-GD — Premium Electronics & Smart Gadgets',
+  itemListElement: vis.map((p, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Product', name: p.name, image: new URL(p.img, Astro.site).toString(), description: p.blurb, category: p.catLabels, offers: { '@type': 'Offer', url: p.url, priceCurrency: 'USD', price: p.price.toFixed(2) } } })),
+};
+const pdata = vis.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p.price, oldPrice: p.oldPrice, off: p.off, rating: p.rating, sold: p.sold || '', url: p.url, tag: p.tag, cats: p.categories, catLabels: p.catLabels }));
+---
+<StoreLayout title="IRFAN-GD — Premium Electronics & Smart Gadgets Store" description="Discover premium technology at IRFAN-GD: trending car tech, smartphone accessories, wireless charging, computer accessories and creator equipment — curated picks with direct AliExpress seller links, USD prices." jsonLd={[itemListLd]}>
+  <style>
+    .gold-text{background:linear-gradient(92deg,#fff 15%,var(--gold2) 55%,var(--gold) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .sec{margin-top:3rem}
+    .sec-h{font-size:1.5rem;font-weight:900;letter-spacing:.02em;margin:0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .sec-sub{color:var(--dim);font-size:.9rem;font-weight:600}
+    .hero{position:relative;border-radius:26px;overflow:hidden;border:1px solid var(--line);margin-top:1.1rem;background:#0a0a0a}
+    .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+    .hero .shade{position:absolute;inset:0;background:radial-gradient(900px 420px at 12% 0%, rgba(255,215,0,.14), transparent 55%),linear-gradient(90deg, rgba(8,8,8,.93) 30%, rgba(8,8,8,.55) 65%, rgba(8,8,8,.25))}
+    .hero-in{position:relative;padding:2.6rem 1.6rem 2.2rem;max-width:640px}
+    .hero h1{font-size:clamp(1.9rem,5.2vw,3.2rem);line-height:1.06;font-weight:900;letter-spacing:.01em;margin:.7rem 0 .6rem}
+    .hero p.lead{color:#d8d8de;font-size:1.02rem;margin:0 0 1.3rem}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;text-decoration:none;font-weight:850;padding:.8rem 1.35rem;border-radius:14px;letter-spacing:.03em}
+    .btn-gold{background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;box-shadow:0 10px 28px rgba(212,175,55,.28)}
+    .btn-ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.03)}
+    .btn:hover{filter:brightness(1.08)}
+    .hero-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:1.3rem}
+    .chip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#e8e8ec;border-radius:999px;padding:.28rem .65rem;font-size:.76rem;font-weight:700}
+    .chip.gold{border-color:var(--line);color:var(--gold2)}
+    .marquee{overflow:hidden;margin-top:.9rem;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+    .track{display:flex;gap:1rem;width:max-content;will-change:transform;animation:scrollx 30s linear infinite}
+    .marquee:hover .track{animation-play-state:paused}
+    @keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media (prefers-reduced-motion: reduce){ .track{animation:none} }
+    .catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:.9rem;margin-top:1rem}
+    .catcard{text-align:left;cursor:pointer;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:1.05rem 1rem;color:var(--ink);font:inherit;transition:transform .18s ease,border-color .18s ease}
+    .catcard:hover{transform:translateY(-3px);border-color:var(--gold2)}
+    .catcard .ic{font-size:1.5rem}
+    .catcard .cl{display:block;font-weight:850;margin-top:.45rem;font-size:.98rem}
+    .catcard .cc{color:var(--dim);font-size:.8rem;font-weight:700}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.1rem;align-items:center}
+    .searchbox{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:.62rem .9rem}
+    .searchbox input{flex:1;background:transparent;border:0;outline:none;color:var(--ink);font-size:.98rem;font-family:inherit;min-width:0}
+    .searchbox input::placeholder{color:#71717a}
+    .sortsel{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:.62rem .8rem;font-family:inherit;font-weight:700;font-size:.9rem}
+    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:.8rem}
+    .fchip{cursor:pointer;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8e8ec;border-radius:999px;padding:.42rem .85rem;font-weight:750;font-size:.83rem;font-family:inherit}
+    .fchip:hover{border-color:var(--gold2);color:var(--gold2)}
+    .fchip.on{background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;border-color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1.1rem}
+    .card{background:var(--glass);border:1px solid rgba(212,175,55,.22);border-radius:20px;padding:14px;display:flex;flex-direction:column;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 18px 42px rgba(0,0,0,.5)}
+    .pimg{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1/1;background:#0d0d0d;display:block}
+    .pimg img{width:100%;height:100%;object-fit:cover;display:block}
+    .badge{position:absolute;font-weight:800;font-size:.72rem;padding:.24rem .55rem;border-radius:999px}
+    .b-off{top:10px;left:10px;background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106}
+    .b-tag{top:10px;right:10px;background:rgba(10,10,10,.85);color:var(--gold2);border:1px solid var(--line);letter-spacing:.05em}
+    .pcat{color:var(--gold);font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:.75rem 0 .2rem}
+    .pname{font-weight:850;font-size:1.05rem;margin:0;line-height:1.3}
+    .pblurb{color:var(--dim);font-size:.9rem;margin:.35rem 0 0;line-height:1.55}
+    .pmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:.6rem}
+    .pmeta .chip{font-size:.74rem}
+    .pprice{display:flex;align-items:baseline;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+    .pprice .now{font-size:1.4rem;font-weight:900}
+    .pprice .was{color:#71717a;text-decoration:line-through;font-size:.92rem}
+    .pprice .usd{color:var(--dim);font-size:.75rem;font-weight:700}
+    .pactions{display:flex;gap:8px;margin-top:.85rem}
+    .shop-now{flex:1;text-align:center;background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;font-weight:900;padding:.72rem .6rem;border-radius:13px;text-decoration:none;letter-spacing:.02em}
+    .details{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:800;padding:.72rem .9rem;border-radius:13px;cursor:pointer;font-family:inherit}
+    .details:hover{border-color:var(--gold2);color:var(--gold2)}
+    .nores{display:none;text-align:center;border:1px dashed var(--line);border-radius:18px;padding:2rem 1rem;margin-top:1.1rem}
+    .nores.show{display:block}
+    .rowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:1rem;margin-top:1rem}
+    .mini{background:var(--glass);border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:12px;display:flex;flex-direction:column}
+    .mini .pname{font-size:.96rem;margin-top:.6rem}
+    .mini .pprice .now{font-size:1.15rem}
+    .mini .shop-now{margin-top:.7rem;padding:.6rem}
+    .trust{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:1.5rem 1.4rem}
+    .trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1.1rem;margin-top:1rem}
+    .trust h3{margin:.2rem 0 .4rem;font-size:1rem}
+    .trust p, .trust li{color:var(--dim);font-size:.92rem}
+    .trust ul{margin:.3rem 0;padding-left:1.1rem}
+    .trust a{color:var(--gold2);text-decoration:underline}
+    dialog.pdlg{background:#101010;color:var(--ink);border:1px solid var(--gold);border-radius:22px;max-width:min(680px,calc(100vw - 28px));padding:0;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+    dialog.pdlg::backdrop{background:rgba(0,0,0,.72)}
+    .pdlg-in{padding:1.2rem;position:relative}
+    .pdlg-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+    @media (max-width:560px){ .pdlg-grid{grid-template-columns:1fr} }
+    .pdlg img.pdimg{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px}
+    .pdlg .x{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);border:1px solid var(--line);color:#fff;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;z-index:2}
+  </style>
+
+  <div class="wrap">
+    <section class="hero" aria-label="IRFAN-GD store hero">
+      <img class="bg" src="/store/banner.webp" alt="" aria-hidden="true" width="1672" height="941" fetchpriority="high" />
+      <div class="shade" aria-hidden="true"></div>
+      <div class="hero-in">
+        <span class="chip gold">IRFAN-GD · PREMIUM TECHNOLOGY STORE</span>
+        <h1>DISCOVER THE <span class="gold-text">FUTURE OF TECHNOLOGY</span></h1>
+        <p class="lead">Explore innovative gadgets, smart accessories and everyday technology essentials — hand-picked, honestly priced in USD, and linked directly to the seller.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="#shop">EXPLORE COLLECTION</a>
+          <a class="btn btn-ghost" href="#hot-deals">VIEW HOT DEALS</a>
+        </div>
+        <p class="hero-chips">
+          <span class="chip">🛍️ {vis.length} curated electronics picks</span>
+          <span class="chip">💵 Prices in USD</span>
+          <span class="chip">🇺🇸 Curated for US shoppers</span>
+          <span class="chip">Last updated {store.updated}</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Hot sale showcase">
+      <h2 class="sec-h">🔥 Hot Sale Showcase <span class="sec-sub">— smooth auto-scroll, hover to pause</span></h2>
+      <div class="marquee">
+        <div class="track">
           {[...hot, ...hot].map(p => (
-            <a href={p.url} target="_blank" rel="sponsored nofollow noopener" class="glass" style="width:250px;flex:none;padding:12px;display:block;text-decoration:none">
-              <span style="position:relative;display:block;border-radius:14px;overflow:hidden">
-                <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" style="width:100%;height:auto;display:block" />
-                <span style="position:absolute;top:8px;left:8px;background:#e11d48;color:#fff;font-weight:800;font-size:.72rem;padding:.22rem .5rem;border-radius:999px">🔥 HOT SALE</span>
-                <span style="position:absolute;bottom:8px;right:8px;background:#f5b301;color:#111;font-weight:800;font-size:.75rem;padding:.22rem .5rem;border-radius:999px">-{p.off}%</span>
-              </span>
-              <span style="display:block;font-weight:800;margin:.55rem 0 .15rem;font-size:.95rem;line-height:1.3">{p.name}</span>
-              <span style="display:flex;align-items:baseline;gap:.45rem"><strong style="font-size:1.15rem">${p.price.toFixed(2)}</strong><span class="text-faint" style="text-decoration:line-through;font-size:.85rem">${p.oldPrice.toFixed(2)}</span><span class="text-dim" style="font-size:.8rem">★ {p.rating}</span></span>
+            <a href={p.url} target="_blank" rel="sponsored nofollow noopener" class="card shop-now-link" data-product={p.name} style="width:236px;flex:none;text-decoration:none">
+              <span class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" />
+                <span class="badge b-off">-{p.off}%</span><span class="badge b-tag">🔥 HOT SALE</span></span>
+              <span class="pname" style="font-size:.94rem;margin-top:.55rem">{p.name}</span>
+              <span class="pprice"><span class="now" style="font-size:1.12rem">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></span>
             </a>
           ))}
         </div>
       </div>
     </section>
 
-    <div class="glass" style="padding:14px 16px;margin:1.4rem 0 0" role="note">
-      <strong>Disclosure:</strong> The Shop Now buttons are AliExpress affiliate links. If you buy through one, IRFAN-GD may earn a commission at no extra cost to you. Prices, ratings and sold counts are as listed on AliExpress at the last update; the price on the product page is the one that counts. Full details: <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.
-    </div>
+    <section class="sec" id="categories" aria-label="Product categories">
+      <h2 class="sec-h">Shop by Category</h2>
+      <div class="catgrid">
+        {catList.map(c => (
+          <button type="button" class="catcard" data-cat-link={c.slug} aria-label={`Browse ${c.label}`}>
+            <span class="ic">{c.slug === 'car-tech' ? '🚗' : c.slug === 'phone-accessories' ? '📱' : c.slug === 'wireless-charging' ? '🔋' : c.slug === 'computer-accessories' ? '🖥️' : '🎥'}</span>
+            <span class="cl">{c.label}</span>
+            <span class="cc">{c.count} product{c.count === 1 ? '' : 's'}</span>
+          </button>
+        ))}
+      </div>
+    </section>
 
-    <!-- Shelves -->
-    {shelves.map(s => (
-      <section aria-label={s.title} style="margin-top:2rem">
-        <h2 style="font-weight:900;font-size:1.45rem">{s.icon} {s.title}</h2>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:1rem;margin-top:.9rem">
-          {s.items.map(p => (
-            <article class="glass" style="padding:16px;display:flex;flex-direction:column">
-              <div style="position:relative;border-radius:16px;overflow:hidden">
-                <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" style="width:100%;height:auto;display:block" />
-                <span style="position:absolute;top:10px;left:10px;background:#f5b301;color:#111;font-weight:800;font-size:.8rem;padding:.25rem .55rem;border-radius:999px">-{p.off}%</span>
-                <span style="position:absolute;top:10px;right:10px;background:#111827;color:#fff;font-weight:800;font-size:.72rem;letter-spacing:.04em;padding:.25rem .55rem;border-radius:999px">{p.tag === 'HOT SALE' ? '🔥 ' : p.tag === 'NEW DEAL' ? '✨ ' : '📈 '}{p.tag}</span>
-              </div>
-              <h3 style="font-weight:800;margin:.7rem 0 .3rem;font-size:1.08rem">{p.name}</h3>
-              <p class="text-dim" style="font-size:.92rem;line-height:1.55">{p.blurb}</p>
-              <p style="margin-top:.55rem;display:flex;gap:6px;flex-wrap:wrap">
-                <span class="chip">★ {p.rating} on AliExpress</span>
-                {p.sold && <span class="chip">{p.sold}</span>}
-              </p>
-              <p style="margin-top:.7rem;display:flex;align-items:baseline;gap:.55rem">
-                <span style="font-size:1.45rem;font-weight:900">${p.price.toFixed(2)}</span>
-                <span class="text-faint" style="text-decoration:line-through">${p.oldPrice.toFixed(2)}</span>
-              </p>
-              <a href={p.url} target="_blank" rel="sponsored nofollow noopener" style="margin-top:.8rem;display:block;text-align:center;background:#f5b301;color:#111;font-weight:850;padding:.75rem 1rem;border-radius:14px">SHOP NOW →</a>
-            </article>
-          ))}
+    <section class="sec" id="shop" aria-label="Shop all products">
+      <h2 class="sec-h">Shop All <span class="sec-sub" id="countLabel">{vis.length} products</span></h2>
+      <div class="controls">
+        <label class="searchbox">
+          <span aria-hidden="true">🔍</span>
+          <input id="q" type="search" placeholder="Search products, categories, keywords…" aria-label="Search products" autocomplete="off" />
+        </label>
+        <label style="font-weight:700;font-size:.88rem;color:var(--dim)">Sort
+          <select id="sort" class="sortsel" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+            <option value="trending">Trending</option>
+            <option value="new">New Arrivals</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips" role="group" aria-label="Filter by category">
+        <button type="button" class="fchip on" data-cat="all">All</button>
+        {catList.map(c => <button type="button" class="fchip" data-cat={c.slug}>{c.label}</button>)}
+      </div>
+      <div class="grid" id="grid">
+        {vis.map((p, i) => (
+          <article class="card pcard" data-idx={i} data-name={p.name.toLowerCase()} data-cats={(p.categories || []).join(' ')} data-catlabels={p.catLabels.toLowerCase()} data-kw={(p.keywords || '').toLowerCase()} data-price={p.price} data-rating={p.rating} data-tag={p.tag}>
+            <div class="pimg">
+              <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" />
+              <span class="badge b-off">-{p.off}% OFF</span>
+              <span class="badge b-tag">{p.tag === 'HOT SALE' ? '🔥 ' : p.tag === 'NEW DEAL' ? '✨ ' : '📈 '}{p.tag}</span>
+            </div>
+            <p class="pcat">{p.catLabels}</p>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pblurb">{p.blurb}</p>
+            <p class="pmeta">
+              <span class="chip">★ {p.rating} on AliExpress</span>
+              {p.sold && <span class="chip">{p.sold}</span>}
+              {p.editorsPick && <span class="chip" style="border-color:var(--line);color:var(--gold2)">⭐ Editor's Pick</span>}
+            </p>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span class="usd">USD</span></p>
+            <div class="pactions">
+              <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+              <button type="button" class="details" data-details={i}>DETAILS</button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="nores" id="nores">
+        <p style="font-weight:850;font-size:1.05rem;margin:0">No products match your search.</p>
+        <p style="color:var(--dim);margin:.4rem 0 1rem">Try a different keyword or category.</p>
+        <button type="button" class="details" id="clearFilters">Clear filters</button>
+      </div>
+      <p style="color:var(--dim);font-size:.84rem;margin-top:1.2rem">Prices, ratings and sold counts are as listed on AliExpress at the last update ({store.updated}); the price on the seller's product page is the one that counts.</p>
+    </section>
+
+    <section class="sec" id="hot-deals" aria-label="Hot deals">
+      <h2 class="sec-h">🔥 Hot Deals</h2>
+      <div class="rowgrid">
+        {hot.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" id="trending" aria-label="Trending products">
+      <h2 class="sec-h">📈 Trending Products</h2>
+      <div class="rowgrid">
+        {trending.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="New arrivals">
+      <h2 class="sec-h">✨ New Arrivals</h2>
+      <div class="rowgrid">
+        {fresh.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Editor's picks">
+      <h2 class="sec-h">⭐ Editor's Picks</h2>
+      <div class="rowgrid">
+        {picks.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" id="trust" aria-label="Trust and transparency">
+      <div class="trust">
+        <h2 class="sec-h" style="font-size:1.3rem">Trust &amp; Transparency — How This Store Works</h2>
+        <div class="trust-grid">
+          <div>
+            <h3>🛍️ A discovery storefront</h3>
+            <p>IRFAN-GD is an affiliate shopping discovery storefront. We research and curate electronics and smart gadgets; we do not sell or ship products ourselves.</p>
+          </div>
+          <div>
+            <h3>✅ AliExpress handles your order</h3>
+            <p>When you tap SHOP NOW you go to the seller's AliExpress listing. AliExpress and the seller handle:</p>
+            <ul><li>Checkout &amp; payments</li><li>Shipping &amp; delivery</li><li>Returns &amp; refunds</li></ul>
+          </div>
+          <div>
+            <h3>🔎 Honest information</h3>
+            <p>Prices, ratings and sold counts shown here are as listed on AliExpress at the last update and can change. Shipping costs and delivery times are confirmed on the seller's page before you pay — we never promise free shipping or delivery dates.</p>
+          </div>
         </div>
-      </section>
-    ))}
-
-    <p class="text-faint" style="font-size:.82rem;margin:1.6rem 0 .4rem">Prices and availability can change at any time on AliExpress. IRFAN-GD does not sell or ship these products; orders, payments, shipping and returns are handled by AliExpress and the individual sellers.</p>
-    <p class="text-faint" style="font-size:.82rem;margin:0 0 2.5rem">As an affiliate, I may earn a commission from qualifying purchases.</p>
+        <p style="margin-top:1rem">Full details: <a href="/disclosure/">Affiliate Disclosure</a> · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Use</a> · <a href="/contact/">Contact</a></p>
+        <p style="color:var(--dim);font-size:.86rem;margin:.4rem 0 0">As an affiliate, I may earn a commission from qualifying purchases — at no extra cost to you.</p>
+      </div>
+    </section>
   </div>
-</BaseLayout>
+
+  <dialog class="pdlg" id="pdlg" aria-label="Product details">
+    <div class="pdlg-in">
+      <button type="button" class="x" id="pdlgClose" aria-label="Close details">✕</button>
+      <div class="pdlg-grid">
+        <img class="pdimg" id="pdImg" src="" alt="" width="640" height="640" />
+        <div>
+          <p class="pcat" id="pdCat" style="margin-top:0"></p>
+          <h3 class="pname" id="pdName" style="font-size:1.25rem"></h3>
+          <p class="pblurb" id="pdBlurb"></p>
+          <p class="pmeta"><span class="chip" id="pdRating"></span><span class="chip" id="pdSold"></span><span class="chip" id="pdTag"></span></p>
+          <p class="pprice"><span class="now" id="pdPrice"></span><span class="was" id="pdWas"></span><span class="usd">USD</span></p>
+          <a class="shop-now shop-now-link" id="pdShop" href="#" target="_blank" rel="sponsored nofollow noopener" style="display:block;margin-top:.9rem">SHOP NOW →</a>
+          <p style="color:var(--dim);font-size:.82rem;margin-top:.8rem">Full specifications, variations and compatibility are listed on the seller's AliExpress page. IRFAN-GD does not sell or ship this product; checkout, shipping and returns are handled by AliExpress and the seller.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="pdata" set:html={JSON.stringify(pdata)}></script>
+  <script is:inline>
+    (function(){
+      var products = [];
+      try { products = JSON.parse(document.getElementById('pdata').textContent || '[]'); } catch(e){}
+      var grid = document.getElementById('grid');
+      var cards = grid ? Array.prototype.slice.call(grid.querySelectorAll('.pcard')) : [];
+      var qEl = document.getElementById('q'), sortEl = document.getElementById('sort');
+      var nores = document.getElementById('nores'), countLabel = document.getElementById('countLabel');
+      var state = { q:'', cat:'all', sort:'featured' };
+      function track(name, params){ try{ if (window.gtag) window.gtag('event', name, params || {}); }catch(e){} }
+      function setCat(cat){
+        state.cat = cat;
+        document.querySelectorAll('.fchip').forEach(function(ch){ ch.classList.toggle('on', ch.getAttribute('data-cat') === cat); });
+        apply();
+      }
+      function apply(){
+        var q = state.q.trim().toLowerCase();
+        var visible = cards.filter(function(card){
+          var okCat = state.cat === 'all' || (card.getAttribute('data-cats') || '').split(' ').indexOf(state.cat) !== -1;
+          var hay = (card.getAttribute('data-name') || '') + ' ' + (card.getAttribute('data-catlabels') || '') + ' ' + (card.getAttribute('data-kw') || '');
+          return okCat && (!q || hay.indexOf(q) !== -1);
+        });
+        cards.forEach(function(c){ c.style.display = 'none'; });
+        var sorted = visible.slice();
+        if (state.sort === 'price-asc') sorted.sort(function(a,b){ return (+a.dataset.price) - (+b.dataset.price); });
+        else if (state.sort === 'price-desc') sorted.sort(function(a,b){ return (+b.dataset.price) - (+a.dataset.price); });
+        else if (state.sort === 'rating') sorted.sort(function(a,b){ return (+b.dataset.rating) - (+a.dataset.rating); });
+        else if (state.sort === 'trending') sorted.sort(function(a,b){ return (b.dataset.tag === 'TRENDING' ? 1 : 0) - (a.dataset.tag === 'TRENDING' ? 1 : 0) || (+b.dataset.rating) - (+a.dataset.rating); });
+        else if (state.sort === 'new') sorted.sort(function(a,b){ return (b.dataset.tag === 'NEW DEAL' ? 1 : 0) - (a.dataset.tag === 'NEW DEAL' ? 1 : 0); });
+        else sorted.sort(function(a,b){ return (+a.dataset.idx) - (+b.dataset.idx); });
+        sorted.forEach(function(c){ c.style.display = ''; grid.appendChild(c); });
+        if (countLabel) countLabel.textContent = visible.length + ' product' + (visible.length === 1 ? '' : 's');
+        if (nores) nores.classList.toggle('show', visible.length === 0);
+      }
+      if (qEl) { var deb; qEl.addEventListener('input', function(){ state.q = qEl.value; apply(); clearTimeout(deb); deb = setTimeout(function(){ if (state.q.trim()) track('store_search', { search_term: state.q.trim() }); }, 600); }); }
+      if (sortEl) sortEl.addEventListener('change', function(){ state.sort = sortEl.value; apply(); });
+      document.querySelectorAll('.fchip').forEach(function(ch){ ch.addEventListener('click', function(){ setCat(ch.getAttribute('data-cat')); track('store_category', { category: state.cat }); }); });
+      document.querySelectorAll('[data-cat-link]').forEach(function(el){ el.addEventListener('click', function(){ var c = el.getAttribute('data-cat-link'); setCat(c || 'all'); track('store_category', { category: c }); var s = document.getElementById('shop'); if (s) s.scrollIntoView({ behavior:'smooth' }); }); });
+      var clearBtn = document.getElementById('clearFilters');
+      if (clearBtn) clearBtn.addEventListener('click', function(){ state.q = ''; if (qEl) qEl.value = ''; state.sort = 'featured'; if (sortEl) sortEl.value = 'featured'; setCat('all'); });
+      document.querySelectorAll('.shop-now-link').forEach(function(a){ a.addEventListener('click', function(){ track('affiliate_click', { product: a.getAttribute('data-product') || '' }); }); });
+      /* Details modal */
+      var dlg = document.getElementById('pdlg');
+      function money(v){ return '$' + (+v).toFixed(2); }
+      function openDetails(i){
+        var p = products[i]; if (!p || !dlg) return;
+        document.getElementById('pdImg').src = p.img; document.getElementById('pdImg').alt = p.name;
+        document.getElementById('pdCat').textContent = p.catLabels;
+        document.getElementById('pdName').textContent = p.name;
+        document.getElementById('pdBlurb').textContent = p.blurb;
+        document.getElementById('pdRating').textContent = '★ ' + p.rating + ' on AliExpress';
+        document.getElementById('pdSold').textContent = p.sold || '';
+        document.getElementById('pdSold').style.display = p.sold ? '' : 'none';
+        document.getElementById('pdTag').textContent = p.tag;
+        document.getElementById('pdPrice').textContent = money(p.price);
+        document.getElementById('pdWas').textContent = money(p.oldPrice);
+        var shop = document.getElementById('pdShop'); shop.href = p.url; shop.setAttribute('data-product', p.name);
+        if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
+      }
+      document.querySelectorAll('[data-details]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(+b.getAttribute('data-details')); }); });
+      var x = document.getElementById('pdlgClose');
+      if (x && dlg) x.addEventListener('click', function(){ dlg.close(); });
+      if (dlg) dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+      apply();
+    })();
+  </script>
+</StoreLayout>

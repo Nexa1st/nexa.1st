@@ -1,0 +1,188 @@
+---
+interface Props { title?: string; description?: string; image?: string; jsonLd?: object[] }
+const { title = 'IRFAN-GD — Premium Electronics & Smart Gadgets Store', description = 'IRFAN-GD is a premium electronics and smart gadgets discovery store: trending car tech, phone accessories, wireless charging, computer accessories and creator equipment with direct seller links.', image = '/store/banner.webp', jsonLd = [] } = Astro.props as Props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
+const gscCode = import.meta.env.PUBLIC_GSC_VERIFICATION as string | undefined;
+const ogImage = new URL(image, Astro.site).toString();
+---
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="en-US" href={canonical} />
+  <link rel="alternate" hreflang="x-default" href={canonical} />
+  <link rel="icon" type="image/webp" href="/store/avatar.webp" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="IRFAN-GD" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="theme-color" content="#080808" />
+  {gscCode && <meta name="google-site-verification" content={gscCode} />}
+  {gaId && (
+    <Fragment>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag; gtag('js', new Date()); gtag('config', gaId);
+      </script>
+    </Fragment>
+  )}
+  {jsonLd.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+  <style>
+    :root{
+      --bg:#080808; --bg2:#111111; --card:#171717; --gold:#D4AF37; --gold2:#FFD700;
+      --ink:#FFFFFF; --dim:#A1A1AA; --line:rgba(212,175,55,.28);
+      --glass:linear-gradient(160deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    :focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:6px}
+    .skip{position:absolute;left:-999px;top:0;background:var(--gold);color:#111;padding:.6rem 1rem;font-weight:800;z-index:200;border-radius:0 0 12px 0}
+    .skip:focus{left:0}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 1rem}
+    /* ---------- Header ---------- */
+    .shead{position:sticky;top:0;z-index:120;background:rgba(8,8,8,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .shead-in{display:flex;align-items:center;gap:14px;padding:.6rem 0}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex:none}
+    .brand img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+    .brand .bn{font-weight:900;font-size:1.28rem;letter-spacing:.06em;background:linear-gradient(92deg,#fff 20%,var(--gold2) 55%,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .brand .bt{display:block;font-size:.58rem;letter-spacing:.32em;color:var(--dim);font-weight:700;margin-top:-3px}
+    .snav{display:flex;gap:2px;margin-left:auto;align-items:center}
+    .snav a{text-decoration:none;font-weight:700;font-size:.8rem;letter-spacing:.08em;padding:.5rem .6rem;border-radius:10px;color:#e7e7ea;white-space:nowrap}
+    .snav a:hover{color:var(--gold2);background:rgba(212,175,55,.08)}
+    .snav a.hot{color:var(--gold2)}
+    .burger{display:none;margin-left:auto;background:var(--glass);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:.5rem .7rem;font-size:1.05rem;cursor:pointer}
+    .mnav{display:none;border-top:1px solid rgba(255,255,255,.06);padding:.5rem 0 .8rem}
+    .mnav.open{display:block}
+    .mnav a{display:block;text-decoration:none;font-weight:700;font-size:.9rem;letter-spacing:.06em;padding:.65rem .4rem;border-bottom:1px solid rgba(255,255,255,.05)}
+    .mnav a:last-child{border-bottom:0}
+    @media (max-width:900px){ .snav{display:none} .burger{display:block} }
+    /* ---------- Footer ---------- */
+    .sfoot{margin-top:4rem;border-top:1px solid var(--line);background:linear-gradient(180deg,#0b0b0b,#080808)}
+    .sfoot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:1.6rem;padding:2.4rem 0 1.4rem}
+    @media (max-width:820px){ .sfoot-grid{grid-template-columns:1fr 1fr} }
+    @media (max-width:480px){ .sfoot-grid{grid-template-columns:1fr} }
+    .sfoot h3{font-size:.8rem;letter-spacing:.22em;color:var(--gold);margin:0 0 .8rem;font-weight:800}
+    .sfoot a{display:block;text-decoration:none;color:var(--dim);padding:.24rem 0;font-size:.92rem}
+    .sfoot a:hover{color:var(--gold2)}
+    .sfoot .fbrand{display:flex;align-items:center;gap:10px}
+    .sfoot .fbrand img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+    .sfoot .legal{border-top:1px solid rgba(255,255,255,.06);padding:1rem 0 1.6rem;color:var(--dim);font-size:.8rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between}
+    /* ---------- Consent ---------- */
+    .consent{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:150;max-width:min(680px,calc(100vw - 24px));background:rgba(17,17,17,.96);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 18px 50px rgba(0,0,0,.55);display:none}
+    .consent.show{display:block}
+    .consent p{margin:0;font-size:.86rem;color:#d6d6da}
+    .consent .row{display:flex;gap:8px;margin-top:10px}
+    .consent button{border-radius:10px;padding:.55rem 1.1rem;font-weight:800;cursor:pointer;border:1px solid var(--line)}
+    .consent .ok{background:linear-gradient(92deg,var(--gold),var(--gold2));color:#141005;border:0}
+    .consent .no{background:transparent;color:var(--ink)}
+    @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header class="shead">
+    <div class="wrap">
+      <div class="shead-in">
+        <a class="brand" href="/store/" aria-label="IRFAN-GD store home">
+          <img src="/store/avatar.webp" alt="IRFAN-GD logo" width="84" height="84" />
+          <span><span class="bn">IRFAN-GD</span><span class="bt">PREMIUM TECHNOLOGY</span></span>
+        </a>
+        <nav class="snav" aria-label="Store">
+          <a href="/store/">HOME</a>
+          <a href="#shop">SHOP ALL</a>
+          <a href="#shop" data-cat-link="all">SMART GADGETS</a>
+          <a href="#shop" data-cat-link="phone-accessories">PHONE ACCESSORIES</a>
+          <a href="#shop" data-cat-link="computer-accessories">COMPUTER ACCESSORIES</a>
+          <a href="#shop" data-cat-link="car-tech">CAR TECH</a>
+          <a class="hot" href="#hot-deals">HOT DEALS</a>
+        </nav>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">☰</button>
+      </div>
+      <nav class="mnav" id="mnav" aria-label="Store mobile">
+        <a href="/store/">HOME</a>
+        <a href="#shop">SHOP ALL</a>
+        <a href="#shop" data-cat-link="all">SMART GADGETS</a>
+        <a href="#shop" data-cat-link="phone-accessories">PHONE ACCESSORIES</a>
+        <a href="#shop" data-cat-link="computer-accessories">COMPUTER ACCESSORIES</a>
+        <a href="#shop" data-cat-link="car-tech">CAR TECH</a>
+        <a href="#hot-deals">HOT DEALS</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <slot />
+  </main>
+  <footer class="sfoot">
+    <div class="wrap">
+      <div class="sfoot-grid">
+        <div>
+          <p class="fbrand"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="92" height="92" loading="lazy" /><span style="font-weight:900;font-size:1.25rem;letter-spacing:.05em">IRFAN-GD</span></p>
+          <p style="color:var(--dim);font-size:.92rem;margin:.7rem 0 0">Discover premium technology, innovative gadgets and smart accessories.</p>
+        </div>
+        <nav aria-label="Shop">
+          <h3>SHOP</h3>
+          <a href="#shop">Shop All</a>
+          <a href="#hot-deals">Hot Deals</a>
+          <a href="#categories">Categories</a>
+          <a href="#trending">Trending Products</a>
+        </nav>
+        <nav aria-label="About">
+          <h3>ABOUT</h3>
+          <a href="#trust">How This Store Works</a>
+          <a href="#trust">Affiliate Model</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+        <nav aria-label="Customer information and legal">
+          <h3>CUSTOMER INFORMATION</h3>
+          <a href="/disclosure/">Affiliate Disclosure</a>
+          <a href="/privacy/">Privacy Policy</a>
+          <a href="/terms/">Terms of Use</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+      </div>
+      <div class="legal">
+        <span>© IRFAN-GD. Prices and availability are set by the sellers on AliExpress and can change at any time.</span>
+        <span>As an affiliate, I may earn a commission from qualifying purchases.</span>
+      </div>
+    </div>
+  </footer>
+  <div class="consent" id="consent" role="region" aria-label="Cookie notice">
+    <p><strong>Cookies on IRFAN-GD.</strong> We store your preferences on your device. If advertising is ever enabled in the future, third-party ad partners may use cookies — you can decline and still browse everything. Ads are currently <strong>not active</strong> on this site. See the <a href="/privacy/" style="text-decoration:underline">Privacy Policy</a>.</p>
+    <div class="row">
+      <button class="ok" id="consentOk" type="button">Accept</button>
+      <button class="no" id="consentNo" type="button">Decline</button>
+    </div>
+  </div>
+  <script is:inline>
+    (function(){
+      var b=document.getElementById('burger'), m=document.getElementById('mnav');
+      if(b&&m){ b.addEventListener('click',function(){ var open=m.classList.toggle('open'); b.setAttribute('aria-expanded', open?'true':'false'); });
+        m.addEventListener('click',function(e){ if(e.target.tagName==='A'){ m.classList.remove('open'); b.setAttribute('aria-expanded','false'); } }); }
+      try{
+        var key='nexa-consent', c=document.getElementById('consent');
+        if(c && !localStorage.getItem(key)){ c.classList.add('show'); }
+        var ok=document.getElementById('consentOk'), no=document.getElementById('consentNo');
+        function set(v){ try{ localStorage.setItem(key,v); }catch(e){} if(c) c.classList.remove('show'); }
+        if(ok) ok.addEventListener('click',function(){ set('accepted'); });
+        if(no) no.addEventListener('click',function(){ set('declined'); });
+      }catch(e){}
+    })();
+  </script>
+</body>
+</html>
