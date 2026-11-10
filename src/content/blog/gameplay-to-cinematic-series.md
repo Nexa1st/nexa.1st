@@ -1,5 +1,5 @@
 ---
-title: "From Gameplay to Cinematic Story: Turning Clips Into a Series People Follow"
+title: "Turning Gameplay Into a Cinematic Series"
 description: "Raw gameplay is everywhere. A repeatable method for turning game footage and AI scenes into a locked series with characters, stakes and cliffhangers."
 pubDate: 2026-10-20
 category: "Gaming"

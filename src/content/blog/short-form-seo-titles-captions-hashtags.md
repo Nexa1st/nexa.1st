@@ -1,5 +1,5 @@
 ---
-title: "Short-Form SEO: Titles, Captions and Hashtags That Earn Discovery"
+title: "Short-Form SEO: Titles, Captions & Hashtags"
 description: "Search and suggested feeds both run on text signals. How to write titles, captions and hashtag sets that help the right viewers find your clips."
 pubDate: 2026-10-27
 category: "Digital Marketing"

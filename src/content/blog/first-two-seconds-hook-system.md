@@ -1,5 +1,5 @@
 ---
-title: "The First Two Seconds: A Hook System for AI Shorts That Holds Attention"
+title: "The First Two Seconds: A Hook System for AI Shorts"
 description: "Extreme hooks are a design problem, not luck. A practical system for opening AI videos so a viewer understands the impossible thing instantly."
 pubDate: 2026-11-04
 category: "Creator Guides"

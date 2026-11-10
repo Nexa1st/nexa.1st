@@ -1,5 +1,5 @@
 ---
-title: "Running AI Locally on a Small Machine: What Is Realistic (and What Is Not)"
+title: "Running AI Locally on a Small Machine: Honest Limits"
 description: "Local AI is genuinely useful — within limits. Small models on modest hardware: what runs well, what crawls, and how to set expectations honestly."
 pubDate: 2026-10-24
 category: "Technology"
