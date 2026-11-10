@@ -24,8 +24,8 @@ export default function CookieConsent() {
       style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 92, zIndex: 180, width: 'calc(100% - 2rem)', maxWidth: 560, padding: 16 }}>
       <p style={{ fontWeight: 700 }}>Cookies on NEXA</p>
       <p className="text-dim" style={{ fontSize: '.88rem', margin: '.35rem 0 .8rem' }}>
-        We store your theme and search preferences on your device. If advertising is ever enabled in the future,
-        third-party ad partners may use cookies — you can decline and still read everything. Ads are currently <strong>not active</strong> on this site.
+        We store your theme and search preferences on your device. This site shows advertising from Adsterra.
+        Ad scripts load <strong>only if you accept</strong> — decline and no advertising scripts will load, and you can still read everything.
         See our <a href="/privacy/" style={{ textDecoration: 'underline' }}>Privacy Policy</a>.
       </p>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
