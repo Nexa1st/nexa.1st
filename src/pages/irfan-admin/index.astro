@@ -1,0 +1,85 @@
+---
+import store from '../../data/store.json';
+const vis = (store.products as any[]).filter(p => p.visible);
+const hidden = (store.products as any[]).filter(p => !p.visible);
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
+---
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IRFAN-GD Owner Dashboard — PROTOTYPE</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Private owner dashboard prototype for IRFAN-GD. Not for public visitors." />
+  <link rel="icon" type="image/webp" href="/store/avatar.webp" />
+  <style>
+    body{margin:0;background:#080808;color:#fff;font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+    .wrap{max-width:1000px;margin:0 auto;padding:1.2rem 1rem 3rem}
+    .warn{border:1px solid #D4AF37;background:rgba(212,175,55,.08);border-radius:16px;padding:1rem 1.1rem}
+    .warn strong{color:#FFD700}
+    .card{border:1px solid rgba(212,175,55,.25);background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border-radius:18px;padding:1.1rem 1.1rem;margin-top:1.1rem}
+    h1{font-size:1.5rem;margin:.4rem 0}
+    h2{font-size:1.08rem;margin:.1rem 0 .6rem;color:#FFD700;letter-spacing:.03em}
+    p, li{color:#A1A1AA;font-size:.93rem}
+    .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:.8rem;margin-top:.6rem}
+    .stat div{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:.8rem}
+    .stat b{display:block;font-size:1.25rem;color:#fff}
+    .unavail{color:#f0b429;font-weight:800;letter-spacing:.04em}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}
+    td, th{padding:.45rem .5rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;color:#d6d6da}
+    a{color:#FFD700}
+    code{background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.05rem .35rem;font-size:.85em}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p style="display:flex;align-items:center;gap:10px"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" style="border-radius:50%;border:2px solid #D4AF37" /><strong style="letter-spacing:.05em">IRFAN-GD · OWNER DASHBOARD</strong></p>
+    <h1>Dashboard Prototype</h1>
+    <div class="warn" role="note">
+      <strong>⚠️ PROTOTYPE — NO REAL LOGIN, NO PRIVATE DATA.</strong>
+      <p style="margin:.4rem 0 0">This page is a non-sensitive layout prototype. The IRFAN-GD site is a static site with <strong>no backend and no database</strong>, so real owner-only data cannot be shown here safely. A password box on a static page would be fake security, so none exists. <code>noindex</code> on this page is hygiene only — it is <strong>not</strong> access control. The real dashboard requires the free server-side architecture described below, activated by the owner.</p>
+    </div>
+
+    <section class="card" aria-label="Affiliate intelligence">
+      <h2>A. Affiliate Intelligence</h2>
+      <div class="stat">
+        <div><b>{gaId ? 'Collecting in GA4' : 'GA4 not configured here'}</b><span>Total affiliate clicks — measured as <code>affiliate_click</code> events in Google Analytics (property G-2XBXR9P2YN), together with <code>store_search</code>, <code>store_category</code>, <code>wishlist_add</code>, <code>gift_finder</code> and <code>collection_open</code>. Read the numbers in GA4 → Reports → Engagement → Events. They are deliberately not copied into this static page.</span></div>
+        <div><b>{vis.length}</b><span>Products live on the storefront</span></div>
+        <div><b>{hidden.length}</b><span>Products hidden (non-electronics, records kept)</span></div>
+      </div>
+      <p style="margin-top:.8rem">Top / lowest clicked products, click trends, traffic sources and device breakdown: <strong>available inside GA4</strong> (Explorations → Free-form, event <code>affiliate_click</code>, parameter <code>product</code>). Country breakdown is shown only where GA4 reliably reports it. Nothing is duplicated or invented here.</p>
+    </section>
+
+    <section class="card" aria-label="Business reports">
+      <h2>B. Business Reports</h2>
+      <p>Affiliate earnings: <span class="unavail">UNAVAILABLE HERE</span> — AliExpress Portals reports commissions inside the Portals account only; it provides no feed this static site can read. Conversion and commission reports are likewise <span class="unavail">UNAVAILABLE</span> until a backend integration exists. No figures are estimated or fabricated.</p>
+      <p>CSV export becomes possible with the backend below (scheduled export from the analytics database). Product performance today = the GA4 events listed in section A.</p>
+    </section>
+
+    <section class="card" aria-label="Product intelligence">
+      <h2>D. Product Intelligence (current catalogue)</h2>
+      <table>
+        <tr><th>Product</th><th>Price (USD)</th><th>Rating</th><th>Sold</th><th>Status</th></tr>
+        {(store.products as any[]).map(p => (
+          <tr><td>{p.name}</td><td>${p.price.toFixed(2)}</td><td>★ {p.rating}</td><td>{p.sold || '—'}</td><td>{p.visible ? 'Live' : 'Hidden'}</td></tr>
+        ))}
+      </table>
+      <p>Performance-based promotion picks require real click data — use GA4's <code>affiliate_click</code> counts per product after traffic accrues; products with zero clicks after a fair window are the demotion candidates. No recommendation is generated from invented data.</p>
+    </section>
+
+    <section class="card" aria-label="Required backend architecture">
+      <h2>C. Admin Management — Required Free Backend (not yet active)</h2>
+      <ul>
+        <li><strong>Cloudflare Access</strong> (free tier) in front of <code>/irfan-admin/</code> — real server-side authentication with the owner's email, optional one-time-code / authenticator 2FA, session expiry and login history, enforced at Cloudflare's edge before the page is served.</li>
+        <li><strong>Cloudflare Pages Functions</strong> (free) for protected admin APIs — every request re-verifies the Access identity server-side; no secrets in frontend code, ever.</li>
+        <li><strong>Cloudflare D1 or KV</strong> (free) for click aggregates and admin activity logs, with access restricted to the Functions binding.</li>
+        <li>Backups: versioned exports of the product database (already in Git) + D1 exports once active.</li>
+      </ul>
+      <p>Activation needs owner action in the Cloudflare dashboard (create the Access application + policy with the owner's email). Until then this prototype stays data-free by design.</p>
+    </section>
+
+    <p style="margin-top:1.4rem"><a href="/store/">← Back to the store</a></p>
+  </div>
+</body>
+</html>
