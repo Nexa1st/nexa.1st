@@ -2,16 +2,15 @@
 import store from '../../data/store.json';
 const vis = (store.products as any[]).filter(p => p.visible);
 const hidden = (store.products as any[]).filter(p => !p.visible);
-const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
 ---
 <!doctype html>
 <html lang="en-US">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IRFAN-GD Owner Dashboard — PROTOTYPE</title>
+  <title>IRFAN-GD Owner Dashboard — Staging</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="description" content="Private owner dashboard prototype for IRFAN-GD. Not for public visitors." />
+  <meta name="description" content="Private owner dashboard for the IRFAN-GD AliExpress affiliate store. Owner only." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
   <style>
     body{margin:0;background:#080808;color:#fff;font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
@@ -30,56 +29,130 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
     td, th{padding:.45rem .5rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;color:#d6d6da}
     a{color:#FFD700}
     code{background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.05rem .35rem;font-size:.85em}
+    button{background:linear-gradient(92deg,#D4AF37,#FFD700);color:#171106;border:0;border-radius:10px;padding:.55rem 1rem;font-weight:800;cursor:pointer;font:inherit;font-size:.9rem}
+    button[disabled]{opacity:.5;cursor:wait}
+    input[type=file]{color:#d6d6da;font:inherit;font-size:.9rem}
+    .ok{color:#7dd87d;font-weight:700}.err{color:#ff8a8a;font-weight:700}
+    .mono{font-variant-numeric:tabular-nums}
   </style>
 </head>
 <body>
   <div class="wrap">
     <p style="display:flex;align-items:center;gap:10px"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" style="border-radius:50%;border:2px solid #D4AF37" /><strong style="letter-spacing:.05em">IRFAN-GD · OWNER DASHBOARD</strong></p>
-    <h1>Dashboard Prototype</h1>
+    <h1>Business Dashboard — Staging Build</h1>
     <div class="warn" role="note">
-      <strong>⚠️ PROTOTYPE — NO REAL LOGIN, NO PRIVATE DATA.</strong>
-      <p style="margin:.4rem 0 0">This page is a non-sensitive layout prototype. The IRFAN-GD site is a static site with <strong>no backend and no database</strong>, so real owner-only data cannot be shown here safely. A password box on a static page would be fake security, so none exists. <code>noindex</code> on this page is hygiene only — it is <strong>not</strong> access control. The real dashboard requires the free server-side architecture described below, activated by the owner.</p>
+      <strong>🔒 OWNER ONLY — IRFAN-GD is an AliExpress affiliate showcase.</strong>
+      <p style="margin:.4rem 0 0">This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until Cloudflare Access + D1 are activated by the owner — no figure on this page is estimated or fabricated. <code>noindex</code> is hygiene only, <strong>not</strong> access control; real protection is Cloudflare Access in front of this page and its APIs.</p>
+      <p style="margin:.4rem 0 0">Signed in as: <strong id="whoami" style="color:#fff">checking…</strong> · Last GA4 sync: <strong id="lastSync" style="color:#fff">—</strong></p>
     </div>
 
-    <section class="card" aria-label="Affiliate intelligence">
-      <h2>A. Affiliate Intelligence</h2>
+    <section class="card" aria-label="Affiliate clicks">
+      <h2>Affiliate Clicks (GA4 → D1)</h2>
       <div class="stat">
-        <div><b>{gaId ? 'Collecting in GA4' : 'GA4 not configured here'}</b><span>Total affiliate clicks — measured as <code>affiliate_click</code> events in Google Analytics (property G-2XBXR9P2YN), together with <code>store_search</code>, <code>store_category</code>, <code>wishlist_add</code>, <code>gift_finder</code> and <code>collection_open</code>. Read the numbers in GA4 → Reports → Engagement → Events. They are deliberately not copied into this static page.</span></div>
+        <div><b class="mono" id="clicks7">—</b><span>Affiliate clicks, last 7 days</span></div>
+        <div><b class="mono" id="clicks30">—</b><span>Affiliate clicks, last 30 days</span></div>
         <div><b>{vis.length}</b><span>Products live on the storefront</span></div>
-        <div><b>{hidden.length}</b><span>Products hidden (non-electronics, records kept)</span></div>
+        <div><b>{hidden.length}</b><span>Products hidden (records kept)</span></div>
       </div>
-      <p style="margin-top:.8rem">Top / lowest clicked products, click trends, traffic sources and device breakdown: <strong>available inside GA4</strong> (Explorations → Free-form, event <code>affiliate_click</code>, parameter <code>product</code>). Country breakdown is shown only where GA4 reliably reports it. Nothing is duplicated or invented here.</p>
+      <p style="margin-top:.8rem"><button type="button" id="syncBtn">Sync GA4 now</button> <span id="syncMsg" role="status"></span></p>
+      <h2 style="margin-top:1.2rem">Top-Performing Products (by real clicks)</h2>
+      <table id="topTable"><tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2"><span class="unavail">NOT CONNECTED</span> — figures appear after the first GA4 sync.</td></tr></table>
     </section>
 
-    <section class="card" aria-label="Business reports">
-      <h2>B. Business Reports</h2>
-      <p>Affiliate earnings: <span class="unavail">UNAVAILABLE HERE</span> — AliExpress Portals reports commissions inside the Portals account only; it provides no feed this static site can read. Conversion and commission reports are likewise <span class="unavail">UNAVAILABLE</span> until a backend integration exists. No figures are estimated or fabricated.</p>
-      <p>CSV export becomes possible with the backend below (scheduled export from the analytics database). Product performance today = the GA4 events listed in section A.</p>
+    <section class="card" aria-label="Earnings imports">
+      <h2>Earnings — Imported from AliExpress Portals Reports</h2>
+      <div class="stat">
+        <div><b class="mono" id="earnTotal">—</b><span>Total imported commission (USD, from your reports only)</span></div>
+        <div><b class="mono" id="earnRows">—</b><span>Imported report rows</span></div>
+        <div><b id="earnLast">—</b><span>Last import</span></div>
+      </div>
+      <form id="importForm" style="margin-top:1rem">
+        <label style="display:block;font-weight:700;color:#d6d6da;font-size:.92rem">Import a Portals CSV report (max 2 MB, owner only)
+          <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
+        </label>
+        <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
+        <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported data stays in the private D1 database and is only ever shown here, behind Access.</p>
+      </form>
     </section>
 
-    <section class="card" aria-label="Product intelligence">
-      <h2>D. Product Intelligence (current catalogue)</h2>
+    <section class="card" aria-label="Product catalogue">
+      <h2>Product Catalogue (current storefront data)</h2>
       <table>
         <tr><th>Product</th><th>Price (USD)</th><th>Rating</th><th>Sold</th><th>Status</th></tr>
         {(store.products as any[]).map(p => (
           <tr><td>{p.name}</td><td>${p.price.toFixed(2)}</td><td>★ {p.rating}</td><td>{p.sold || '—'}</td><td>{p.visible ? 'Live' : 'Hidden'}</td></tr>
         ))}
       </table>
-      <p>Performance-based promotion picks require real click data — use GA4's <code>affiliate_click</code> counts per product after traffic accrues; products with zero clicks after a fair window are the demotion candidates. No recommendation is generated from invented data.</p>
     </section>
 
-    <section class="card" aria-label="Required backend architecture">
-      <h2>C. Admin Management — Required Free Backend (not yet active)</h2>
-      <ul>
-        <li><strong>Cloudflare Access</strong> (free tier) in front of <code>/irfan-admin/</code> — real server-side authentication with the owner's email, optional one-time-code / authenticator 2FA, session expiry and login history, enforced at Cloudflare's edge before the page is served.</li>
-        <li><strong>Cloudflare Pages Functions</strong> (free) for protected admin APIs — every request re-verifies the Access identity server-side; no secrets in frontend code, ever.</li>
-        <li><strong>Cloudflare D1 or KV</strong> (free) for click aggregates and admin activity logs, with access restricted to the Functions binding.</li>
-        <li>Backups: versioned exports of the product database (already in Git) + D1 exports once active.</li>
-      </ul>
-      <p>Activation needs owner action in the Cloudflare dashboard (create the Access application + policy with the owner's email). Until then this prototype stays data-free by design.</p>
+    <section class="card" aria-label="Admin activity">
+      <h2>Admin Activity Log</h2>
+      <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
+      <p>Login sessions (via Cloudflare Access) and every dashboard action are recorded here from the private database. Cloudflare's own Access log lives in the Zero Trust dashboard (free-plan retention: 24 hours) — this D1 log is the durable record.</p>
     </section>
 
     <p style="margin-top:1.4rem"><a href="/store/">← Back to the store</a></p>
   </div>
+
+  <script is:inline>
+    (function(){
+      function el(id){ return document.getElementById(id); }
+      function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+      function notConnected(){
+        el('whoami').textContent = 'Access not active on this hostname yet';
+        el('clicks7').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+        el('clicks30').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+        el('earnTotal').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+      }
+      fetch('/api/admin/overview', { headers: { 'Accept': 'application/json' } }).then(function(r){
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      }).then(function(d){
+        if (!d || !d.connected) { notConnected(); return; }
+        el('whoami').textContent = d.email || 'owner';
+        el('lastSync').textContent = d.lastSync || 'never';
+        el('clicks7').textContent = d.clicks7d;
+        el('clicks30').textContent = d.clicks30d;
+        if (d.topProducts && d.topProducts.length) {
+          el('topTable').innerHTML = '<tr><th>Product</th><th>Clicks (30d)</th></tr>' + d.topProducts.map(function(t){ return '<tr><td>' + esc(t.product) + '</td><td class="mono">' + esc(t.clicks) + '</td></tr>'; }).join('');
+        } else {
+          el('topTable').innerHTML = '<tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2">No clicks recorded yet.</td></tr>';
+        }
+        if (d.earnings) {
+          el('earnTotal').textContent = '$' + (+d.earnings.total).toFixed(2);
+          el('earnRows').textContent = d.earnings.rows;
+          el('earnLast').textContent = d.earnings.lastImport || 'never';
+        }
+        if (d.log && d.log.length) {
+          el('logTable').innerHTML = '<tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr>' + d.log.map(function(l){ return '<tr><td class="mono">' + esc(l.ts) + '</td><td>' + esc(l.actor) + '</td><td>' + esc(l.action) + '</td><td>' + esc(l.detail) + '</td><td>' + esc(l.result) + '</td></tr>'; }).join('');
+        } else {
+          el('logTable').innerHTML = '<tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5">No activity recorded yet.</td></tr>';
+        }
+      }).catch(function(){ notConnected(); });
+
+      el('syncBtn').addEventListener('click', function(){
+        var btn = el('syncBtn'), msg = el('syncMsg');
+        btn.disabled = true; msg.textContent = 'Syncing…'; msg.className = '';
+        fetch('/api/admin/sync', { method: 'POST', headers: { 'Accept': 'application/json' } }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); }).then(function(res){
+          if (res.ok && res.j && res.j.ok) { msg.textContent = '✓ Synced at ' + (res.j.syncedAt || ''); msg.className = 'ok'; setTimeout(function(){ location.reload(); }, 900); }
+          else { msg.textContent = '✗ ' + ((res.j && res.j.error) || 'Sync unavailable until backend is connected.'); msg.className = 'err'; }
+        }).catch(function(){ msg.textContent = '✗ Sync unavailable until backend is connected.'; msg.className = 'err'; }).finally(function(){ btn.disabled = false; });
+      });
+
+      el('importForm').addEventListener('submit', function(ev){
+        ev.preventDefault();
+        var btn = el('importBtn'), msg = el('importMsg'), f = el('csvFile').files[0];
+        if (!f) return;
+        if (f.size > 2 * 1024 * 1024) { msg.textContent = '✗ File is larger than 2 MB.'; msg.className = 'err'; return; }
+        if (!/\.csv$/i.test(f.name)) { msg.textContent = '✗ Only .csv files are accepted.'; msg.className = 'err'; return; }
+        btn.disabled = true; msg.textContent = 'Validating & importing…'; msg.className = '';
+        var fd = new FormData(); fd.append('file', f);
+        fetch('/api/admin/import', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); }).then(function(res){
+          if (res.ok && res.j && res.j.ok) { msg.textContent = '✓ Imported ' + res.j.imported + ' rows (' + res.j.skippedDuplicates + ' duplicates skipped).'; msg.className = 'ok'; setTimeout(function(){ location.reload(); }, 1200); }
+          else { msg.textContent = '✗ ' + ((res.j && res.j.error) || 'Import unavailable until backend is connected.'); msg.className = 'err'; }
+        }).catch(function(){ msg.textContent = '✗ Import unavailable until backend is connected.'; msg.className = 'err'; }).finally(function(){ btn.disabled = false; });
+      });
+    })();
+  </script>
 </body>
 </html>
