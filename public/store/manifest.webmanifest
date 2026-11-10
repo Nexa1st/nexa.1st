@@ -1,0 +1,13 @@
+{
+  "name": "IRFAN-GD — Premium Technology Store",
+  "short_name": "IRFAN-GD",
+  "description": "Premium electronics and smart gadgets discovery store.",
+  "start_url": "/store/",
+  "scope": "/store/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    { "src": "/store/avatar.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any" }
+  ]
+}

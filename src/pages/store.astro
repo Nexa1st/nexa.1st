@@ -1,104 +1,828 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import StoreLayout from '../layouts/StoreLayout.astro';
 import store from '../data/store.json';
-const all = store.products.map(p => ({ ...p, off: Math.round((1 - p.price / p.oldPrice) * 100) }));
-const hot = all.filter(p => p.tag === 'HOT SALE');
-const trending = all.filter(p => p.tag === 'TRENDING');
-const fresh = all.filter(p => p.tag === 'NEW DEAL');
-const shelves = [
-  { icon: '🔥', title: 'Hot Sale', items: hot },
-  { icon: '📈', title: 'Trending Now', items: trending },
-  { icon: '✨', title: 'New Deals', items: fresh },
-];
----
-<BaseLayout title="IRFAN-GD Store — AliExpress Gadget Picks & Deals" description="IRFAN-GD Store: trending gadgets, new deals and hot-sale AliExpress picks with direct Shop Now links. Only trending, new-deal and hot-sale products — refreshed from daily research.">
-  <style>
-    .sf-hero { background: radial-gradient(1100px 480px at 15% -10%, rgba(245,179,1,.28), transparent 60%), radial-gradient(900px 500px at 95% 0%, rgba(20,184,166,.25), transparent 55%), linear-gradient(135deg, #0b1226, #12203a 55%, #0d2b2e); border: 1px solid rgba(255,255,255,.08); }
-    .sf-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-    .sf-track { display: flex; gap: 1rem; width: max-content; will-change: transform; animation: sf-scroll 18s linear infinite; }
-    .sf-marquee:hover .sf-track { animation-play-state: paused; }
-    @keyframes sf-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @keyframes sf-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-    .sf-live { animation: sf-pulse 1.6s ease-in-out infinite; }
-    @keyframes sf-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .sf-float { animation: sf-float 5s ease-in-out infinite; }
-  </style>
-  <div class="mx-auto" style="max-width:1200px;padding:1.2rem 1rem 0">
-    <!-- Storefront hero -->
-    <header class="sf-hero" style="border-radius:26px;padding:0 0 1.6rem;position:relative;overflow:hidden">
-      <img src="/store/banner.webp" alt="IRFAN-GD — Premium Electronics Accessories Store" width="1672" height="941" style="width:100%;height:auto;display:block" />
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:1.4rem 1.4rem 0">
-        <img class="sf-float" src="/store/avatar.webp" alt="IRFAN-GD avatar logo" width="512" height="512" style="width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.35)" />
-        <div style="min-width:240px;flex:1">
-          <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span style="font-size:1.9rem;font-weight:900;letter-spacing:.01em">IRFAN-GD</span>
-            <span class="sf-live" style="background:#e11d48;color:#fff;font-weight:800;font-size:.72rem;padding:.28rem .6rem;border-radius:999px">● 11.11 SALE LIVE</span>
-          </p>
-          <p class="text-dim" style="margin-top:.2rem">Official gadget store — trending products, new deals &amp; hot sales only.</p>
-        </div>
-      </div>
-      <p style="display:flex;gap:6px;flex-wrap:wrap;margin-top:1.1rem;padding:0 1.4rem">
-        <span class="chip">🛍️ {all.length} curated picks</span>
-        <span class="chip">🇺🇸 Ships to USA</span>
-        <span class="chip">🔄 Refreshed from daily research</span>
-        <span class="chip">Last updated {store.updated}</span>
-      </p>
-    </header>
 
-    <!-- Animated HOT SALE showcase -->
-    <section aria-label="Hot sale showcase" style="margin-top:1.6rem">
-      <h2 style="font-weight:900;font-size:1.45rem;display:flex;align-items:center;gap:.5rem">🔥 Hot Sale Showcase <span class="text-faint" style="font-size:.8rem;font-weight:600">— auto-scrolling, hover to pause</span></h2>
-      <div class="sf-marquee" style="margin-top:.8rem">
-        <div class="sf-track">
-          {[...hot, ...hot].map(p => (
-            <a href={p.url} target="_blank" rel="sponsored nofollow noopener" class="glass" style="width:250px;flex:none;padding:12px;display:block;text-decoration:none">
-              <span style="position:relative;display:block;border-radius:14px;overflow:hidden">
-                <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" style="width:100%;height:auto;display:block" />
-                <span style="position:absolute;top:8px;left:8px;background:#e11d48;color:#fff;font-weight:800;font-size:.72rem;padding:.22rem .5rem;border-radius:999px">🔥 HOT SALE</span>
-                <span style="position:absolute;bottom:8px;right:8px;background:#f5b301;color:#111;font-weight:800;font-size:.75rem;padding:.22rem .5rem;border-radius:999px">-{p.off}%</span>
-              </span>
-              <span style="display:block;font-weight:800;margin:.55rem 0 .15rem;font-size:.95rem;line-height:1.3">{p.name}</span>
-              <span style="display:flex;align-items:baseline;gap:.45rem"><strong style="font-size:1.15rem">${p.price.toFixed(2)}</strong><span class="text-faint" style="text-decoration:line-through;font-size:.85rem">${p.oldPrice.toFixed(2)}</span><span class="text-dim" style="font-size:.8rem">★ {p.rating}</span></span>
-            </a>
-          ))}
+const CATS: Record<string, string> = {
+  'car-tech': 'Car Electronics',
+  'phone-accessories': 'Smartphone Accessories',
+  'wireless-charging': 'Wireless Charging',
+  'computer-accessories': 'Computer Accessories',
+  'creator-equipment': 'Creator Equipment',
+};
+const all = (store.products as any[]).map(p => ({ ...p, off: Math.round((1 - p.price / p.oldPrice) * 100), catLabels: (p.categories || []).map((c: string) => CATS[c] || c).join(' · ') }));
+const vis = all.filter(p => p.visible);
+const hot = vis.filter(p => p.tag === 'HOT SALE');
+const trending = vis.filter(p => p.tag === 'TRENDING');
+const fresh = vis.filter(p => p.tag === 'NEW DEAL');
+const picks = vis.filter(p => p.editorsPick);
+const soldNum = (s: string) => { const n = parseFloat(String(s || '').replace(/[^0-9.]/g, '')); return isNaN(n) ? 0 : n; };
+const bestSellers = [...vis].sort((a, b) => soldNum(b.sold) - soldNum(a.sold)).slice(0, 4);
+const catList = Object.keys(CATS).map(slug => ({ slug, label: CATS[slug], count: vis.filter(p => (p.categories || []).includes(slug)).length })).filter(c => c.count > 0);
+const itemListLd = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'IRFAN-GD — Premium Electronics & Smart Gadgets',
+  itemListElement: vis.map((p, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Product', name: p.name, image: new URL(p.img, Astro.site).toString(), description: p.blurb, category: p.catLabels, offers: { '@type': 'Offer', url: p.url, priceCurrency: 'USD', price: p.price.toFixed(2) } } })),
+};
+const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p.price, oldPrice: p.oldPrice, off: p.off, rating: p.rating, sold: p.sold || '', url: p.url, tag: p.tag, cats: p.categories, catLabels: p.catLabels, vis: !!p.visible }));
+---
+<StoreLayout title="IRFAN-GD — Premium Electronics & Smart Gadgets Store" description="Discover premium technology at IRFAN-GD: trending car tech, smartphone accessories, wireless charging, computer accessories and creator equipment — curated picks with direct AliExpress seller links, USD prices." jsonLd={[itemListLd]}>
+  <style>
+    :global(#main img){max-width:100%}
+    .gold-text{background:linear-gradient(92deg,#fff 15%,var(--gold2) 55%,var(--gold) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .sec{margin-top:3rem}
+    .sec-h{font-size:1.5rem;font-weight:900;letter-spacing:.02em;margin:0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .sec-sub{color:var(--dim);font-size:.9rem;font-weight:600}
+    .hero{position:relative;border-radius:26px;overflow:hidden;border:1px solid var(--line);margin-top:1.1rem;background:#0a0a0a}
+    .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+    .hero .shade{position:absolute;inset:0;background:radial-gradient(900px 420px at 12% 0%, rgba(255,215,0,.14), transparent 55%),linear-gradient(90deg, rgba(8,8,8,.93) 30%, rgba(8,8,8,.55) 65%, rgba(8,8,8,.25))}
+    .hero-in{position:relative;padding:2.6rem 1.6rem 2.2rem;max-width:640px}
+    .hero h1{font-size:clamp(1.9rem,5.2vw,3.2rem);line-height:1.06;font-weight:900;letter-spacing:.01em;margin:.7rem 0 .6rem}
+    .hero p.lead{color:#d8d8de;font-size:1.02rem;margin:0 0 1.3rem}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;text-decoration:none;font-weight:850;padding:.8rem 1.35rem;border-radius:14px;letter-spacing:.03em}
+    .btn-gold{background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;box-shadow:0 10px 28px rgba(212,175,55,.28)}
+    .btn-ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.03)}
+    .btn:hover{filter:brightness(1.08)}
+    .hero-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:1.3rem}
+    .chip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#e8e8ec;border-radius:999px;padding:.28rem .65rem;font-size:.76rem;font-weight:700}
+    .chip.gold{border-color:var(--line);color:var(--gold2)}
+    .marquee{overflow:hidden;margin-top:.9rem;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+    .track{display:flex;gap:1rem;width:max-content;will-change:transform;animation:scrollx 30s linear infinite}
+    .marquee:hover .track{animation-play-state:paused}
+    @keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media (prefers-reduced-motion: reduce){ .track{animation:none} }
+    .catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:.9rem;margin-top:1rem}
+    .catcard{text-align:left;cursor:pointer;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:1.05rem 1rem;color:var(--ink);font:inherit;transition:transform .18s ease,border-color .18s ease}
+    .catcard:hover{transform:translateY(-3px);border-color:var(--gold2)}
+    .catcard .ic{font-size:1.5rem}
+    .catcard .cl{display:block;font-weight:850;margin-top:.45rem;font-size:.98rem}
+    .catcard .cc{color:var(--dim);font-size:.8rem;font-weight:700}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.1rem;align-items:center}
+    .searchbox{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:.62rem .9rem}
+    .searchbox input{flex:1;background:transparent;border:0;outline:none;color:var(--ink);font-size:.98rem;font-family:inherit;min-width:0}
+    .searchbox input::placeholder{color:#71717a}
+    .sortsel{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:.62rem .8rem;font-family:inherit;font-weight:700;font-size:.9rem}
+    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:.8rem}
+    .fchip{cursor:pointer;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8e8ec;border-radius:999px;padding:.42rem .85rem;font-weight:750;font-size:.83rem;font-family:inherit}
+    .fchip:hover{border-color:var(--gold2);color:var(--gold2)}
+    .fchip.on{background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;border-color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1.1rem}
+    .card{background:var(--glass);border:1px solid rgba(212,175,55,.22);border-radius:20px;padding:14px;display:flex;flex-direction:column;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 18px 42px rgba(0,0,0,.5)}
+    .pimg{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1/1;background:#0d0d0d;display:block}
+    .pimg img{width:100%;height:100%;object-fit:cover;display:block}
+    .badge{position:absolute;font-weight:800;font-size:.72rem;padding:.24rem .55rem;border-radius:999px}
+    .b-off{top:10px;left:10px;background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106}
+    .b-tag{top:10px;right:10px;background:rgba(10,10,10,.85);color:var(--gold2);border:1px solid var(--line);letter-spacing:.05em}
+    .pcat{color:var(--gold);font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:.75rem 0 .2rem}
+    .pname{font-weight:850;font-size:1.05rem;margin:0;line-height:1.3}
+    .pblurb{color:var(--dim);font-size:.9rem;margin:.35rem 0 0;line-height:1.55}
+    .pmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:.6rem}
+    .pmeta .chip{font-size:.74rem}
+    .pprice{display:flex;align-items:baseline;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+    .pprice .now{font-size:1.4rem;font-weight:900}
+    .pprice .was{color:#71717a;text-decoration:line-through;font-size:.92rem}
+    .pprice .usd{color:var(--dim);font-size:.75rem;font-weight:700}
+    .pactions{display:flex;gap:8px;margin-top:.85rem}
+    .shop-now{flex:1;text-align:center;background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;font-weight:900;padding:.72rem .6rem;border-radius:13px;text-decoration:none;letter-spacing:.02em}
+    .details{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:800;padding:.72rem .9rem;border-radius:13px;cursor:pointer;font-family:inherit}
+    .details:hover{border-color:var(--gold2);color:var(--gold2)}
+    .nores{display:none;text-align:center;border:1px dashed var(--line);border-radius:18px;padding:2rem 1rem;margin-top:1.1rem}
+    .nores.show{display:block}
+    .rowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:1rem;margin-top:1rem}
+    .mini{background:var(--glass);border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:12px;display:flex;flex-direction:column}
+    .mini .pname{font-size:.96rem;margin-top:.6rem}
+    .mini .pprice .now{font-size:1.15rem}
+    .mini .shop-now{margin-top:.7rem;padding:.6rem}
+    .trust{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:1.5rem 1.4rem}
+    .trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1.1rem;margin-top:1rem}
+    .trust h3{margin:.2rem 0 .4rem;font-size:1rem}
+    .trust p, .trust li{color:var(--dim);font-size:.92rem}
+    .trust ul{margin:.3rem 0;padding-left:1.1rem}
+    .trust a{color:var(--gold2);text-decoration:underline}
+    /* SPOTLIGHT */
+    .spot{position:relative;margin-top:1rem;border:1px solid var(--line);border-radius:24px;background:radial-gradient(700px 300px at 85% -10%, rgba(255,215,0,.12), transparent 60%),var(--glass);overflow:hidden}
+    .spot-stage{min-height:220px;display:flex;align-items:stretch}
+    .spot-slide{display:none;grid-template-columns:1fr 1fr;gap:1.4rem;padding:1.4rem;width:100%;align-items:center}
+    .spot-slide.on{display:grid;animation:spotin .55s ease both}
+    @keyframes spotin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+    @media (max-width:640px){ .spot-slide{grid-template-columns:1fr;padding:1.1rem} }
+    .spot-img{position:relative;perspective:800px}
+    .spot-img img{width:min(100%,250px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55);transition:transform .35s ease;animation:floaty 6s ease-in-out infinite}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @media (prefers-reduced-motion: reduce){ .spot-img img{animation:none} .spot-slide.on{animation:none} }
+    .spot-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(10,10,10,.75);color:var(--gold2);font-size:1.4rem;cursor:pointer;line-height:1}
+    .spot-nav.prev{left:10px}.spot-nav.next{right:10px}
+    .spot-nav:hover{background:rgba(212,175,55,.2)}
+    /* CIRCULAR MOVING SHOWCASE (owner order 2026-11-11) */
+    .orbit-band{margin-top:1rem;border:1px solid var(--line);border-radius:20px;background:radial-gradient(520px 200px at 50% -40px,rgba(212,175,55,.13),transparent 70%),#0d0d0f;padding:16px 0 12px;overflow:hidden}
+    .orbit-title{text-align:center;font-size:11px;letter-spacing:.24em;color:var(--gold2);font-weight:700;margin-bottom:12px}
+    .orbit-mask{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+    .orbit-track{display:flex;gap:16px;width:max-content}
+    .orbit-track.go{animation:orbitmove 30s linear infinite}
+    .orbit-band:hover .orbit-track{animation-play-state:paused}
+    @keyframes orbitmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    :global(.orbit-band .orbit-item){flex:0 0 auto;width:118px;text-align:center;cursor:pointer;background:none;border:none;font:inherit;color:inherit;padding:0;display:block}
+    :global(.orbit-band .orbit-ring){width:104px;height:104px;margin:0 auto;border-radius:50%;padding:3px;background:conic-gradient(from 210deg,var(--gold),#5c4a12,var(--gold2),#5c4a12,var(--gold));box-shadow:0 8px 22px rgba(0,0,0,.5);display:block}
+    .orbit-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#fff}
+    .orbit-name{margin-top:8px;font-size:11px;font-weight:600;color:#e9e9ec;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:28px}
+    .orbit-price{font-size:12px;font-weight:800;color:var(--gold2);display:block}
+    @media (prefers-reduced-motion: reduce){ .orbit-track{animation:none} }
+    .spot-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
+    .spot-dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--gold);background:transparent;cursor:pointer;padding:0}
+    .spot-dots button.on{background:var(--gold2)}
+    /* SEARCH EXTRAS */
+    .searchwrap{position:relative;flex:1 1 240px;display:flex}
+    .suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#141414;border:1px solid var(--line);border-radius:14px;overflow:hidden;z-index:60;display:none;box-shadow:0 22px 50px rgba(0,0,0,.6)}
+    .suggest.show{display:block}
+    .suggest button{display:flex;width:100%;gap:10px;align-items:center;background:transparent;border:0;color:var(--ink);padding:.55rem .8rem;cursor:pointer;font:inherit;text-align:left}
+    .suggest button:hover{background:rgba(212,175,55,.1)}
+    .suggest img{width:38px;height:38px;border-radius:9px;object-fit:cover}
+    .micbtn{background:transparent;border:0;color:var(--gold2);font-size:1.05rem;cursor:pointer;padding:0 .1rem}
+    .pricerow{display:flex;align-items:center;gap:10px;margin-top:.8rem;flex-wrap:wrap;color:var(--dim);font-size:.88rem;font-weight:700}
+    .pricerow input[type=range]{accent-color:var(--gold);width:180px}
+    /* CARD EXTRAS */
+    .wish-btn{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:800;padding:.72rem .8rem;border-radius:13px;cursor:pointer;font-family:inherit;font-size:1rem;line-height:1}
+    .wish-btn.on{color:#ff5d7a;border-color:#ff5d7a}
+    .cmp-lab{display:flex;align-items:center;gap:6px;margin-top:.6rem;color:var(--dim);font-size:.82rem;font-weight:700;cursor:pointer}
+    .cmp-lab input{accent-color:var(--gold);width:16px;height:16px}
+    .pimg img{opacity:0;transition:opacity .5s ease}
+    .pimg img.ld{opacity:1}
+    .pimg::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#101010 40%,#1c1c1c 50%,#101010 60%);background-size:200% 100%;animation:shim 1.4s infinite}
+    .pimg.done::before{display:none}
+    @keyframes shim{from{background-position:180% 0}to{background-position:-80% 0}}
+    /* COMPARE TRAY + RECENT */
+    .tray{position:fixed;left:50%;transform:translate(-50%,140%);bottom:16px;z-index:140;background:rgba(15,15,15,.97);border:1px solid var(--gold);border-radius:16px;padding:.6rem .8rem;display:flex;gap:10px;align-items:center;box-shadow:0 20px 50px rgba(0,0,0,.6);transition:transform .3s ease;max-width:calc(100vw - 20px);flex-wrap:wrap;justify-content:center}
+    .tray.show{transform:translate(-50%,0)}
+    .tray .tn{font-weight:800;font-size:.88rem}
+    .recent{display:none;margin-top:1rem}
+    .recent.show{display:block}
+    .recent-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem}
+    .recent-chip{display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:.3rem .8rem .3rem .35rem;cursor:pointer;color:var(--ink);font:inherit;font-size:.83rem;font-weight:700}
+    .recent-chip img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+    /* GUIDES / COLLECTIONS / ABOUT */
+    .gcard{background:var(--glass);border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:1.1rem 1rem}
+    .gcard h3{margin:.1rem 0 .45rem;font-size:1rem}
+    .gcard p{color:var(--dim);font-size:.9rem;margin:0;line-height:1.6}
+    .colcard{cursor:pointer;text-align:left;font:inherit;color:var(--ink);background:radial-gradient(500px 200px at 90% -20%, rgba(255,215,0,.13), transparent 60%),var(--glass);border:1px solid var(--line);border-radius:20px;padding:1.2rem 1.1rem;transition:transform .18s ease,border-color .18s ease;width:100%}
+    .colcard:hover{transform:translateY(-3px);border-color:var(--gold2)}
+    dialog.pdlg{background:#101010;color:var(--ink);border:1px solid var(--gold);border-radius:22px;max-width:min(680px,calc(100vw - 28px));padding:0;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+    dialog.pdlg::backdrop{background:rgba(0,0,0,.72)}
+    .pdlg-in{padding:1.2rem;position:relative}
+    .pdlg-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+    @media (max-width:560px){ .pdlg-grid{grid-template-columns:1fr} }
+    .pdlg img.pdimg{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px}
+    .pdlg .x{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);border:1px solid var(--line);color:#fff;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;z-index:2}
+  </style>
+  <style is:inline>
+    .orbit-band .orbit-ring{width:104px !important;height:104px !important}
+    .orbit-band .orbit-ring img{width:100% !important;height:100% !important;border-radius:50%;object-fit:cover;display:block}
+    .orbit-band .orbit-item{width:118px !important}
+  </style>
+
+  <div class="wrap">
+    <section class="hero" aria-label="IRFAN-GD store hero">
+      <img class="bg" src="/store/banner.webp" alt="" aria-hidden="true" width="1672" height="941" fetchpriority="high" />
+      <div class="shade" aria-hidden="true"></div>
+      <div class="hero-in">
+        <span class="chip gold">IRFAN-GD · PREMIUM TECHNOLOGY STORE</span>
+        <h1>DISCOVER THE <span class="gold-text">FUTURE OF TECHNOLOGY</span></h1>
+        <p class="lead">Explore innovative gadgets, smart accessories and everyday technology essentials — hand-picked, honestly priced in USD, and linked directly to the seller.</p>
+        <p style="color:var(--ink);font-size:.9rem;margin:.7rem 0 0"><strong style="color:var(--gold2)">Affiliate showcase:</strong> IRFAN-GD doesn't sell or ship products — SHOP NOW takes you to AliExpress, where the seller handles checkout, payment, shipping and returns. As an affiliate, I may earn a commission at no extra cost to you.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="#shop">EXPLORE COLLECTION</a>
+          <a class="btn btn-ghost" href="#hot-deals">VIEW HOT DEALS</a>
+        </div>
+        <p class="hero-chips">
+          <span class="chip">🛍️ {vis.length} curated electronics picks</span>
+          <span class="chip">💵 Prices in USD</span>
+          <span class="chip">🇺🇸 Curated for US shoppers</span>
+          <span class="chip">Last updated {store.updated}</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Featured product spotlight">
+      <h2 class="sec-h">✨ Product Spotlight <span class="sec-sub">— featured picks, swipe or use the arrows</span></h2>
+      <div class="spot" id="spot">
+        <button type="button" class="spot-nav prev" id="spotPrev" aria-label="Previous featured product">‹</button>
+        <div class="spot-stage" id="spotStage" aria-live="polite"></div>
+        <button type="button" class="spot-nav next" id="spotNext" aria-label="Next featured product">›</button>
+        <div class="spot-dots" id="spotDots" role="tablist" aria-label="Featured products"></div>
+      </div>
+    </section>
+
+    <!-- CIRCULAR MOVING SHOWCASE (owner order 2026-11-11: small products, circle shape, right-to-left) -->
+    <section class="orbit-band" aria-label="Moving product showcase">
+      <div class="orbit-title">&#10022; TRENDING SHOWCASE &#10022;</div>
+      <div class="orbit-mask"><div class="orbit-track" id="orbitTrack"></div></div>
+    </section>
+
+    <section class="sec" id="categories" aria-label="Product categories">
+      <h2 class="sec-h">Shop by Category</h2>
+      <div class="catgrid">
+        {catList.map(c => (
+          <button type="button" class="catcard" data-cat-link={c.slug} aria-label={`Browse ${c.label}`}>
+            <span class="ic">{c.slug === 'car-tech' ? '🚗' : c.slug === 'phone-accessories' ? '📱' : c.slug === 'wireless-charging' ? '🔋' : c.slug === 'computer-accessories' ? '🖥️' : '🎥'}</span>
+            <span class="cl">{c.label}</span>
+            <span class="cc">{c.count} product{c.count === 1 ? '' : 's'}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Gift finder">
+      <div class="trust" style="padding:1.3rem 1.4rem">
+        <h2 class="sec-h" style="font-size:1.25rem">🎁 Gift Finder</h2>
+        <p style="color:var(--dim);font-size:.92rem;margin:.4rem 0 0">Answer two questions — we filter the real collection for you. No fake recommendations, just the products above.</p>
+        <div class="controls" style="margin-top:.9rem">
+          <label style="font-weight:700;font-size:.88rem;color:var(--dim)">For
+            <select id="giftFor" class="sortsel" aria-label="Gift recipient type">
+              <option value="all">Anyone</option>
+              <option value="car-tech">A driver</option>
+              <option value="creator-equipment">A creator</option>
+              <option value="computer-accessories">A desk setup</option>
+              <option value="phone-accessories">A phone lover</option>
+            </select>
+          </label>
+          <label style="font-weight:700;font-size:.88rem;color:var(--dim)">Budget
+            <select id="giftBudget" class="sortsel" aria-label="Gift budget">
+              <option value="25">Up to $25</option>
+              <option value="20">Up to $20</option>
+              <option value="15">Up to $15</option>
+            </select>
+          </label>
+          <button type="button" class="details" id="giftGo" style="background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;border:0">FIND GIFTS</button>
         </div>
       </div>
     </section>
 
-    <div class="glass" style="padding:14px 16px;margin:1.4rem 0 0" role="note">
-      <strong>Disclosure:</strong> The Shop Now buttons are AliExpress affiliate links. If you buy through one, IRFAN-GD may earn a commission at no extra cost to you. Prices, ratings and sold counts are as listed on AliExpress at the last update; the price on the product page is the one that counts. Full details: <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.
-    </div>
-
-    <!-- Shelves -->
-    {shelves.map(s => (
-      <section aria-label={s.title} style="margin-top:2rem">
-        <h2 style="font-weight:900;font-size:1.45rem">{s.icon} {s.title}</h2>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:1rem;margin-top:.9rem">
-          {s.items.map(p => (
-            <article class="glass" style="padding:16px;display:flex;flex-direction:column">
-              <div style="position:relative;border-radius:16px;overflow:hidden">
-                <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" style="width:100%;height:auto;display:block" />
-                <span style="position:absolute;top:10px;left:10px;background:#f5b301;color:#111;font-weight:800;font-size:.8rem;padding:.25rem .55rem;border-radius:999px">-{p.off}%</span>
-                <span style="position:absolute;top:10px;right:10px;background:#111827;color:#fff;font-weight:800;font-size:.72rem;letter-spacing:.04em;padding:.25rem .55rem;border-radius:999px">{p.tag === 'HOT SALE' ? '🔥 ' : p.tag === 'NEW DEAL' ? '✨ ' : '📈 '}{p.tag}</span>
-              </div>
-              <h3 style="font-weight:800;margin:.7rem 0 .3rem;font-size:1.08rem">{p.name}</h3>
-              <p class="text-dim" style="font-size:.92rem;line-height:1.55">{p.blurb}</p>
-              <p style="margin-top:.55rem;display:flex;gap:6px;flex-wrap:wrap">
-                <span class="chip">★ {p.rating} on AliExpress</span>
-                {p.sold && <span class="chip">{p.sold}</span>}
-              </p>
-              <p style="margin-top:.7rem;display:flex;align-items:baseline;gap:.55rem">
-                <span style="font-size:1.45rem;font-weight:900">${p.price.toFixed(2)}</span>
-                <span class="text-faint" style="text-decoration:line-through">${p.oldPrice.toFixed(2)}</span>
-              </p>
-              <a href={p.url} target="_blank" rel="sponsored nofollow noopener" style="margin-top:.8rem;display:block;text-align:center;background:#f5b301;color:#111;font-weight:850;padding:.75rem 1rem;border-radius:14px">SHOP NOW →</a>
-            </article>
-          ))}
+    <section class="sec" id="shop" aria-label="Shop all products">
+      <h2 class="sec-h">Shop All <span class="sec-sub" id="countLabel">{vis.length} products</span></h2>
+      <div class="controls">
+        <div class="searchwrap">
+          <label class="searchbox" style="flex:1">
+            <span aria-hidden="true">🔍</span>
+            <input id="q" type="search" placeholder="Search products, categories, keywords…" aria-label="Search products" autocomplete="off" />
+            <button type="button" class="micbtn" id="micBtn" aria-label="Voice search" title="Voice search" hidden>🎤</button>
+          </label>
+          <div class="suggest" id="suggest" role="listbox" aria-label="Search suggestions"></div>
         </div>
-      </section>
-    ))}
+        <label style="font-weight:700;font-size:.88rem;color:var(--dim)">Sort
+          <select id="sort" class="sortsel" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+            <option value="trending">Trending</option>
+            <option value="new">New Arrivals</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips" role="group" aria-label="Filter by category">
+        <button type="button" class="fchip on" data-cat="all">All</button>
+        {catList.map(c => <button type="button" class="fchip" data-cat={c.slug}>{c.label}</button>)}
+        <button type="button" class="fchip" id="wishChip" aria-pressed="false">♥ Wishlist (<span id="wishCount">0</span>)</button>
+      </div>
+      <div class="pricerow">
+        <label for="maxPrice">Max price</label>
+        <input type="range" id="maxPrice" min="10" max="25" step="1" value="25" aria-label="Maximum price in USD" />
+        <span id="maxPriceLabel">Up to $25</span>
+        <span aria-hidden="true">·</span>
+        <span>Prices in USD, as listed on AliExpress</span>
+      </div>
+      <div class="recent" id="recentBox">
+        <span style="font-weight:800;font-size:.9rem">Recently viewed</span>
+        <div class="recent-row" id="recentRow"></div>
+      </div>
+      <div class="grid" id="grid">
+        {vis.map((p, i) => (
+          <article class="card pcard" data-idx={i} data-name={p.name.toLowerCase()} data-cats={(p.categories || []).join(' ')} data-catlabels={p.catLabels.toLowerCase()} data-kw={(p.keywords || '').toLowerCase()} data-price={p.price} data-rating={p.rating} data-tag={p.tag}>
+            <div class="pimg">
+              <img src={p.img} alt={p.name} loading="lazy" width="640" height="640" />
+              <span class="badge b-off">-{p.off}% OFF</span>
+              <span class="badge b-tag">{p.tag === 'HOT SALE' ? '🔥 ' : p.tag === 'NEW DEAL' ? '✨ ' : '📈 '}{p.tag}</span>
+            </div>
+            <p class="pcat">{p.catLabels}</p>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pblurb">{p.blurb}</p>
+            <p class="pmeta">
+              <span class="chip">★ {p.rating} on AliExpress</span>
+              {p.sold && <span class="chip">{p.sold}</span>}
+              {p.editorsPick && <span class="chip" style="border-color:var(--line);color:var(--gold2)">⭐ Editor's Pick</span>}
+            </p>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span class="usd">USD</span></p>
+            <div class="pactions">
+              <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+              <button type="button" class="details" data-details={i}>DETAILS</button>
+              <button type="button" class="wish-btn" data-wish={i} aria-pressed="false" aria-label={`Save ${p.name} to wishlist`} title="Save to wishlist">♡</button>
+            </div>
+            <label class="cmp-lab"><input type="checkbox" data-compare={i} /> Add to compare (up to 4)</label>
+          </article>
+        ))}
+      </div>
+      <div class="nores" id="nores">
+        <p style="font-weight:850;font-size:1.05rem;margin:0">No products match your search.</p>
+        <p style="color:var(--dim);margin:.4rem 0 1rem">Try a different keyword or category.</p>
+        <button type="button" class="details" id="clearFilters">Clear filters</button>
+      </div>
+      <p style="color:var(--dim);font-size:.84rem;margin-top:1.2rem">Prices, ratings and sold counts are as listed on AliExpress at the last update ({store.updated}); the price on the seller's product page is the one that counts.</p>
+    </section>
 
-    <p class="text-faint" style="font-size:.82rem;margin:1.6rem 0 .4rem">Prices and availability can change at any time on AliExpress. IRFAN-GD does not sell or ship these products; orders, payments, shipping and returns are handled by AliExpress and the individual sellers.</p>
-    <p class="text-faint" style="font-size:.82rem;margin:0 0 2.5rem">As an affiliate, I may earn a commission from qualifying purchases.</p>
+    <section class="sec" id="hot-deals" aria-label="Hot deals">
+      <h2 class="sec-h">🔥 Hot Deals</h2>
+      <div class="rowgrid">
+        {hot.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" id="trending" aria-label="Trending products">
+      <h2 class="sec-h">📈 Trending Products</h2>
+      <div class="rowgrid">
+        {trending.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="New arrivals">
+      <h2 class="sec-h">✨ New Arrivals</h2>
+      <div class="rowgrid">
+        {fresh.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Editor's picks">
+      <h2 class="sec-h">⭐ Editor's Picks</h2>
+      <div class="rowgrid">
+        {picks.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Best sellers">
+      <h2 class="sec-h">🏆 Best Sellers <span class="sec-sub">— by verified sold counts on AliExpress</span></h2>
+      <div class="rowgrid">
+        {bestSellers.map(p => (
+          <article class="mini">
+            <div class="pimg"><img src={p.img} alt={p.name} loading="lazy" width="640" height="640" /><span class="badge b-off">-{p.off}% OFF</span></div>
+            <h3 class="pname">{p.name}</h3>
+            <p class="pprice"><span class="now">${p.price.toFixed(2)}</span><span class="was">${p.oldPrice.toFixed(2)}</span><span style="color:var(--dim);font-size:.8rem">★ {p.rating}{p.sold ? ` · ${p.sold}` : ''}</span></p>
+            <a class="shop-now shop-now-link" data-product={p.name} href={p.url} target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Featured collections">
+      <h2 class="sec-h">🗂️ Featured Collections</h2>
+      <div class="rowgrid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))">
+        <button type="button" class="colcard" data-collection="creator">
+          <span style="font-size:1.6rem">🎥</span>
+          <span class="cl" style="display:block;font-weight:900;font-size:1.1rem;margin-top:.4rem">The Creator Kit</span>
+          <span style="color:var(--dim);font-size:.9rem">Wireless mic + selfie tripod — the two tools every short-form creator needs first.</span>
+        </button>
+        <button type="button" class="colcard" data-collection="car">
+          <span style="font-size:1.6rem">🚗</span>
+          <span class="cl" style="display:block;font-weight:900;font-size:1.1rem;margin-top:.4rem">Car Essentials</span>
+          <span style="color:var(--dim);font-size:.9rem">Cordless vacuum + magnetic phone mount — a cleaner car and a safer drive.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="sec" aria-label="Buying guides">
+      <h2 class="sec-h">📚 Buying Guides</h2>
+      <div class="rowgrid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))">
+        <article class="gcard">
+          <h3>Choosing a car vacuum</h3>
+          <p>Look at suction type (cyclonic holds power longer), dust-cup size, and attachments for tight corners. A cordless model with USB charging is the most practical for daily car use — check the seller's page for the exact specifications before ordering.</p>
+        </article>
+        <article class="gcard">
+          <h3>Wireless mics for creators</h3>
+          <p>Clear voice beats fancy cameras. A clip-on lavalier with noise reduction and a plug-and-play receiver removes echo and room noise from Reels and TikTok. Confirm phone compatibility (USB-C or Lightning) on the listing first.</p>
+        </article>
+        <article class="gcard">
+          <h3>Charging stands, explained</h3>
+          <p>A 3-in-1 stand charges phone, watch and earbuds from one cable — fewer wires, one nightstand footprint. Magnetic alignment matters more than headline wattage; verify your devices support magnetic wireless charging on the seller's page.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="sec" aria-label="About IRFAN-GD">
+      <div class="trust" style="padding:1.3rem 1.4rem">
+        <h2 class="sec-h" style="font-size:1.25rem">About IRFAN-GD</h2>
+        <p style="color:var(--dim);font-size:.94rem;margin:.5rem 0 0;line-height:1.65">IRFAN-GD is a creator-led discovery storefront for premium electronics and smart gadgets. Every product here is hand-picked, priced in USD, and linked directly to its seller on AliExpress — we curate, you buy from the seller with full AliExpress buyer protection. No inflated claims, no invented reviews: just the verified price, rating and sold count from the listing itself.</p>
+      </div>
+    </section>
+
+    <section class="sec" id="trust" aria-label="Trust and transparency">
+      <div class="trust">
+        <h2 class="sec-h" style="font-size:1.3rem">Trust &amp; Transparency — How This Store Works</h2>
+        <div class="trust-grid">
+          <div>
+            <h3>🛍️ A discovery storefront</h3>
+            <p>IRFAN-GD is an affiliate shopping discovery storefront. We research and curate electronics and smart gadgets; we do not sell or ship products ourselves.</p>
+          </div>
+          <div>
+            <h3>✅ AliExpress handles your order</h3>
+            <p>When you tap SHOP NOW you go to the seller's AliExpress listing. AliExpress and the seller handle:</p>
+            <ul><li>Checkout &amp; payments</li><li>Shipping &amp; delivery</li><li>Returns &amp; refunds</li></ul>
+          </div>
+          <div>
+            <h3>🔎 Honest information</h3>
+            <p>Prices, ratings and sold counts shown here are as listed on AliExpress at the last update and can change. Shipping costs and delivery times are confirmed on the seller's page before you pay — we never promise free shipping or delivery dates.</p>
+          </div>
+        </div>
+        <p style="margin-top:1rem">Full details: <a href="/disclosure/">Affiliate Disclosure</a> · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Use</a> · <a href="/contact/">Contact</a></p>
+        <p style="color:var(--dim);font-size:.86rem;margin:.4rem 0 0">As an affiliate, I may earn a commission from qualifying purchases — at no extra cost to you.</p>
+      </div>
+    </section>
   </div>
-</BaseLayout>
+
+  <dialog class="pdlg" id="pdlg" aria-label="Product details">
+    <div class="pdlg-in">
+      <button type="button" class="x" id="pdlgClose" aria-label="Close details">✕</button>
+      <div class="pdlg-grid">
+        <img class="pdimg" id="pdImg" src="" alt="" width="640" height="640" />
+        <div>
+          <p class="pcat" id="pdCat" style="margin-top:0"></p>
+          <h3 class="pname" id="pdName" style="font-size:1.25rem"></h3>
+          <p class="pblurb" id="pdBlurb"></p>
+          <p class="pmeta"><span class="chip" id="pdRating"></span><span class="chip" id="pdSold"></span><span class="chip" id="pdTag"></span></p>
+          <p class="pprice"><span class="now" id="pdPrice"></span><span class="was" id="pdWas"></span><span class="usd">USD</span></p>
+          <a class="shop-now shop-now-link" id="pdShop" href="#" target="_blank" rel="sponsored nofollow noopener" style="display:block;margin-top:.9rem">SHOP NOW →</a>
+          <div style="display:flex;gap:8px;margin-top:.6rem">
+            <button type="button" class="details" id="pdShare" style="flex:1">↗ Share</button>
+            <button type="button" class="details" id="pdWish" style="flex:1">♡ Save to Wishlist</button>
+          </div>
+          <p style="color:var(--dim);font-size:.82rem;margin-top:.8rem">Full specifications, variations and compatibility are listed on the seller's AliExpress page. IRFAN-GD does not sell or ship this product; checkout, shipping and returns are handled by AliExpress and the seller.</p>
+          <div id="pdAlt" style="margin-top:.9rem"></div>
+          <div id="pdPair" style="margin-top:.6rem"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="tray" id="cmpTray" role="region" aria-label="Compare tray">
+    <span class="tn" id="cmpLabel">Compare: 0 selected</span>
+    <button type="button" class="details" id="cmpOpen" style="background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;border:0;padding:.55rem 1rem">COMPARE NOW</button>
+    <button type="button" class="details" id="cmpClear" style="padding:.55rem 1rem">Clear</button>
+  </div>
+
+  <dialog class="pdlg" id="cmpDlg" aria-label="Product comparison" style="max-width:min(860px,calc(100vw - 28px))">
+    <div class="pdlg-in">
+      <button type="button" class="x" id="cmpClose" aria-label="Close comparison">✕</button>
+      <h3 style="margin:.2rem 0 1rem;font-size:1.2rem">Product Comparison</h3>
+      <div id="cmpTable" style="overflow-x:auto"></div>
+      <p style="color:var(--dim);font-size:.82rem;margin-top:.8rem">All values are the verified listing data shown on the product cards. Specifications beyond this are on the seller's page.</p>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="pdata" set:html={JSON.stringify(pdata)}></script>
+  <script is:inline>
+    (function(){
+      var products = [];
+      try { products = JSON.parse(document.getElementById('pdata').textContent || '[]'); } catch(e){}
+      var visIdx = []; products.forEach(function(p, i){ if (p.vis !== false) visIdx.push(i); });
+      function cardIdx(card){ return visIdx[+card.getAttribute('data-idx')]; }
+      function gridPos(origIdx){ return visIdx.indexOf(origIdx); }
+      var grid = document.getElementById('grid');
+      var cards = grid ? Array.prototype.slice.call(grid.querySelectorAll('.pcard')) : [];
+      var qEl = document.getElementById('q'), sortEl = document.getElementById('sort');
+      var nores = document.getElementById('nores'), countLabel = document.getElementById('countLabel');
+      var state = { q:'', cat:'all', sort:'featured' };
+      function track(name, params){ try{ if (window.gtag) window.gtag('event', name, params || {}); }catch(e){} }
+      function escTop(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+      function setCat(cat){
+        state.cat = cat;
+        document.querySelectorAll('.fchip').forEach(function(ch){ ch.classList.toggle('on', ch.getAttribute('data-cat') === cat); });
+        apply();
+      }
+      function apply(){
+        var q = state.q.trim().toLowerCase();
+        var visible = cards.filter(function(card){
+          var okCat = state.cat === 'all' || (card.getAttribute('data-cats') || '').split(' ').indexOf(state.cat) !== -1;
+          var hay = (card.getAttribute('data-name') || '') + ' ' + (card.getAttribute('data-catlabels') || '') + ' ' + (card.getAttribute('data-kw') || '');
+          return okCat && (!q || hay.indexOf(q) !== -1);
+        });
+        cards.forEach(function(c){ c.style.display = 'none'; });
+        var sorted = visible.slice();
+        if (state.sort === 'price-asc') sorted.sort(function(a,b){ return (+a.dataset.price) - (+b.dataset.price); });
+        else if (state.sort === 'price-desc') sorted.sort(function(a,b){ return (+b.dataset.price) - (+a.dataset.price); });
+        else if (state.sort === 'rating') sorted.sort(function(a,b){ return (+b.dataset.rating) - (+a.dataset.rating); });
+        else if (state.sort === 'trending') sorted.sort(function(a,b){ return (b.dataset.tag === 'TRENDING' ? 1 : 0) - (a.dataset.tag === 'TRENDING' ? 1 : 0) || (+b.dataset.rating) - (+a.dataset.rating); });
+        else if (state.sort === 'new') sorted.sort(function(a,b){ return (b.dataset.tag === 'NEW DEAL' ? 1 : 0) - (a.dataset.tag === 'NEW DEAL' ? 1 : 0); });
+        else sorted.sort(function(a,b){ return (+a.dataset.idx) - (+b.dataset.idx); });
+        sorted.forEach(function(c){ c.style.display = ''; grid.appendChild(c); });
+        if (countLabel) countLabel.textContent = visible.length + ' product' + (visible.length === 1 ? '' : 's');
+        if (nores) nores.classList.toggle('show', visible.length === 0);
+      }
+      if (qEl) { var deb; qEl.addEventListener('input', function(){ state.q = qEl.value; apply(); clearTimeout(deb); deb = setTimeout(function(){ if (state.q.trim()) track('store_search', { search_term: state.q.trim() }); }, 600); }); }
+      if (sortEl) sortEl.addEventListener('change', function(){ state.sort = sortEl.value; apply(); });
+      document.querySelectorAll('.fchip').forEach(function(ch){ var cat = ch.getAttribute('data-cat'); if (!cat) return; ch.addEventListener('click', function(){ setCat(cat); track('store_category', { category: state.cat }); }); });
+      document.querySelectorAll('[data-cat-link]').forEach(function(el){ el.addEventListener('click', function(){ var c = el.getAttribute('data-cat-link'); setCat(c || 'all'); track('store_category', { category: c }); var s = document.getElementById('shop'); if (s) s.scrollIntoView({ behavior:'smooth' }); }); });
+      var clearBtn = document.getElementById('clearFilters');
+      if (clearBtn) clearBtn.addEventListener('click', function(){ state.q = ''; if (qEl) qEl.value = ''; state.sort = 'featured'; if (sortEl) sortEl.value = 'featured'; setCat('all'); });
+      document.querySelectorAll('.shop-now-link').forEach(function(a){ a.addEventListener('click', function(){ track('affiliate_click', { product: a.getAttribute('data-product') || '' }); }); });
+      /* Details modal */
+      var dlg = document.getElementById('pdlg');
+      function money(v){ return '$' + (+v).toFixed(2); }
+      function openDetails(i){
+        var p = products[i]; if (!p || !dlg) return;
+        document.getElementById('pdImg').src = p.img; document.getElementById('pdImg').alt = p.name;
+        document.getElementById('pdCat').textContent = p.catLabels;
+        document.getElementById('pdName').textContent = p.name;
+        document.getElementById('pdBlurb').textContent = p.blurb;
+        document.getElementById('pdRating').textContent = '★ ' + p.rating + ' on AliExpress';
+        document.getElementById('pdSold').textContent = p.sold || '';
+        document.getElementById('pdSold').style.display = p.sold ? '' : 'none';
+        document.getElementById('pdTag').textContent = p.tag;
+        document.getElementById('pdPrice').textContent = money(p.price);
+        document.getElementById('pdWas').textContent = money(p.oldPrice);
+        var shop = document.getElementById('pdShop'); shop.href = p.url; shop.setAttribute('data-product', p.name);
+        if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
+      }
+      document.querySelectorAll('[data-details]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(visIdx[+b.getAttribute('data-details')]); }); });
+      var x = document.getElementById('pdlgClose');
+      if (x && dlg) x.addEventListener('click', function(){ dlg.close(); });
+      if (dlg) dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+
+      /* ---------- image skeleton ---------- */
+      document.querySelectorAll('.pimg img').forEach(function(img){
+        function done(){ img.classList.add('ld'); var w = img.closest('.pimg'); if (w) w.classList.add('done'); }
+        if (img.complete && img.naturalWidth) done(); else { img.addEventListener('load', done); img.addEventListener('error', done); }
+      });
+
+      /* ---------- SPOTLIGHT carousel ---------- */
+      var vprods = products.filter(function(p){ return p.vis !== false; });
+      var seen = {}; var featured = vprods.filter(function(p){ var take = (p.tag === 'HOT SALE') && !seen[p.name]; seen[p.name] = true; return take; });
+      vprods.forEach(function(p){ if (p.name && featured.length < 4 && featured.indexOf(p) === -1 && (p.tag === 'TRENDING')) featured.push(p); });
+      featured = featured.slice(0, 4);
+      var stage = document.getElementById('spotStage'), dots = document.getElementById('spotDots'), cur = 0, timer = null;
+      function esc(s){ return escTop(s); } function escUnused(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+      if (stage && featured.length){
+        stage.innerHTML = featured.map(function(p, i){
+          return '<div class="spot-slide' + (i === 0 ? ' on' : '') + '" role="group" aria-label="' + esc(p.name) + '">' +
+            '<div class="spot-img"><img src="' + p.img + '" alt="' + esc(p.name) + '" width="640" height="640" ' + (i ? 'loading="lazy"' : '') + '><span class="badge b-off" style="top:12px;left:12px">-' + p.off + '% OFF</span></div>' +
+            '<div><p class="pcat" style="margin-top:0">' + esc(p.catLabels) + '</p>' +
+            '<h3 style="font-size:1.5rem;font-weight:900;margin:.2rem 0 .4rem;line-height:1.2">' + esc(p.name) + '</h3>' +
+            '<p class="pblurb" style="font-size:.98rem">' + esc(p.blurb) + '</p>' +
+            '<p class="pmeta"><span class="chip">★ ' + p.rating + ' on AliExpress</span>' + (p.sold ? '<span class="chip">' + esc(p.sold) + '</span>' : '') + '<span class="chip" style="color:var(--gold2);border-color:var(--line)">' + esc(p.tag) + '</span></p>' +
+            '<p class="pprice"><span class="now" style="font-size:1.7rem">$' + (+p.price).toFixed(2) + '</span><span class="was">$' + (+p.oldPrice).toFixed(2) + '</span><span class="usd">USD</span></p>' +
+            '<div class="pactions" style="max-width:420px"><a class="shop-now shop-now-link" data-product="' + esc(p.name) + '" href="' + p.url + '" target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>' +
+            '<button type="button" class="details" data-spot-details="' + products.indexOf(p) + '">DETAILS</button></div></div></div>';
+        }).join('');
+        dots.innerHTML = featured.map(function(p, i){ return '<button type="button" data-dot="' + i + '" aria-label="Show ' + esc(p.name) + '"' + (i === 0 ? ' class="on"' : '') + '></button>'; }).join('');
+        var slides = Array.prototype.slice.call(stage.querySelectorAll('.spot-slide'));
+        function show(i){
+          cur = (i + slides.length) % slides.length;
+          slides.forEach(function(s, j){ s.classList.toggle('on', j === cur); });
+          dots.querySelectorAll('button').forEach(function(d, j){ d.classList.toggle('on', j === cur); });
+        }
+        function auto(){ clearInterval(timer); timer = setInterval(function(){ show(cur + 1); }, 6000); }
+        document.getElementById('spotPrev').addEventListener('click', function(){ show(cur - 1); auto(); });
+        document.getElementById('spotNext').addEventListener('click', function(){ show(cur + 1); auto(); });
+        dots.querySelectorAll('button').forEach(function(d){ d.addEventListener('click', function(){ show(+d.getAttribute('data-dot')); auto(); }); });
+        var spot = document.getElementById('spot');
+        spot.addEventListener('pointerenter', function(){ clearInterval(timer); });
+        spot.addEventListener('pointerleave', auto);
+        var sx = null;
+        spot.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, { passive: true });
+        spot.addEventListener('touchend', function(e){ if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 42) show(cur + (dx < 0 ? 1 : -1)); sx = null; auto(); }, { passive: true });
+        stage.querySelectorAll('.spot-img img').forEach(function(img){
+          img.addEventListener('pointermove', function(e){ var r = img.getBoundingClientRect(); var rx = ((e.clientY - r.top) / r.height - .5) * -7; var ry = ((e.clientX - r.left) / r.width - .5) * 9; img.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(1.03)'; });
+          img.addEventListener('pointerleave', function(){ img.style.transform = ''; });
+        });
+        stage.querySelectorAll('[data-spot-details]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(+b.getAttribute('data-spot-details')); }); });
+        stage.querySelectorAll('.shop-now-link').forEach(function(a){ a.addEventListener('click', function(){ track('affiliate_click', { product: a.getAttribute('data-product') || '' }); }); });
+        auto();
+      }
+
+      /* ---------- CIRCULAR MOVING SHOWCASE ---------- */
+      (function(){
+        var track = document.getElementById('orbitTrack'); if (!track) return;
+        var items = '';
+        products.forEach(function(p, i){
+          if (p.vis === false) return;
+          items += '<button type="button" class="orbit-item" data-orbit="' + i + '" aria-label="' + esc(p.name) + '">'
+            + '<span class="orbit-ring"><img src="' + p.img + '" alt="' + esc(p.name) + '" loading="lazy"></span>'
+            + '<span class="orbit-name">' + esc(p.name) + '</span>'
+            + '<span class="orbit-price">$' + (+p.price).toFixed(2) + '</span></button>';
+        });
+        track.innerHTML = items + items;
+        // animation sirf tab jab poora set track mein aa jaye (warna pehla paint dev tools mein bada render hota hai)
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ track.classList.add('go'); }); });
+        track.addEventListener('click', function(e){
+          var b = e.target.closest('.orbit-item'); if (!b) return;
+          openDetails(+b.getAttribute('data-orbit'));
+        });
+      })();
+
+      /* ---------- SEARCH SUGGESTIONS ---------- */
+      var sug = document.getElementById('suggest');
+      function renderSuggest(){
+        var q = (qEl.value || '').trim().toLowerCase();
+        if (!q || !sug) { if (sug) sug.classList.remove('show'); return; }
+        var hits = products.filter(function(p){ return p.vis !== false && (p.name + ' ' + p.catLabels + ' ' + (p.cats || []).join(' ')).toLowerCase().indexOf(q) !== -1; }).slice(0, 5);
+        if (!hits.length) { sug.classList.remove('show'); return; }
+        sug.innerHTML = hits.map(function(p){
+          return '<button type="button" role="option" data-sug="' + products.indexOf(p) + '"><img src="' + p.img + '" alt="" width="38" height="38"><span style="flex:1">' + esc(p.name) + '</span><strong>$' + (+p.price).toFixed(2) + '</strong></button>';
+        }).join('');
+        sug.classList.add('show');
+        sug.querySelectorAll('[data-sug]').forEach(function(b){ b.addEventListener('click', function(){ sug.classList.remove('show'); openDetails(+b.getAttribute('data-sug')); }); });
+      }
+      if (qEl) { qEl.addEventListener('input', renderSuggest); qEl.addEventListener('focus', renderSuggest); document.addEventListener('click', function(e){ if (sug && !sug.contains(e.target) && e.target !== qEl) sug.classList.remove('show'); }); }
+
+      /* ---------- VOICE SEARCH (browser permitting) ---------- */
+      var mic = document.getElementById('micBtn');
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (mic && SR) {
+        mic.hidden = false;
+        mic.addEventListener('click', function(){
+          try {
+            var rec = new SR(); rec.lang = 'en-US'; rec.interimResults = false;
+            mic.textContent = '🔴';
+            rec.onresult = function(ev){ var t = ev.results[0][0].transcript || ''; qEl.value = t; state.q = t; apply(); renderSuggest(); mic.textContent = '🎤'; };
+            rec.onend = function(){ mic.textContent = '🎤'; };
+            rec.onerror = function(){ mic.textContent = '🎤'; };
+            rec.start();
+          } catch(e){ mic.hidden = true; }
+        });
+      }
+
+      /* ---------- PRICE FILTER ---------- */
+      var priceEl = document.getElementById('maxPrice'), priceLabel = document.getElementById('maxPriceLabel');
+      state.maxPrice = 25;
+      var baseApply = apply;
+      apply = function(){
+        cards.forEach(function(c){ /* price gate handled below via dataset */ });
+        baseApply();
+        var mp = state.maxPrice;
+        var shown = 0;
+        cards.forEach(function(c){
+          if (c.style.display !== 'none' && (+c.dataset.price) > mp) c.style.display = 'none';
+          if (c.style.display !== 'none') shown++;
+        });
+        if (countLabel) countLabel.textContent = shown + ' product' + (shown === 1 ? '' : 's');
+        if (nores) nores.classList.toggle('show', shown === 0);
+      };
+      if (priceEl) priceEl.addEventListener('input', function(){ state.maxPrice = +priceEl.value; if (priceLabel) priceLabel.textContent = 'Up to $' + state.maxPrice; apply(); });
+
+      /* ---------- WISHLIST ---------- */
+      var wish = new Set();
+      try { (JSON.parse(localStorage.getItem('irfan-wishlist') || '[]')).forEach(function(i){ wish.add(i); }); } catch(e){}
+      state.wishOnly = false;
+      var wishChip = document.getElementById('wishChip'), wishCount = document.getElementById('wishCount');
+      function saveWish(){ try { localStorage.setItem('irfan-wishlist', JSON.stringify(Array.from(wish))); } catch(e){} }
+      function paintWish(){
+        document.querySelectorAll('[data-wish]').forEach(function(b){ var i = visIdx[+b.getAttribute('data-wish')]; var on = wish.has(i); b.classList.toggle('on', on); b.textContent = on ? '♥' : '♡'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        if (wishCount) wishCount.textContent = wish.size;
+      }
+      document.querySelectorAll('[data-wish]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var i = visIdx[+b.getAttribute('data-wish')];
+          if (wish.has(i)) wish.delete(i); else { wish.add(i); track('wishlist_add', { product: products[i] ? products[i].name : '' }); }
+          saveWish(); paintWish(); if (state.wishOnly) applyWish();
+        });
+      });
+      function applyWish(){
+        if (!state.wishOnly) { applyOrig(); return; }
+        applyOrig();
+        var shown = 0;
+        cards.forEach(function(c){ if (c.style.display !== 'none' && !wish.has(cardIdx(c))) c.style.display = 'none'; if (c.style.display !== 'none') shown++; });
+        if (countLabel) countLabel.textContent = shown + ' product' + (shown === 1 ? '' : 's');
+        if (nores) nores.classList.toggle('show', shown === 0);
+      }
+      var applyOrig = apply;
+      apply = function(){ if (state.wishOnly) applyWish(); else applyOrig(); };
+      if (wishChip) wishChip.addEventListener('click', function(){ state.wishOnly = !state.wishOnly; wishChip.classList.toggle('on', state.wishOnly); wishChip.setAttribute('aria-pressed', state.wishOnly ? 'true' : 'false'); apply(); });
+      paintWish();
+
+      /* ---------- COMPARE (up to 4) ---------- */
+      var cmp = [];
+      var tray = document.getElementById('cmpTray'), cmpLabel = document.getElementById('cmpLabel');
+      function paintCmp(){
+        if (cmpLabel) cmpLabel.textContent = 'Compare: ' + cmp.length + ' selected';
+        if (tray) tray.classList.toggle('show', cmp.length > 0);
+        document.querySelectorAll('[data-compare]').forEach(function(cb){ cb.checked = cmp.indexOf(visIdx[+cb.getAttribute('data-compare')]) !== -1; });
+      }
+      document.querySelectorAll('[data-compare]').forEach(function(cb){
+        cb.addEventListener('change', function(){
+          var i = visIdx[+cb.getAttribute('data-compare')];
+          if (cb.checked) { if (cmp.length >= 4) { cb.checked = false; if (cmpLabel) cmpLabel.textContent = 'Compare: max 4 products'; return; } cmp.push(i); }
+          else cmp = cmp.filter(function(x){ return x !== i; });
+          paintCmp();
+        });
+      });
+      var cmpDlg = document.getElementById('cmpDlg');
+      document.getElementById('cmpClear').addEventListener('click', function(){ cmp = []; paintCmp(); });
+      document.getElementById('cmpClose').addEventListener('click', function(){ cmpDlg.close(); });
+      document.getElementById('cmpOpen').addEventListener('click', function(){
+        if (cmp.length < 2) { if (cmpLabel) cmpLabel.textContent = 'Compare: pick at least 2'; return; }
+        var rows = [['', 'Name'], ['', 'Price'], ['', 'Was'], ['', 'Discount'], ['', 'Rating'], ['', 'Sold'], ['', 'Category'], ['', 'Tag']];
+        var head = '<tr><th style="text-align:left;padding:.5rem;color:var(--dim)"></th>' + cmp.map(function(i){ return '<th style="text-align:left;padding:.5rem;min-width:150px"><img src="' + products[i].img + '" alt="" width="54" height="54" style="border-radius:10px;object-fit:cover;display:block;margin-bottom:.3rem">' + esc(products[i].name) + '</th>'; }).join('') + '</tr>';
+        function row(label, fn){ return '<tr><td style="padding:.5rem;color:var(--dim);font-weight:700">' + label + '</td>' + cmp.map(function(i){ return '<td style="padding:.5rem">' + fn(products[i]) + '</td>'; }).join('') + '</tr>'; }
+        var body = row('Price', function(p){ return '<strong>$' + (+p.price).toFixed(2) + '</strong> USD'; })
+          + row('Was', function(p){ return '$' + (+p.oldPrice).toFixed(2); })
+          + row('Discount', function(p){ return '-' + p.off + '%'; })
+          + row('Rating', function(p){ return '★ ' + p.rating; })
+          + row('Sold', function(p){ return esc(p.sold || '—'); })
+          + row('Category', function(p){ return esc(p.catLabels); })
+          + row('Tag', function(p){ return esc(p.tag); })
+          + '<tr><td></td>' + cmp.map(function(i){ return '<td style="padding:.5rem"><a class="shop-now shop-now-link" data-product="' + esc(products[i].name) + '" href="' + products[i].url + '" target="_blank" rel="sponsored nofollow noopener" style="display:block;padding:.55rem">SHOP NOW →</a></td>'; }).join('') + '</tr>';
+        document.getElementById('cmpTable').innerHTML = '<table style="border-collapse:collapse;width:100%">' + head + body + '</table>';
+        document.querySelectorAll('#cmpTable .shop-now-link').forEach(function(a){ a.addEventListener('click', function(){ track('affiliate_click', { product: a.getAttribute('data-product') || '' }); }); });
+        if (cmpDlg.showModal) cmpDlg.showModal();
+      });
+      paintCmp();
+
+      /* ---------- RECENTLY VIEWED ---------- */
+      var recent = [];
+      try { recent = JSON.parse(localStorage.getItem('irfan-recent') || '[]'); } catch(e){}
+      var recentBox = document.getElementById('recentBox'), recentRow = document.getElementById('recentRow');
+      function paintRecent(){
+        if (!recentBox || !recentRow) return;
+        recentBox.classList.toggle('show', recent.length > 0);
+        recentRow.innerHTML = recent.map(function(i){ var p = products[i]; if (!p) return ''; return '<button type="button" class="recent-chip" data-recent="' + i + '"><img src="' + p.img + '" alt="" width="26" height="26">' + esc(p.name) + '</button>'; }).join('');
+        recentRow.querySelectorAll('[data-recent]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(+b.getAttribute('data-recent')); }); });
+      }
+      var baseOpen = openDetails;
+      openDetails = function(i){
+        baseOpen(i);
+        recent = [i].concat(recent.filter(function(x){ return x !== i; })).slice(0, 6);
+        try { localStorage.setItem('irfan-recent', JSON.stringify(recent)); } catch(e){}
+        paintRecent();
+        /* modal extras: alternatives + pairs + share/wish wiring */
+        var p = products[i]; if (!p) return;
+        var alt = products.filter(function(x){ return x !== p && x.vis !== false && (x.cats || []).some(function(c){ return (p.cats || []).indexOf(c) !== -1; }); }).slice(0, 2);
+        var altBox = document.getElementById('pdAlt');
+        if (altBox) altBox.innerHTML = alt.length ? '<p style="font-weight:800;font-size:.88rem;margin:0 0 .4rem">More in this category</p>' + alt.map(function(x){ return '<button type="button" class="recent-chip" data-alt="' + products.indexOf(x) + '" style="margin:0 .4rem .4rem 0"><img src="' + x.img + '" alt="" width="26" height="26">' + esc(x.name) + ' · $' + (+x.price).toFixed(2) + '</button>'; }).join('') : '';
+        if (altBox) altBox.querySelectorAll('[data-alt]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(+b.getAttribute('data-alt')); }); });
+        var pair = products.filter(function(x){ return x !== p && x.vis !== false && !(x.cats || []).some(function(c){ return (p.cats || []).indexOf(c) !== -1; }); }).sort(function(a, b){ return b.rating - a.rating; })[0];
+        var pairBox = document.getElementById('pdPair');
+        if (pairBox) pairBox.innerHTML = pair ? '<p style="font-weight:800;font-size:.88rem;margin:0 0 .4rem">Pairs well with</p><button type="button" class="recent-chip" data-alt="' + products.indexOf(pair) + '"><img src="' + pair.img + '" alt="" width="26" height="26">' + esc(pair.name) + ' · $' + (+pair.price).toFixed(2) + '</button>' : '';
+        if (pairBox) pairBox.querySelectorAll('[data-alt]').forEach(function(b){ b.addEventListener('click', function(){ openDetails(+b.getAttribute('data-alt')); }); });
+        var shareBtn = document.getElementById('pdShare');
+        if (shareBtn) shareBtn.onclick = function(){
+          var url = location.origin + '/store/';
+          if (navigator.share) { navigator.share({ title: p.name + ' — IRFAN-GD', text: p.name + ' · $' + (+p.price).toFixed(2) + ' USD at IRFAN-GD', url: url }).catch(function(){}); }
+          else if (navigator.clipboard) { navigator.clipboard.writeText(url); shareBtn.textContent = '✓ Link copied'; setTimeout(function(){ shareBtn.textContent = '↗ Share'; }, 1600); }
+        };
+        var wishBtn = document.getElementById('pdWish');
+        if (wishBtn) {
+          wishBtn.textContent = wish.has(i) ? '♥ In Wishlist' : '♡ Save to Wishlist';
+          wishBtn.onclick = function(){ if (wish.has(i)) wish.delete(i); else wish.add(i); saveWish(); paintWish(); wishBtn.textContent = wish.has(i) ? '♥ In Wishlist' : '♡ Save to Wishlist'; if (state.wishOnly) apply(); };
+        }
+      };
+      paintRecent();
+
+      /* ---------- GIFT FINDER + COLLECTIONS ---------- */
+      function scrollShop(){ var s = document.getElementById('shop'); if (s) s.scrollIntoView({ behavior: 'smooth' }); }
+      var giftGo = document.getElementById('giftGo');
+      if (giftGo) giftGo.addEventListener('click', function(){
+        var cat = document.getElementById('giftFor').value;
+        var budget = +document.getElementById('giftBudget').value;
+        setCat(cat);
+        state.maxPrice = budget;
+        if (priceEl) priceEl.value = budget;
+        if (priceLabel) priceLabel.textContent = 'Up to $' + budget;
+        apply(); scrollShop(); track('gift_finder', { category: cat, budget: budget });
+      });
+      document.querySelectorAll('[data-collection]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var kind = b.getAttribute('data-collection');
+          if (kind === 'creator') { setCat('creator-equipment'); }
+          else { setCat('car-tech'); }
+          state.maxPrice = 25; if (priceEl) priceEl.value = 25; if (priceLabel) priceLabel.textContent = 'Up to $25';
+          apply(); scrollShop(); track('collection_open', { collection: kind });
+        });
+      });
+
+      apply();
+    })();
+  </script>
+</StoreLayout>

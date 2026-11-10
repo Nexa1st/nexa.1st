@@ -9,7 +9,13 @@
    "rating": 4.9,
    "sold": "10,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c2JkoGgr",
-   "tag": "HOT SALE"
+   "tag": "HOT SALE",
+   "categories": [
+    "car-tech"
+   ],
+   "keywords": "car vacuum cleaner cordless handheld auto detailing",
+   "editorsPick": true,
+   "visible": true
   },
   {
    "blurb": "Clip-on wireless mic for creators — clearer voice on Reels and TikTok.",
@@ -20,7 +26,13 @@
    "rating": 4.9,
    "sold": "5,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3LnWNAf",
-   "tag": "TRENDING"
+   "tag": "TRENDING",
+   "categories": [
+    "creator-equipment"
+   ],
+   "keywords": "wireless microphone lavalier clip-on recording video creators",
+   "editorsPick": true,
+   "visible": true
   },
   {
    "blurb": "Magnetic mount that keeps your phone locked in place on the road.",
@@ -31,7 +43,14 @@
    "rating": 4.9,
    "sold": null,
    "url": "https://s.click.aliexpress.com/e/_c3VR2qRl",
-   "tag": "NEW DEAL"
+   "tag": "NEW DEAL",
+   "categories": [
+    "car-tech",
+    "phone-accessories"
+   ],
+   "keywords": "magnetic car phone holder mount dashboard ugreen",
+   "editorsPick": false,
+   "visible": true
   },
   {
    "blurb": "One stand for phone, watch and earbuds — a cleaner nightstand.",
@@ -42,7 +61,14 @@
    "rating": 4.9,
    "sold": "3,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3n3gdC3",
-   "tag": "TRENDING"
+   "tag": "TRENDING",
+   "categories": [
+    "phone-accessories",
+    "wireless-charging"
+   ],
+   "keywords": "wireless charger stand magnetic 3 in 1 phone watch earbuds",
+   "editorsPick": false,
+   "visible": true
   },
   {
    "blurb": "Screen light bar with three colour temperatures — easier on the eyes at night.",
@@ -53,7 +79,13 @@
    "rating": 4.9,
    "sold": "5,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3KN5xGx",
-   "tag": "TRENDING"
+   "tag": "TRENDING",
+   "categories": [
+    "computer-accessories"
+   ],
+   "keywords": "monitor light bar screen lamp desk computer eye care usb",
+   "editorsPick": false,
+   "visible": true
   },
   {
    "blurb": "Extends for group shots, folds into a tripod, remote in the handle.",
@@ -64,7 +96,13 @@
    "rating": 4.9,
    "sold": "10,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c4PF7nuT",
-   "tag": "HOT SALE"
+   "tag": "HOT SALE",
+   "categories": [
+    "creator-equipment"
+   ],
+   "keywords": "selfie stick tripod bluetooth remote phone stand vlogging",
+   "editorsPick": false,
+   "visible": true
   },
   {
    "blurb": "Seven cubes that keep a suitcase organised from the first day to the last.",
@@ -75,7 +113,11 @@
    "rating": 4.9,
    "sold": "3,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3slxZhl",
-   "tag": "TRENDING"
+   "tag": "TRENDING",
+   "categories": [],
+   "keywords": "",
+   "editorsPick": false,
+   "visible": false
   },
   {
    "blurb": "Small prep jobs — garlic, herbs, chillies — without the knife work.",
@@ -86,7 +128,11 @@
    "rating": 4.9,
    "sold": "2,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3KdpbRp",
-   "tag": "NEW DEAL"
+   "tag": "NEW DEAL",
+   "categories": [],
+   "keywords": "",
+   "editorsPick": false,
+   "visible": false
   },
   {
    "blurb": "Pour or spray — one glass bottle for controlled cooking oil.",
@@ -97,7 +143,11 @@
    "rating": 4.7,
    "sold": "10,000+ sold",
    "url": "https://s.click.aliexpress.com/e/_c3ayHe1t",
-   "tag": "HOT SALE"
+   "tag": "HOT SALE",
+   "categories": [],
+   "keywords": "",
+   "editorsPick": false,
+   "visible": false
   }
  ],
  "updated": "2026-11-10"
