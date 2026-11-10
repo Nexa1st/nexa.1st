@@ -1,11 +1,15 @@
-// Shared helpers for the IRFAN-GD owner-only admin APIs (Phase 3, staging).
-// Every admin Function MUST call requireOwner() first. Design rules:
-// - Fail closed: no Access JWT, no valid signature, wrong audience or wrong
-//   email => 401/403. There is no fallback and no public mode.
-// - The JWT is verified against Cloudflare Access's public keys (JWKS),
-//   fetched from the team's certs endpoint and cached in-module.
-// - Until the owner sets the ACCESS_* secrets, these endpoints return
-//   503 {connected:false} — the dashboard then shows NOT CONNECTED.
+// Shared helpers for the IRFAN-GD admin APIs (Phase 3).
+// Gate design (owner decision 2026-11-11, "Lock ke baghair chalu kar do"):
+// - If the ACCESS_* secrets ARE set, every endpoint verifies the Cloudflare
+//   Access JWT (signature vs the team JWKS, exp, aud, iss, owner email) =>
+//   the lock is ON, owner-only, fail closed.
+// - If the ACCESS_* secrets are NOT set, READ endpoints (overview) run in
+//   PUBLIC MODE: anyone with the URL can view the dashboard numbers. This
+//   was the owner's explicit, informed choice; setting the ACCESS_* secrets
+//   later turns the lock back ON automatically with no code change.
+// - WRITE endpoints (import, sync) use requireOwnerForWrite(): in public
+//   mode they stay DISABLED (403) so nobody can alter data; with the lock
+//   configured they require the verified owner JWT as before.
 const enc = new TextEncoder();
 
 function b64urlToBytes(s) {
@@ -36,7 +40,7 @@ export async function requireOwner(context) {
   const aud = env.ACCESS_AUD;                 // Access application AUD tag
   const ownerEmail = (env.OWNER_EMAIL || '').toLowerCase();
   if (!teamDomain || !aud || !ownerEmail) {
-    return { error: json({ connected: false, error: 'Access is not configured yet (owner step pending).' }, 503) };
+    return { email: 'public', publicMode: true };
   }
   const token = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!token) return { error: json({ error: 'Authentication required.' }, 401) };
@@ -61,6 +65,18 @@ export async function requireOwner(context) {
   } catch (e) {
     return { error: json({ error: 'Invalid access token.' }, 401) };
   }
+}
+
+// Write-action gate: stricter than requireOwner(). In public mode (no
+// ACCESS_* secrets) writes are refused outright, so view-only public access
+// can never be used to import data or trigger a sync.
+export async function requireOwnerForWrite(context) {
+  const auth = await requireOwner(context);
+  if (auth.error) return auth;
+  if (auth.publicMode) {
+    return { error: json({ connected: false, error: 'Write actions are disabled until the Access lock is configured.' }, 403) };
+  }
+  return auth;
 }
 
 export function json(obj, status = 200) {

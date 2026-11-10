@@ -10,7 +10,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IRFAN-GD Owner Dashboard — Staging</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="description" content="Private owner dashboard for the IRFAN-GD AliExpress affiliate store. Owner only." />
+  <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
   <style>
     body{margin:0;background:#080808;color:#fff;font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
@@ -39,10 +39,10 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
 <body>
   <div class="wrap">
     <p style="display:flex;align-items:center;gap:10px"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" style="border-radius:50%;border:2px solid #D4AF37" /><strong style="letter-spacing:.05em">IRFAN-GD · OWNER DASHBOARD</strong></p>
-    <h1>Business Dashboard — Staging Build</h1>
+    <h1>Business Dashboard</h1>
     <div class="warn" role="note">
-      <strong>🔒 OWNER ONLY — IRFAN-GD is an AliExpress affiliate showcase.</strong>
-      <p style="margin:.4rem 0 0">This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until Cloudflare Access + D1 are activated by the owner — no figure on this page is estimated or fabricated. <code>noindex</code> is hygiene only, <strong>not</strong> access control; real protection is Cloudflare Access in front of this page and its APIs.</p>
+      <strong>📊 IRFAN-GD BUSINESS DASHBOARD — IRFAN-GD is an AliExpress affiliate showcase.</strong>
+      <p style="margin:.4rem 0 0">This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until the D1 database is connected — no figure on this page is estimated or fabricated. <strong>Access mode (owner decision, 2026-11-11): viewing is currently open without a login</strong> — the owner chose to run the dashboard without the Cloudflare Access lock for now. Actions that change data (CSV import, manual sync) stay <strong>disabled</strong> until the owner configures the Access lock; configuring it later re-secures this page automatically. This page is not linked from the public site and carries <code>noindex</code>.</p>
       <p style="margin:.4rem 0 0">Signed in as: <strong id="whoami" style="color:#fff">checking…</strong> · Last GA4 sync: <strong id="lastSync" style="color:#fff">—</strong></p>
     </div>
 
@@ -67,11 +67,11 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <div><b id="earnLast">—</b><span>Last import</span></div>
       </div>
       <form id="importForm" style="margin-top:1rem">
-        <label style="display:block;font-weight:700;color:#d6d6da;font-size:.92rem">Import a Portals CSV report (max 2 MB, owner only)
+        <label style="display:block;font-weight:700;color:#d6d6da;font-size:.92rem">Import a Portals CSV report (max 2 MB — enabled once the Access lock is configured)
           <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
         </label>
         <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
-        <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported data stays in the private D1 database and is only ever shown here, behind Access.</p>
+        <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported rows are stored in the D1 database. While the dashboard runs without the Access lock, importing stays disabled so nobody can alter the figures.</p>
       </form>
     </section>
 
@@ -88,7 +88,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     <section class="card" aria-label="Admin activity">
       <h2>Admin Activity Log</h2>
       <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
-      <p>Login sessions (via Cloudflare Access) and every dashboard action are recorded here from the private database. Cloudflare's own Access log lives in the Zero Trust dashboard (free-plan retention: 24 hours) — this D1 log is the durable record.</p>
+      <p>Once the Access lock is configured, login sessions and every dashboard action are recorded here from the D1 database (Cloudflare's own Access log, in the Zero Trust dashboard, keeps only 24 hours on the free plan — this D1 log is the durable record). In the current no-lock mode, no sessions are recorded.</p>
     </section>
 
     <p style="margin-top:1.4rem"><a href="/store/">← Back to the store</a></p>
@@ -99,7 +99,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       function el(id){ return document.getElementById(id); }
       function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
       function notConnected(){
-        el('whoami').textContent = 'Access not active on this hostname yet';
+        el('whoami').textContent = 'Database not connected yet';
         el('clicks7').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
         el('clicks30').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
         el('earnTotal').innerHTML = '<span class="unavail">NOT CONNECTED</span>';

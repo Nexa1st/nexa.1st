@@ -17,7 +17,7 @@
 //   amount   <- a header containing "commission", "earning" or "amount" (USD)
 // If the real Portals export differs, adjust HEADER_MATCH below after seeing
 // one genuine sample file — do NOT loosen row validation to make it fit.
-import { requireOwner, json, logActivity } from './_auth.js';
+import { requireOwnerForWrite, json, logActivity } from './_auth.js';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 const MAX_ROWS = 5000;
@@ -76,7 +76,7 @@ function normAmount(raw) {
 }
 
 export async function onRequestPost(context) {
-  const auth = await requireOwner(context);
+  const auth = await requireOwnerForWrite(context);
   if (auth.error) return auth.error;
   const { request, env } = context;
   if (!env.DB) return json({ connected: false, error: 'D1 database is not bound yet (owner step pending).' }, 503);

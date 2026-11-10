@@ -2,11 +2,11 @@
 // sync runs in the separate irfan-ga4-sync Worker on a Cron Trigger, which
 // imports the same runGa4Sync() logic; this endpoint is the manual backup
 // the approved plan required. There is NO public sync endpoint.
-import { requireOwner, json, logActivity } from './_auth.js';
+import { requireOwnerForWrite, json, logActivity } from './_auth.js';
 import { runGa4Sync } from './_ga4.js';
 
 export async function onRequestPost(context) {
-  const auth = await requireOwner(context);
+  const auth = await requireOwnerForWrite(context);
   if (auth.error) return auth.error;
   const { env } = context;
   try {
