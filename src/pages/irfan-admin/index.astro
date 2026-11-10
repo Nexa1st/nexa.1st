@@ -1,0 +1,158 @@
+---
+import store from '../../data/store.json';
+const vis = (store.products as any[]).filter(p => p.visible);
+const hidden = (store.products as any[]).filter(p => !p.visible);
+---
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IRFAN-GD Owner Dashboard — Staging</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Private owner dashboard for the IRFAN-GD AliExpress affiliate store. Owner only." />
+  <link rel="icon" type="image/webp" href="/store/avatar.webp" />
+  <style>
+    body{margin:0;background:#080808;color:#fff;font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+    .wrap{max-width:1000px;margin:0 auto;padding:1.2rem 1rem 3rem}
+    .warn{border:1px solid #D4AF37;background:rgba(212,175,55,.08);border-radius:16px;padding:1rem 1.1rem}
+    .warn strong{color:#FFD700}
+    .card{border:1px solid rgba(212,175,55,.25);background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border-radius:18px;padding:1.1rem 1.1rem;margin-top:1.1rem}
+    h1{font-size:1.5rem;margin:.4rem 0}
+    h2{font-size:1.08rem;margin:.1rem 0 .6rem;color:#FFD700;letter-spacing:.03em}
+    p, li{color:#A1A1AA;font-size:.93rem}
+    .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:.8rem;margin-top:.6rem}
+    .stat div{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:.8rem}
+    .stat b{display:block;font-size:1.25rem;color:#fff}
+    .unavail{color:#f0b429;font-weight:800;letter-spacing:.04em}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}
+    td, th{padding:.45rem .5rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;color:#d6d6da}
+    a{color:#FFD700}
+    code{background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.05rem .35rem;font-size:.85em}
+    button{background:linear-gradient(92deg,#D4AF37,#FFD700);color:#171106;border:0;border-radius:10px;padding:.55rem 1rem;font-weight:800;cursor:pointer;font:inherit;font-size:.9rem}
+    button[disabled]{opacity:.5;cursor:wait}
+    input[type=file]{color:#d6d6da;font:inherit;font-size:.9rem}
+    .ok{color:#7dd87d;font-weight:700}.err{color:#ff8a8a;font-weight:700}
+    .mono{font-variant-numeric:tabular-nums}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p style="display:flex;align-items:center;gap:10px"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" style="border-radius:50%;border:2px solid #D4AF37" /><strong style="letter-spacing:.05em">IRFAN-GD · OWNER DASHBOARD</strong></p>
+    <h1>Business Dashboard — Staging Build</h1>
+    <div class="warn" role="note">
+      <strong>🔒 OWNER ONLY — IRFAN-GD is an AliExpress affiliate showcase.</strong>
+      <p style="margin:.4rem 0 0">This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until Cloudflare Access + D1 are activated by the owner — no figure on this page is estimated or fabricated. <code>noindex</code> is hygiene only, <strong>not</strong> access control; real protection is Cloudflare Access in front of this page and its APIs.</p>
+      <p style="margin:.4rem 0 0">Signed in as: <strong id="whoami" style="color:#fff">checking…</strong> · Last GA4 sync: <strong id="lastSync" style="color:#fff">—</strong></p>
+    </div>
+
+    <section class="card" aria-label="Affiliate clicks">
+      <h2>Affiliate Clicks (GA4 → D1)</h2>
+      <div class="stat">
+        <div><b class="mono" id="clicks7">—</b><span>Affiliate clicks, last 7 days</span></div>
+        <div><b class="mono" id="clicks30">—</b><span>Affiliate clicks, last 30 days</span></div>
+        <div><b>{vis.length}</b><span>Products live on the storefront</span></div>
+        <div><b>{hidden.length}</b><span>Products hidden (records kept)</span></div>
+      </div>
+      <p style="margin-top:.8rem"><button type="button" id="syncBtn">Sync GA4 now</button> <span id="syncMsg" role="status"></span></p>
+      <h2 style="margin-top:1.2rem">Top-Performing Products (by real clicks)</h2>
+      <table id="topTable"><tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2"><span class="unavail">NOT CONNECTED</span> — figures appear after the first GA4 sync.</td></tr></table>
+    </section>
+
+    <section class="card" aria-label="Earnings imports">
+      <h2>Earnings — Imported from AliExpress Portals Reports</h2>
+      <div class="stat">
+        <div><b class="mono" id="earnTotal">—</b><span>Total imported commission (USD, from your reports only)</span></div>
+        <div><b class="mono" id="earnRows">—</b><span>Imported report rows</span></div>
+        <div><b id="earnLast">—</b><span>Last import</span></div>
+      </div>
+      <form id="importForm" style="margin-top:1rem">
+        <label style="display:block;font-weight:700;color:#d6d6da;font-size:.92rem">Import a Portals CSV report (max 2 MB, owner only)
+          <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
+        </label>
+        <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
+        <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported data stays in the private D1 database and is only ever shown here, behind Access.</p>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Product catalogue">
+      <h2>Product Catalogue (current storefront data)</h2>
+      <table>
+        <tr><th>Product</th><th>Price (USD)</th><th>Rating</th><th>Sold</th><th>Status</th></tr>
+        {(store.products as any[]).map(p => (
+          <tr><td>{p.name}</td><td>${p.price.toFixed(2)}</td><td>★ {p.rating}</td><td>{p.sold || '—'}</td><td>{p.visible ? 'Live' : 'Hidden'}</td></tr>
+        ))}
+      </table>
+    </section>
+
+    <section class="card" aria-label="Admin activity">
+      <h2>Admin Activity Log</h2>
+      <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
+      <p>Login sessions (via Cloudflare Access) and every dashboard action are recorded here from the private database. Cloudflare's own Access log lives in the Zero Trust dashboard (free-plan retention: 24 hours) — this D1 log is the durable record.</p>
+    </section>
+
+    <p style="margin-top:1.4rem"><a href="/store/">← Back to the store</a></p>
+  </div>
+
+  <script is:inline>
+    (function(){
+      function el(id){ return document.getElementById(id); }
+      function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+      function notConnected(){
+        el('whoami').textContent = 'Access not active on this hostname yet';
+        el('clicks7').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+        el('clicks30').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+        el('earnTotal').innerHTML = '<span class="unavail">NOT CONNECTED</span>';
+      }
+      fetch('/api/admin/overview', { headers: { 'Accept': 'application/json' } }).then(function(r){
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      }).then(function(d){
+        if (!d || !d.connected) { notConnected(); return; }
+        el('whoami').textContent = d.email || 'owner';
+        el('lastSync').textContent = d.lastSync || 'never';
+        el('clicks7').textContent = d.clicks7d;
+        el('clicks30').textContent = d.clicks30d;
+        if (d.topProducts && d.topProducts.length) {
+          el('topTable').innerHTML = '<tr><th>Product</th><th>Clicks (30d)</th></tr>' + d.topProducts.map(function(t){ return '<tr><td>' + esc(t.product) + '</td><td class="mono">' + esc(t.clicks) + '</td></tr>'; }).join('');
+        } else {
+          el('topTable').innerHTML = '<tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2">No clicks recorded yet.</td></tr>';
+        }
+        if (d.earnings) {
+          el('earnTotal').textContent = '$' + (+d.earnings.total).toFixed(2);
+          el('earnRows').textContent = d.earnings.rows;
+          el('earnLast').textContent = d.earnings.lastImport || 'never';
+        }
+        if (d.log && d.log.length) {
+          el('logTable').innerHTML = '<tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr>' + d.log.map(function(l){ return '<tr><td class="mono">' + esc(l.ts) + '</td><td>' + esc(l.actor) + '</td><td>' + esc(l.action) + '</td><td>' + esc(l.detail) + '</td><td>' + esc(l.result) + '</td></tr>'; }).join('');
+        } else {
+          el('logTable').innerHTML = '<tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5">No activity recorded yet.</td></tr>';
+        }
+      }).catch(function(){ notConnected(); });
+
+      el('syncBtn').addEventListener('click', function(){
+        var btn = el('syncBtn'), msg = el('syncMsg');
+        btn.disabled = true; msg.textContent = 'Syncing…'; msg.className = '';
+        fetch('/api/admin/sync', { method: 'POST', headers: { 'Accept': 'application/json' } }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); }).then(function(res){
+          if (res.ok && res.j && res.j.ok) { msg.textContent = '✓ Synced at ' + (res.j.syncedAt || ''); msg.className = 'ok'; setTimeout(function(){ location.reload(); }, 900); }
+          else { msg.textContent = '✗ ' + ((res.j && res.j.error) || 'Sync unavailable until backend is connected.'); msg.className = 'err'; }
+        }).catch(function(){ msg.textContent = '✗ Sync unavailable until backend is connected.'; msg.className = 'err'; }).finally(function(){ btn.disabled = false; });
+      });
+
+      el('importForm').addEventListener('submit', function(ev){
+        ev.preventDefault();
+        var btn = el('importBtn'), msg = el('importMsg'), f = el('csvFile').files[0];
+        if (!f) return;
+        if (f.size > 2 * 1024 * 1024) { msg.textContent = '✗ File is larger than 2 MB.'; msg.className = 'err'; return; }
+        if (!/\.csv$/i.test(f.name)) { msg.textContent = '✗ Only .csv files are accepted.'; msg.className = 'err'; return; }
+        btn.disabled = true; msg.textContent = 'Validating & importing…'; msg.className = '';
+        var fd = new FormData(); fd.append('file', f);
+        fetch('/api/admin/import', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); }).then(function(res){
+          if (res.ok && res.j && res.j.ok) { msg.textContent = '✓ Imported ' + res.j.imported + ' rows (' + res.j.skippedDuplicates + ' duplicates skipped).'; msg.className = 'ok'; setTimeout(function(){ location.reload(); }, 1200); }
+          else { msg.textContent = '✗ ' + ((res.j && res.j.error) || 'Import unavailable until backend is connected.'); msg.className = 'err'; }
+        }).catch(function(){ msg.textContent = '✗ Import unavailable until backend is connected.'; msg.className = 'err'; }).finally(function(){ btn.disabled = false; });
+      });
+    })();
+  </script>
+</body>
+</html>
