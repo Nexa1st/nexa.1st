@@ -1,0 +1,4 @@
+# NEXA redirects
+# No redirect rules are defined. This static site has no legacy URLs to redirect pre-deploy.
+# Add one rule per line ONLY for real moved pages after deploy, e.g.:
+# /old-path/  /new-path/  301

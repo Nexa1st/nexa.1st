@@ -1,0 +1,42 @@
+NEXA — npm audit attempt, 2026-11-10 (pre-deployment check)
+============================================================
+
+STATUS: COULD NOT RUN in this build environment — registry policy block.
+This is an environment limitation, NOT a result of "0 vulnerabilities".
+
+Commands attempted (all from ~/workspace/nexa-ultra-hybrid):
+  1. npm audit --json            -> saved to audit-npm-before.json / audit-npm.json
+  2. npm audit                   -> audit-npm-before.txt
+  3. npm audit --registry=https://registry.npmjs.org --json
+  4. npm audit fix --dry-run
+
+Every attempt returned:
+  npm warn audit 403 Forbidden - POST https://registry.npmjs.org/-/npm/v1/security/audits/quick - policy_denied
+  detail: 'POST /-/npm/v1/security/audits/quick not permitted by policy'
+  policy: 'zz_managed_internal_spaces_package_registries'
+
+The sandbox egress proxy refuses POSTs to the npm audit endpoint, so neither
+`npm audit` nor `npm audit fix` can execute here. No workaround was attempted
+(bypassing the egress policy is not acceptable), and NO vulnerability counts
+(critical/high/moderate/low) are claimed anywhere in this project's reports.
+
+Substitute checks actually performed:
+  - `npm outdated`: every installed package is at Current == Wanted, i.e. the
+    LATEST version allowed by its semver range in package.json. The only newer
+    releases are next MAJOR versions (astro 7.x, @astrojs/mdx 8.x,
+    @astrojs/react 7.x, framer-motion 14.x, typescript 7.x), which were NOT
+    taken (task rule: no breaking major upgrades).
+  - All dependencies were freshly installed from the registry on 2026-11-10
+    for this build (535 packages in package-lock.json), so no stale pinned
+    versions are being carried.
+  - Therefore `npm update` / `npm audit fix` would have nothing within-range
+    to change even if the endpoint were reachable.
+
+Required follow-up (owner, at/after repo creation — see roadmap):
+  - Run `npm audit` on a normal network (local machine) OR enable GitHub
+    Dependabot alerts on the Nexa1st/nexa.1st repo after push, and fix any
+    critical/high findings before or immediately after deployment.
+  - Risk context for a STATIC site: production output is static HTML/CSS/JS;
+    dev/build-only dependencies are never shipped in dist, which limits the
+    blast radius of most toolchain advisories. This is context, not a
+    substitute for a real audit.

@@ -1,0 +1,182 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import ThemeSwitcher from '../components/ThemeSwitcher';
+import CommandPalette from '../components/CommandPalette';
+import CookieConsent from '../components/CookieConsent';
+import Footer from '../components/Footer.astro';
+
+interface Props { title?: string; description?: string; type?: string; image?: string; jsonLd?: object[]; noFooter?: boolean; canonical?: string }
+const { title = 'NEXA — AI, Tech, Gaming & Online Earning', description = 'NEXA is a Liquid Glass magazine for AI tools, technology, gaming and honest online-earning guides.', type = 'website', jsonLd = [], noFooter = false, canonical: canonicalOverride } = Astro.props as Props;
+const canonical = canonicalOverride ?? new URL(Astro.url.pathname, Astro.site).toString();
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
+const gscCode = import.meta.env.PUBLIC_GSC_VERIFICATION as string | undefined;
+const ogImage = new URL((Astro.props as Props).image ?? '/og-image.png', Astro.site).toString();
+const websiteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'NEXA', url: String(Astro.site), inLanguage: 'en-US' };
+---
+<!doctype html>
+<html lang="en-US" data-theme="midnight">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="en-US" href={canonical} />
+  <link rel="alternate" hreflang="x-default" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate" type="application/rss+xml" title="NEXA RSS" href="/rss.xml" />
+  <meta property="og:type" content={type} /><meta property="og:title" content={title} />
+  <meta property="og:description" content={description} /><meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="NEXA" /><meta property="og:locale" content="en_US" />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  {gscCode && <meta name="google-site-verification" content={gscCode} />}
+  {gaId && (
+    <Fragment>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag; gtag('js', new Date()); gtag('config', gaId);
+        document.addEventListener('astro:page-load', () => { if (window.gtag) window.gtag('event', 'page_view', { page_path: location.pathname, page_title: document.title }); });
+      </script>
+    </Fragment>
+  )}
+  <script is:inline>
+    try{var t=localStorage.getItem('nexa-theme');if(t)document.documentElement.dataset.theme=t;
+    var lite=localStorage.getItem('nexa-lite')==='1'||(navigator.connection&&navigator.connection.saveData)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2);
+    if(lite)document.documentElement.classList.add('lite');
+    if(localStorage.getItem('nexa-cursor')==='1'&&matchMedia('(pointer:fine)').matches)document.documentElement.classList.add('cursor-on');}catch(e){}
+  </script>
+  <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+  {jsonLd.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+  <ClientRouter />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <div id="loader" aria-hidden="true"><div style="text-align:center"><div class="loader-ring" style="margin:0 auto 14px"></div><p class="font-display" style="font-weight:900;font-size:1.4rem">NEXA</p></div></div>
+  <div class="aurora" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div id="cursorDot" aria-hidden="true"></div>
+
+  <header style="position:sticky;top:10px;z-index:120" class="hide-in-reading">
+    <div class="glass mx-auto" style="max-width:1200px;margin:0 1rem;padding:.55rem .8rem;display:flex;align-items:center;gap:.6rem;width:calc(100% - 2rem);margin-inline:auto">
+      <a href="/" class="font-display" style="font-weight:900;font-size:1.35rem" aria-label="NEXA home">NEXA<span class="text-accent">.</span></a>
+      <nav aria-label="Primary" class="hidden lg:flex" style="gap:1.1rem;margin-left:1rem;font-weight:600;font-size:.95rem">
+        <a href="/blog/">Blog</a><a href="/tools/">Tools</a><a href="/products/">Products</a><a href="/about/">About</a><a href="/contact/">Contact</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;gap:.5rem;align-items:center">
+        <button id="searchBtn" class="glass-soft magnetic" style="min-height:44px;padding:.5rem .9rem;font-weight:650" aria-label="Open search (Control K)">⌕ <span class="hidden sm:inline">Search</span> <kbd class="hidden md:inline text-faint" style="font-size:.7rem">Ctrl K</kbd></button>
+        <ThemeSwitcher client:load />
+        <button id="menuBtn" class="glass-soft lg:hidden" style="min-height:44px;min-width:44px" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="glass mx-auto" hidden style="max-width:1200px;width:calc(100% - 2rem);margin:8px auto 0;padding:14px" role="dialog" aria-label="Menu">
+      <nav aria-label="Mobile" style="display:grid;gap:4px;font-weight:650">
+        <a href="/blog/" style="padding:.7rem .5rem">📚 Blog</a><a href="/tools/" style="padding:.7rem .5rem">🧰 AI Tools</a>
+        <a href="/products/" style="padding:.7rem .5rem">🛠 Products</a><a href="/about/" style="padding:.7rem .5rem">ℹ️ About</a>
+        <a href="/contact/" style="padding:.7rem .5rem">✉️ Contact</a>
+        <button id="shortcutsBtn2" class="btn-ghost glass-soft" style="min-height:44px">⌨️ Keyboard shortcuts (?)</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"><slot /></main>
+  {!noFooter && <Footer />}
+
+  <!-- Desktop floating dock -->
+  <nav id="dock" aria-label="Dock" class="hidden md:flex glass" style="position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:130;gap:.35rem;padding:.5rem;border-radius:999px;background:var(--dock)">
+    {[['/','🏠','Home'],['/blog/','📚','Blog'],['/tools/','🧰','Tools'],['/products/','🛠','Products'],['/about/','ℹ️','About']].map(([h,e,l]) => (
+      <a href={h} aria-label={l} class="magnetic" style="display:flex;flex-direction:column;align-items:center;gap:1px;min-width:58px;padding:.45rem .6rem;border-radius:16px;font-size:.68rem;font-weight:650"><span aria-hidden style="font-size:1.25rem">{e}</span>{l}</a>
+    ))}
+    <button id="dockSearch" aria-label="Search" class="magnetic" style="display:flex;flex-direction:column;align-items:center;min-width:58px;padding:.45rem .6rem;border-radius:16px;font-size:.68rem;font-weight:650"><span aria-hidden style="font-size:1.25rem">⌕</span>Search</button>
+  </nav>
+  <!-- Mobile glass bottom dock (distinct compact layout, >=44px targets) -->
+  <nav id="mobileDock" aria-label="Mobile dock" class="md:hidden glass" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:130;display:flex;justify-content:space-around;padding:.4rem;border-radius:22px;background:var(--dock)">
+    {[['/','🏠','Home'],['/blog/','📚','Blog'],['/tools/','🧰','Tools'],['/products/','🛠','Shop']].map(([h,e,l]) => (
+      <a href={h} aria-label={l} style="display:flex;flex-direction:column;align-items:center;min-width:56px;min-height:48px;justify-content:center;font-size:.66rem;font-weight:650"><span aria-hidden style="font-size:1.2rem">{e}</span>{l}</a>
+    ))}
+    <button id="mobileSearch" aria-label="Search" style="display:flex;flex-direction:column;align-items:center;min-width:56px;min-height:48px;justify-content:center;font-size:.66rem;font-weight:650"><span aria-hidden style="font-size:1.2rem">⌕</span>Search</button>
+  </nav>
+
+  <button id="toTop" aria-label="Back to top" class="glass magnetic" style="position:fixed;right:16px;bottom:96px;z-index:125;width:48px;height:48px;border-radius:50%;opacity:0;pointer-events:none;transition:opacity .3s">↑</button>
+
+  <dialog id="helpDialog" aria-label="Keyboard shortcuts" class="glass" style="max-width:420px;width:calc(100% - 2rem);padding:1.4rem;color:var(--ink)">
+    <h2 style="font-weight:800;font-size:1.2rem">Keyboard shortcuts</h2>
+    <ul style="display:grid;gap:.5rem;margin-top:.8rem;font-size:.95rem">
+      <li><kbd>Ctrl/⌘ + K</kbd> — Command palette / search</li>
+      <li><kbd>K</kbd> — Open search</li><li><kbd>T</kbd> — Cycle theme</li>
+      <li><kbd>↑</kbd> (at top, or press Home) — Back to top button appears on scroll</li>
+      <li><kbd>?</kbd> — This help</li><li><kbd>Esc</kbd> — Close menus, search and dialogs</li>
+    </ul>
+    <button id="helpClose" class="btn" style="margin-top:1rem">Close</button>
+  </dialog>
+
+  <CommandPalette client:load />
+  <CookieConsent client:load />
+
+  <script is:inline>
+    // Loader
+    addEventListener('load',()=>setTimeout(()=>document.getElementById('loader')?.classList.add('done'),250));
+    setTimeout(()=>document.getElementById('loader')?.classList.add('done'),2200);
+    const openPalette=()=>dispatchEvent(new CustomEvent('nexa:palette'));
+    document.getElementById('searchBtn')?.addEventListener('click',openPalette);
+    document.getElementById('dockSearch')?.addEventListener('click',openPalette);
+    document.getElementById('mobileSearch')?.addEventListener('click',openPalette);
+    // Mobile menu (Esc closes)
+    const mm=document.getElementById('mobileMenu'),mb=document.getElementById('menuBtn');
+    mb?.addEventListener('click',()=>{const h=mm.hidden;mm.hidden=!h;mb.setAttribute('aria-expanded',String(h));});
+    // Help dialog
+    const hd=document.getElementById('helpDialog');
+    const openHelp=()=>{if(hd&&!hd.open)hd.showModal();};
+    document.getElementById('shortcutsBtn2')?.addEventListener('click',openHelp);
+    document.getElementById('helpClose')?.addEventListener('click',()=>hd?.close());
+    // Back to top
+    const tt=document.getElementById('toTop');
+    addEventListener('scroll',()=>{const s=scrollY>600;tt.style.opacity=s?'1':'0';tt.style.pointerEvents=s?'auto':'none';},{passive:true});
+    tt?.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+    // Shortcuts: K search, T theme cycle, ? help — never while typing
+    const THEMES=['midnight','silver','arctic','nebula','light'];
+    addEventListener('keydown',e=>{
+      const tag=(e.target&&e.target.tagName)||''; const typing=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||e.target.isContentEditable;
+      if(e.key==='Escape'){if(mm)mm.hidden=true;}
+      if(typing||e.metaKey||e.ctrlKey||e.altKey)return;
+      if(e.key==='k'||e.key==='K'){e.preventDefault();openPalette();}
+      else if(e.key==='?'){openHelp();}
+      else if(e.key==='t'||e.key==='T'){const cur=document.documentElement.dataset.theme||'midnight';const nx=THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];document.documentElement.dataset.theme=nx;try{localStorage.setItem('nexa-theme',nx)}catch(_){}dispatchEvent(new CustomEvent('nexa-theme',{detail:nx}));}
+    });
+    // Reveal on scroll (paused off-screen by IO)
+    const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.08});
+    document.querySelectorAll('[data-reveal]').forEach(el=>io.observe(el));
+    // 3D tilt + magnetic (fine pointers only)
+    if(matchMedia('(pointer:fine)').matches&&!document.documentElement.classList.contains('lite')){
+      document.querySelectorAll('.tilt').forEach(el=>{
+        el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-2px)`;});
+        el.addEventListener('mouseleave',()=>{el.style.transform='';});
+      });
+      document.querySelectorAll('.magnetic').forEach(el=>{
+        el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.12}px)`;});
+        el.addEventListener('mouseleave',()=>{el.style.transform='';});
+      });
+      const dot=document.getElementById('cursorDot');
+      addEventListener('mousemove',e=>{if(dot){dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';}});
+    }
+    // Particles: low count, pause off-screen / hidden tab, off in lite + reduced motion
+    (function(){
+      if(document.documentElement.classList.contains('lite'))return;
+      if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      const c=document.getElementById('particles');if(!c)return;const ctx=c.getContext('2d');if(!ctx)return;
+      let W,H,run=true;const N=Math.min(42,Math.floor(innerWidth/34));
+      const ps=Array.from({length:N},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.4,s:Math.random()*.00045+.00012,o:Math.random()*.5+.15}));
+      const size=()=>{W=c.width=innerWidth;H=c.height=innerHeight;};size();addEventListener('resize',size);
+      document.addEventListener('visibilitychange',()=>{run=!document.hidden;if(run)loop();});
+      function loop(){if(!run)return;ctx.clearRect(0,0,W,H);const col=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#6ea8ff';ctx.fillStyle=col;
+        for(const p of ps){p.y-=p.s;if(p.y<-.02){p.y=1.02;p.x=Math.random();}ctx.globalAlpha=p.o;ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,7);ctx.fill();}
+        ctx.globalAlpha=1;requestAnimationFrame(loop);}
+      loop();
+    })();
+  </script>
+</body>
+</html>

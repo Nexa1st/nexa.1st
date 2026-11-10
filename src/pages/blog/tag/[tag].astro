@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getPublishedPosts, slugify } from '../../../lib/content';
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const tags = [...new Set(posts.flatMap(p => p.data.tags))];
+  return tags.map(t => ({ params: { tag: slugify(t) }, props: { name: t, posts: posts.filter(p => p.data.tags.includes(t)) } }));
+}
+const { name, posts } = Astro.props as any;
+---
+<BaseLayout title={`#${name} — NEXA Blog`} description={`Articles tagged ${name} on NEXA.`}>
+  <div class="mx-auto" style="max-width:1200px;padding:2.5rem 1rem 0">
+    <nav aria-label="Breadcrumb" class="text-faint" style="font-size:.85rem"><a href="/">Home</a> / <a href="/blog/">Blog</a> / #{name}</nav>
+    <h1 class="font-display" style="font-size:2.4rem;font-weight:900;margin-top:.6rem">#{name}</h1>
+    <p class="text-dim" style="margin:.4rem 0 1.2rem">{posts.length} article{posts.length === 1 ? '' : 's'}</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem">{posts.map((p: any) => <ArticleCard post={p} />)}</div>
+  </div>
+</BaseLayout>

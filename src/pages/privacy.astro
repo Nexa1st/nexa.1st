@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Privacy Policy — NEXA" description="NEXA privacy policy: what this static site stores on your device, advertising and cookies status, analytics status, and your choices.">
+  <div class="mx-auto prose-nexa" style="max-width:820px;padding:2.5rem 1rem 0">
+    <h1 class="font-display" style="font-size:2.4rem;font-weight:900;color:var(--ink)">Privacy Policy</h1>
+    <p><em>Last updated: November 10, 2026. Plain language, honest current state. This policy describes this website only.</em></p>
+
+    <h2>What this site is</h2>
+    <p>NEXA is a static website. It has no user accounts, no comment system, no database of visitors, and — in its current state — no contact or newsletter backend that receives your data.</p>
+
+    <h2>Stored on your device (localStorage)</h2>
+    <ul>
+      <li><strong>Theme &amp; display preferences</strong> — your chosen colour theme, Lite-effects setting and cursor preference, so the site looks the way you left it.</li>
+      <li><strong>Recent searches</strong> — the last few search phrases you typed, shown back to you as suggestions. They never leave your browser.</li>
+      <li><strong>Cookie-consent choice</strong> — whether you accepted or declined, so we do not ask on every page.</li>
+    </ul>
+    <p>You can erase all of these at any time by clearing site data in your browser settings.</p>
+
+    <h2>Advertising &amp; Cookies</h2>
+    <p><strong>Current honest state: advertising is NOT active on this site.</strong> No ad network (including Google AdSense or Adsterra) is loaded, no advertising cookies are set by this site today, and no ad code exists in the deployed configuration — the ad system is present in code only, switched off, with empty code fields.</p>
+    <p>If advertising is enabled in the future by the site owner:</p>
+    <ul>
+      <li>Third-party ad partners (such as Google or Adsterra) may use cookies and similar technologies to serve and measure ads, including personalised ads where permitted.</li>
+      <li>Ad scripts would load <strong>only after</strong> you accept via the cookie-consent banner. Declining keeps the full site readable with no ad scripts.</li>
+      <li>Ads would be labelled "Advertisement" and placed away from navigation and buttons to avoid accidental clicks.</li>
+      <li>You can opt out of personalised advertising via your browser's cookie controls, the ad partner's own opt-out pages (for example Google's Ad Settings), or industry pages such as youradchoices / aboutads for participating companies.</li>
+      <li>This section will be updated with the specific partners before any activation.</li>
+    </ul>
+
+    <h2>Analytics</h2>
+    <p>Analytics is <strong>not active</strong> in the current build. The site is prepared for Google Analytics 4 via an environment variable that is currently empty — no analytics script is served. If the owner later adds this site's own GA4 property, this policy will be updated. (Any analytics on other NEXA pages, such as the separate NEXA Link page, are covered by those pages, not this policy.)</p>
+
+    <h2>External links</h2>
+    <p>Articles link to official third-party sites (tools, platforms, stores). Their privacy practices are their own — check their policies.</p>
+
+    <h2>Children</h2>
+    <p>This site is general-audience editorial content and does not knowingly collect information from children.</p>
+
+    <h2>Changes &amp; contact</h2>
+    <p>If this policy changes, the date above changes with it, and material changes (like activating ads or analytics) will be reflected here before or at activation. Questions: use the <a href="/contact/">Contact page</a>.</p>
+  </div>
+</BaseLayout>

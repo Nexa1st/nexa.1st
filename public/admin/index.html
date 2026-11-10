@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>NEXA Admin — Decap CMS (activates after repo + OAuth setup)</title>
+  <style>body{font-family:system-ui,sans-serif;background:#0b0e1a;color:#eef1ff;margin:0;padding:2rem;line-height:1.7}.box{max-width:720px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:1.6rem}a{color:#8ab4ff}</style>
+</head>
+<body>
+  <div class="box">
+    <h1>NEXA Admin (Decap CMS)</h1>
+    <p><strong>Honest status: this admin is NOT live yet.</strong> Decap CMS edits files in the GitHub repository
+    <code>Nexa1st/nexa.1st</code> (branch <code>main</code>). It activates only after:</p>
+    <ol>
+      <li>The owner manually creates the GitHub repo <code>Nexa1st/nexa.1st</code> and pushes this project.</li>
+      <li>An authentication route is connected: Netlify Identity + Git Gateway, <em>or</em> a GitHub OAuth app / Decap proxy (see CMS-GUIDE.md).</li>
+    </ol>
+    <p>Until then, this page is a noindexed placeholder and no login is possible — repository permissions on GitHub are the real auth gate. Full instructions: <code>CMS-GUIDE.md</code> in the project root.</p>
+  </div>
+  <!-- Decap CMS app: uncomment the script below ONLY after the repo + auth above exist.
+       Loading it before auth is configured would show a broken login, so it stays off.
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  -->
+</body>
+</html>

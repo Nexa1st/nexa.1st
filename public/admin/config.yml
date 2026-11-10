@@ -1,0 +1,152 @@
+# Decap CMS config for NEXA — Git-based CMS (no database, no fake admin).
+# Backend: the GitHub repository the OWNER creates manually: Nexa1st/nexa.1st
+# ACTIVATION: this config works only after (a) that repo exists with this
+# project pushed to branch `main`, AND (b) an auth route is connected —
+# Netlify Identity + Git Gateway, or a GitHub OAuth app for Decap.
+# Until then /admin shows an honest placeholder. Repo permissions = auth gate.
+
+backend:
+  name: github
+  repo: Nexa1st/nexa.1st
+  branch: main
+  # For Netlify Identity + Git Gateway instead, replace the block above with:
+  #   name: git-gateway
+  #   branch: main
+
+publish_mode: editorial_workflow # drafts -> in review -> ready (creates PRs)
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+site_url: https://nexa1st.pages.dev
+display_url: https://nexa1st.pages.dev
+logo_url: /favicon.svg
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "articles"
+    label: "Articles"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "SEO Title (optional)", name: "seoTitle", widget: "string", required: false }
+      - { label: "SEO Description (optional)", name: "seoDescription", widget: "text", required: false }
+      - { label: "Focus Keyword (admin metadata only)", name: "focusKeyword", widget: "string", required: false }
+      - { label: "Secondary Keywords", name: "secondaryKeywords", widget: "list", default: [] }
+      - { label: "Long-Tail Keywords", name: "longTailKeywords", widget: "list", default: [] }
+      - label: "Search Intent"
+        name: "searchIntent"
+        widget: "select"
+        options: ["informational", "navigational", "commercial", "transactional"]
+        default: "informational"
+      - { label: "Target Country", name: "targetCountry", widget: "string", default: "US" }
+      - label: "Topic Cluster"
+        name: "cluster"
+        widget: "select"
+        required: false
+        options: ["Artificial Intelligence", "AI Tools & Tutorials", "Technology", "Gaming", "Digital Marketing", "Online Business", "Product Reviews"]
+      - { label: "Pillar Guide", name: "pillar", widget: "boolean", default: false }
+      - label: "FAQs (renders FAQ section + FAQ schema)"
+        name: "faqs"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Question", name: "q", widget: "string" }
+          - { label: "Answer", name: "a", widget: "text" }
+      - { label: "Canonical URL Override (optional)", name: "canonicalUrl", widget: "string", required: false }
+      - { label: "Social / OG Image (optional)", name: "ogImage", widget: "image", required: false }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime", hint: "A FUTURE date schedules the post: the build hides it until that date passes." }
+      - { label: "Updated Date (optional)", name: "updatedDate", widget: "datetime", required: false }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options: ["AI & Machine Learning", "Technology", "Gaming", "Online Business", "Digital Marketing", "Creator Guides"]
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - label: "Author"
+        name: "author"
+        widget: "select"
+        options:
+          - { label: "Irfan Ullah", value: "irfan-ullah" }
+          - { label: "NEXA Editorial Team", value: "nexa-editorial" }
+        default: "irfan-ullah"
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Trending", name: "trending", widget: "boolean", default: false }
+      - { label: "Popularity (editorial score 0-100, NOT analytics)", name: "popularity", widget: "number", default: 0, min: 0, max: 100 }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, hint: "Drafts never appear in the build." }
+      - { label: "Gradient (CSS, featured visual fallback)", name: "gradient", widget: "string", default: "linear-gradient(135deg,#3b82f6,#8b5cf6)" }
+      - { label: "Emoji (featured visual fallback)", name: "emoji", widget: "string", default: "✦" }
+      - { label: "Featured Image (optional upload)", name: "image", widget: "image", required: false }
+      - { label: "Image Alt Text (REQUIRED whenever an image is set — describe the image)", name: "imageAlt", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "tools"
+    label: "AI Tools (data file)"
+    files:
+      - label: "Tools Directory"
+        name: "tools"
+        file: "src/data/tools.json"
+        fields:
+          - label: "Tools"
+            name: "tools"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Slug", name: "slug", widget: "string" }
+              - { label: "By", name: "by", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Best For", name: "bestFor", widget: "string" }
+              - label: "Pricing Label (never invent pricing)"
+                name: "pricingLabel"
+                widget: "select"
+                options: ["Check official site", "Free / Open Source"]
+                default: "Check official site"
+              - { label: "Official URL", name: "url", widget: "string" }
+              - { label: "Gradient", name: "gradient", widget: "string" }
+              - { label: "Emoji", name: "emoji", widget: "string" }
+
+  - name: "products"
+    label: "Products & Reviews"
+    folder: "src/content/products"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "SEO Title (optional)", name: "seoTitle", widget: "string", required: false }
+      - { label: "SEO Description (optional)", name: "seoDescription", widget: "text", required: false }
+      - { label: "Focus Keyword (admin metadata only)", name: "focusKeyword", widget: "string", required: false }
+      - { label: "Secondary Keywords", name: "secondaryKeywords", widget: "list", default: [] }
+      - { label: "Long-Tail Keywords", name: "longTailKeywords", widget: "list", default: [] }
+      - { label: "Canonical URL Override (optional)", name: "canonicalUrl", widget: "string", required: false }
+      - { label: "Social / OG Image (optional)", name: "ogImage", widget: "image", required: false }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Price (ONLY if verified — leave empty for 'Check price')", name: "price", widget: "string", required: false }
+      - { label: "Affiliate URL (manually entered only)", name: "affiliateUrl", widget: "string", required: false }
+      - { label: "Official URL", name: "officialUrl", widget: "string" }
+      - { label: "Pros", name: "pros", widget: "list", default: [] }
+      - { label: "Cons", name: "cons", widget: "list", default: [] }
+      - label: "Specs"
+        name: "specs"
+        widget: "list"
+        fields:
+          - { label: "Key", name: "k", widget: "string" }
+          - { label: "Value", name: "v", widget: "string" }
+      - { label: "Editorial Rating 0-5 (labelled editorial on site)", name: "editorialRating", widget: "number", required: false, min: 0, max: 5, step: 0.1 }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Gradient", name: "gradient", widget: "string", default: "linear-gradient(135deg,#f59e0b,#ef4444)" }
+      - { label: "Emoji", name: "emoji", widget: "string", default: "🛠" }
+      - { label: "Image (optional upload)", name: "image", widget: "image", required: false }
+      - { label: "Image Alt Text (REQUIRED whenever an image is set — describe the image)", name: "imageAlt", widget: "string", required: false }
+      - { label: "Body (review)", name: "body", widget: "markdown" }

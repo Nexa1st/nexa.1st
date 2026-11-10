@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InArticleAd from '../../components/InArticleAd.astro';
+import { getPublishedProducts, fmtDate, entrySlug } from '../../lib/content';
+export async function getStaticPaths() {
+  const products = await getPublishedProducts();
+  return products.map(pr => ({ params: { slug: entrySlug(pr) }, props: { product: pr } }));
+}
+const { product } = Astro.props as any;
+const { Content } = await product.render();
+const d = product.data;
+const buyUrl = d.affiliateUrl ?? d.officialUrl;
+const isAffiliate = Boolean(d.affiliateUrl);
+const productLd = { '@context': 'https://schema.org', '@type': 'Product', name: d.title, description: d.description, category: d.category };
+---
+<BaseLayout title={d.seoTitle ?? `${d.title} — NEXA`} description={d.seoDescription ?? d.description} type="article" jsonLd={[productLd]}>
+  <div class="mx-auto" style="max-width:900px;padding:2.5rem 1rem 0">
+    <nav aria-label="Breadcrumb" class="text-faint" style="font-size:.85rem"><a href="/">Home</a> / <a href="/products/">Products</a> / {d.title}</nav>
+    <div class="glass" style="padding:16px;margin:1rem 0" role="note"><strong>FTC Disclosure:</strong> This page may contain affiliate links entered manually by our editors. If you purchase through one, NEXA may earn a commission at no extra cost to you. {isAffiliate ? 'The main button on this page is an affiliate link.' : 'The button on this page links to the official site (no affiliate link is set for this product).'} See the full <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.</div>
+    <div aria-hidden="true" style={`height:200px;border-radius:22px;background:${d.gradient};display:grid;place-items:center;font-size:4rem`}>{d.emoji}</div>
+    <h1 class="font-display" style="font-size:clamp(1.8rem,4.5vw,2.7rem);font-weight:900;margin-top:1.2rem;line-height:1.15">{d.title}</h1>
+    <p class="text-dim" style="font-size:1.05rem;margin-top:.6rem">{d.description}</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:1rem 0">
+      <span class="chip">{d.category}</span><span class="chip">📅 {fmtDate(d.pubDate)}</span>
+      {d.editorialRating && <span class="chip">Editorial rating: {d.editorialRating}/5 (our editors' opinion, not a user rating)</span>}
+    </div>
+    <div class="glass" style="padding:20px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <p><span class="text-faint" style="font-size:.8rem;display:block">PRICE</span><strong style="font-size:1.25rem">{d.price ?? 'Check price on the official site'}</strong></p>
+      <a class="btn magnetic" href={buyUrl} target="_blank" rel={isAffiliate ? 'sponsored nofollow noopener' : 'noopener noreferrer'}>{d.price ? 'View deal' : 'Check price'} ↗</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1rem;margin-top:1rem">
+      <div class="glass" style="padding:18px"><h2 style="font-weight:800">✅ Pros</h2><ul style="margin-top:.6rem;display:grid;gap:.4rem" class="text-dim">{d.pros.map((p: string) => <li>• {p}</li>)}</ul></div>
+      <div class="glass" style="padding:18px"><h2 style="font-weight:800">⚠️ Cons</h2><ul style="margin-top:.6rem;display:grid;gap:.4rem" class="text-dim">{d.cons.map((c: string) => <li>• {c}</li>)}</ul></div>
+    </div>
+    {d.specs.length > 0 && (
+      <section aria-label="Specifications" class="glass" style="padding:6px;margin-top:1rem;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.95rem"><tbody>
+          {d.specs.map((s: any) => <tr style="border-top:1px solid var(--stroke)"><th style="text-align:left;padding:12px;width:40%">{s.k}</th><td style="padding:12px" class="text-dim">{s.v}</td></tr>)}
+        </tbody></table>
+      </section>
+    )}
+    <InArticleAd />
+    <div class="prose-nexa" style="margin-top:1rem"><Content /></div>
+    <p class="text-faint" style="font-size:.85rem;margin-top:1.5rem">Prices and features change. Verify everything on the <a href={d.officialUrl} target="_blank" rel="noopener noreferrer" style="text-decoration:underline">official site</a> before purchasing.</p>
+  </div>
+</BaseLayout>

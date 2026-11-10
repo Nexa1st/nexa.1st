@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import InArticleAd from '../../components/InArticleAd.astro';
+import SidebarAd from '../../components/SidebarAd.astro';
+import { getPublishedPosts, readingTime, fmtDate, authorById, relatedPosts, slugify, entrySlug, clusterOf, clusterHubUrl } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post, i) => ({
+    params: { slug: entrySlug(post) },
+    props: { post, prev: posts[i + 1] ?? null, next: posts[i - 1] ?? null, related: relatedPosts(post, posts),
+      clusterPosts: posts.filter(q => q.id !== post.id && clusterOf(q) === clusterOf(post)) },
+  }));
+}
+const { post, prev, next, related, clusterPosts } = Astro.props as any;
+const cluster = clusterOf(post); const hubUrl = clusterHubUrl(post);
+const { Content, headings } = await post.render();
+const d = post.data; const author = authorById(d.author);
+const minutes = readingTime(post.body);
+const url = new URL(`/blog/${entrySlug(post)}/`, Astro.site).toString();
+const articleLd = { '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.description, datePublished: d.pubDate.toISOString(), author: { '@type': 'Person', name: author.name }, publisher: { '@type': 'Organization', name: 'NEXA' }, mainEntityOfPage: url, inLanguage: 'en-US' };
+const crumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: String(Astro.site) },
+  { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog/', Astro.site).toString() },
+  { '@type': 'ListItem', position: 3, name: d.title, item: url } ] };
+const toc = headings.filter((h: any) => h.depth === 2 || h.depth === 3);
+const faqLd = d.faqs?.length ? { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: d.faqs.map((f: any) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) } : null;
+const allLd = faqLd ? [articleLd, crumbLd, faqLd] : [articleLd, crumbLd];
+const shareX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(d.title)}&url=${encodeURIComponent(url)}`;
+const shareFb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+const shareWa = `https://wa.me/?text=${encodeURIComponent(d.title + ' ' + url)}`;
+---
+<BaseLayout title={d.seoTitle ?? `${d.title} — NEXA`} description={d.seoDescription ?? d.description} type="article" image={d.ogImage ?? d.image} canonical={d.canonicalUrl} jsonLd={allLd}>
+  <div id="progressBar" aria-hidden="true" style="position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;z-index:210"></div>
+  <div class="mx-auto" style="max-width:1200px;padding:2rem 1rem 0;display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem" >
+    <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem" class="lg:grid-cols-[minmax(0,1fr)_250px]">
+      <article>
+        <nav aria-label="Breadcrumb" class="text-faint" style="font-size:.85rem"><a href="/">Home</a> / <a href="/blog/">Blog</a> / <a href={`/blog/category/${slugify(d.category)}/`}>{d.category}</a></nav>
+        <div aria-hidden="true" style={`height:220px;border-radius:22px;background:${d.gradient};display:grid;place-items:center;font-size:4.5rem;margin:1rem 0`}>{d.image ? '' : d.emoji}</div>
+        {d.image && <img src={d.image} alt={d.imageAlt ?? d.title} width="1200" height="440" loading="lazy" style="width:100%;border-radius:22px;margin:-226px 0 1rem;height:220px;object-fit:cover" />}
+        <h1 class="font-display" style="font-size:clamp(1.9rem,4.5vw,2.9rem);font-weight:900;line-height:1.12">{d.title}</h1>
+        <p class="text-dim" style="font-size:1.08rem;margin-top:.7rem">{d.description}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:1rem 0">
+          <span class="chip">{d.category}</span>
+          <span class="chip">📅 {fmtDate(d.pubDate)}</span>
+          <span class="chip">⏱ {minutes} min read</span>{d.updatedDate && <span class="chip">Updated {fmtDate(d.updatedDate)}</span>}
+          {d.tags.map((t: string) => <a class="chip" href={`/blog/tag/${slugify(t)}/`}>#{t}</a>)}
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.2rem" class="hide-in-reading">
+          <button id="readingToggle" class="btn btn-ghost magnetic" aria-pressed="false">📖 Reading mode</button>
+          <a class="btn btn-ghost magnetic" href={shareX} target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="btn btn-ghost magnetic" href={shareFb} target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a class="btn btn-ghost magnetic" href={shareWa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+        <InArticleAd />
+        <div class="prose-nexa"><Content /></div>
+        <InArticleAd />
+        <section aria-label="Topic cluster" class="glass" style="padding:20px;margin-top:2rem">
+          <p style="font-weight:800">{d.pillar ? `🏛 Pillar guide — ${cluster}` : `Part of the ${cluster} hub`}</p>
+          <p class="text-dim" style="font-size:.93rem;margin-top:.4rem">{d.pillar ? 'This is a pillar guide for its topic cluster. The supporting guides below go deeper on individual parts of the topic.' : 'This article supports a broader topic hub. Start from the hub for the full picture, or continue with the supporting guides.'}</p>
+          <p style="margin-top:.7rem"><a class="btn btn-ghost magnetic" href={hubUrl}>Open the {cluster} hub →</a></p>
+          {clusterPosts.length > 0 && (<><p style="font-weight:750;margin-top:1rem">Supporting guides in this cluster</p><ul style="display:grid;gap:.45rem;margin-top:.5rem">{clusterPosts.map((q: any) => <li><a href={`/blog/${entrySlug(q)}/`}>{q.data.title}</a> <span class="text-faint" style="font-size:.8rem">— {q.data.category}</span></li>)}</ul></>)}
+        </section>
+        {d.faqs?.length > 0 && (
+          <section aria-label="Frequently asked questions" style="margin-top:2rem">
+            <h2 style="font-weight:850;font-size:1.5rem">Frequently asked questions</h2>
+            {d.faqs.map((f: any) => (
+              <details class="glass-soft" style="padding:14px 16px;margin-top:10px">
+                <summary style="font-weight:700;cursor:pointer;min-height:32px">{f.q}</summary>
+                <p class="text-dim" style="margin-top:.5rem">{f.a}</p>
+              </details>
+            ))}
+          </section>
+        )}
+        <section aria-label="About the author" class="glass" style="padding:20px;margin-top:2rem;display:flex;gap:14px;align-items:flex-start">
+          <span aria-hidden="true" class="glass-soft" style="width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex:none">{author.initials}</span>
+          <div><p style="font-weight:800">{author.name}</p><p class="text-faint" style="font-size:.82rem">{author.role}</p><p class="text-dim" style="font-size:.92rem;margin-top:4px">{author.bio}</p></div>
+        </section>
+        <nav aria-label="Previous and next articles" style="display:flex;justify-content:space-between;gap:10px;margin-top:1.6rem;flex-wrap:wrap">
+          {prev ? <a class="btn btn-ghost magnetic" href={`/blog/${entrySlug(prev)}/`}>← Older: {prev.data.title.slice(0, 42)}…</a> : <span></span>}
+          {next && <a class="btn btn-ghost magnetic" href={`/blog/${entrySlug(next)}/`}>Newer: {next.data.title.slice(0, 42)}… →</a>}
+        </nav>
+      </article>
+      <aside class="hide-in-reading" aria-label="Article sidebar" style="align-self:start;position:sticky;top:96px">
+        {toc.length > 0 && (
+          <nav class="glass" style="padding:16px" aria-label="Table of contents">
+            <p style="font-weight:800;margin-bottom:.6rem">On this page</p>
+            <ul style="display:grid;gap:.45rem;font-size:.9rem">{toc.map((h: any) => <li style={`margin-left:${h.depth === 3 ? 12 : 0}px`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+          </nav>
+        )}
+        <SidebarAd pageType="article" />
+      </aside>
+    </div>
+    {related.length > 0 && (
+      <section aria-label="Related articles" class="hide-in-reading">
+        <h2 style="font-weight:850;font-size:1.5rem;margin-bottom:1rem">Related articles</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem">{related.map((p: any) => <ArticleCard post={p} />)}</div>
+      </section>
+    )}
+  </div>
+  <script is:inline>
+    addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);const b=document.getElementById('progressBar');if(b)b.style.width=(p*100)+'%';},{passive:true});
+    document.getElementById('readingToggle')?.addEventListener('click',function(){const on=document.body.classList.toggle('reading');this.setAttribute('aria-pressed',String(on));this.textContent=on?'📖 Exit reading mode':'📖 Reading mode';});
+  </script>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ToolsExplorer } from '../../components/Explorers';
+import BannerAd from '../../components/BannerAd.astro';
+import tools from '../../data/tools.json';
+const items = tools.map(t => ({ title: t.name, description: `${t.description} Best for: ${t.bestFor}`, url: `/tools/${t.slug}/`, category: t.category, tags: [t.pricingLabel], date: '', gradient: t.gradient, emoji: t.emoji, meta: `${t.by} · ${t.pricingLabel}` }));
+---
+<BaseLayout title="AI Tools Directory — NEXA" description="A curated directory of AI and creator tools with official links only. Pricing is never invented — check each official site for current plans.">
+  <div class="mx-auto" style="max-width:1200px;padding:2.5rem 1rem 0">
+    <h1 class="font-display" style="font-size:2.6rem;font-weight:900">AI Tools Directory</h1>
+    <p class="text-dim" style="margin:.5rem 0 1.4rem;max-width:680px">Real tools, real official links. Where a label says “Check official site”, that is deliberate: plans and features change, and NEXA does not invent pricing. Search and filter below.</p>
+    <ToolsExplorer client:load items={items} />
+    <BannerAd pageType="tools" />
+  </div>
+</BaseLayout>

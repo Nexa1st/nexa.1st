@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page not found — NEXA" description="That page does not exist on NEXA. Head back home or search the site.">
+  <div class="mx-auto" style="max-width:700px;padding:4rem 1rem 0;text-align:center">
+    <p aria-hidden="true" style="font-size:4rem">🪐</p>
+    <h1 class="font-display" style="font-size:2.6rem;font-weight:900">404 — Lost in the glass</h1>
+    <p class="text-dim" style="margin:1rem 0 1.6rem">That page does not exist (or has not been published yet). Try the homepage, the blog, or press <kbd>Ctrl K</kbd> to search everything.</p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <a class="btn magnetic" href="/">Go home</a>
+      <a class="btn btn-ghost magnetic" href="/blog/">Read the blog</a>
+      <a class="btn btn-ghost magnetic" href="/tools/">Browse tools</a>
+    </div>
+  </div>
+</BaseLayout>

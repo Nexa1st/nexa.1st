@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BannerAd from '../../components/BannerAd.astro';
+import { getPublishedProducts, fmtDate, entrySlug } from '../../lib/content';
+const products = await getPublishedProducts();
+---
+<BaseLayout title="Products & Reviews — NEXA" description="Editorial product reviews from NEXA: pros, cons, specs, honest verdicts, full affiliate disclosure, and no invented prices.">
+  <div class="mx-auto" style="max-width:1200px;padding:2.5rem 1rem 0">
+    <h1 class="font-display" style="font-size:2.6rem;font-weight:900">Products &amp; Editorial Reviews</h1>
+    <section aria-label="About this topic" class="glass" style="padding:20px;margin-top:1rem">
+      <h2 style="font-weight:850">🏛 Product Reviews — pillar hub</h2>
+      <p class="text-dim" style="margin-top:.4rem;line-height:1.7">Editorial product reviews from a working creator stack: pros, cons, specs and verdicts, with full affiliate disclosure. Prices are never invented, and every rating is labelled as our editors' opinion.</p>
+      <p style="margin-top:.6rem;font-size:.92rem"><strong>Sibling clusters:</strong> <a class="chip" href="/blog/category/ai-machine-learning/">Artificial Intelligence</a> <a class="chip" href="/blog/category/gaming/">Gaming</a> <a class="chip" href="/blog/category/technology/">Technology</a> <a class="chip" href="/blog/category/online-business/">Online Business</a></p>
+    </section>
+    <div class="glass" style="padding:16px;margin:1rem 0" role="note">
+      <strong>Disclosure:</strong> Some links on product pages may be affiliate links, entered manually by our editors. If you buy through one, NEXA may earn a commission at no extra cost to you. Prices are shown only when an editor has entered a verified one — otherwise the button says “Check price”. Ratings, when shown, are explicitly <em>editorial</em> opinions. Full details: <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.
+    </div>
+    <BannerAd pageType="products" />
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:1rem;margin-top:1rem">
+      {products.map(pr => (
+        <a href={`/products/${entrySlug(pr)}/`} class="glass tilt" style="padding:20px;display:block">
+          <div aria-hidden="true" style={`height:130px;border-radius:16px;background:${pr.data.gradient};display:grid;place-items:center;font-size:2.8rem;margin-bottom:12px`}>{pr.data.emoji}</div>
+          <span class="chip">{pr.data.category}</span>
+          <h2 style="font-weight:800;margin:.55rem 0 .35rem;font-size:1.15rem">{pr.data.title}</h2>
+          <p class="text-dim" style="font-size:.92rem">{pr.data.description}</p>
+          <p style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+            <span class="chip">{pr.data.price ?? 'Check price on official site'}</span>
+            {pr.data.editorialRating && <span class="chip">Editorial rating: {pr.data.editorialRating}/5</span>}
+          </p>
+          <p class="text-faint" style="font-size:.78rem;margin-top:8px">{fmtDate(pr.data.pubDate)}</p>
+        </a>
+      ))}
+    </div>
+    {products.length >= 2 && (
+      <section aria-label="Comparison table" style="margin-top:2.5rem">
+        <h2 style="font-weight:850;font-size:1.5rem">Side-by-side comparison</h2>
+        <div class="glass" style="padding:6px;margin-top:1rem;overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.93rem;min-width:560px">
+            <thead><tr><th style="text-align:left;padding:12px">Product</th><th style="text-align:left;padding:12px">Category</th><th style="text-align:left;padding:12px">Price</th><th style="text-align:left;padding:12px">Editorial rating</th><th style="text-align:left;padding:12px"></th></tr></thead>
+            <tbody>{products.map(pr => (
+              <tr style="border-top:1px solid var(--stroke)"><td style="padding:12px"><strong>{pr.data.title}</strong></td><td style="padding:12px">{pr.data.category}</td><td style="padding:12px">{pr.data.price ?? 'Check price'}</td><td style="padding:12px">{pr.data.editorialRating ? `${pr.data.editorialRating}/5 (editorial)` : '—'}</td><td style="padding:12px"><a class="text-accent" href={`/products/${entrySlug(pr)}/`}>Review →</a></td></tr>
+            ))}</tbody>
+          </table>
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>

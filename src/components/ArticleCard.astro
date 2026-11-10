@@ -1,0 +1,19 @@
+---
+import { fmtDate, readingTime, entrySlug, type Post } from '../lib/content';
+interface Props { post: Post; large?: boolean }
+const { post, large = false } = Astro.props as Props;
+const d = post.data;
+---
+<article class="glass tilt" style={`padding:${large ? '26px' : '18px'};height:100%`}>
+  <a href={`/blog/${entrySlug(post)}/`} aria-label={d.title}>
+    {d.image
+      ? <img src={d.image} alt={d.imageAlt ?? d.title} loading="lazy" width="800" height="450" style={`width:100%;height:${large ? 240 : 130}px;object-fit:cover;border-radius:16px;margin-bottom:14px`} />
+      : <div aria-hidden="true" style={`height:${large ? 240 : 130}px;border-radius:16px;background:${d.gradient};display:grid;place-items:center;font-size:${large ? '4rem' : '2.6rem'};margin-bottom:14px`}>{d.emoji}</div>}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span class="chip">{d.category}</span>{d.featured && <span class="chip">★ Featured</span>}{d.trending && <span class="chip">🔥 Trending</span>}
+    </div>
+    <h3 style={`font-weight:800;margin:.6rem 0 .4rem;font-size:${large ? '1.6rem' : '1.08rem'};line-height:1.25`}>{d.title}</h3>
+    <p class="text-dim" style="font-size:.92rem">{d.description}</p>
+    <p class="text-faint" style="font-size:.78rem;margin-top:10px">{fmtDate(d.pubDate)} · {readingTime(post.body)} min read</p>
+  </a>
+</article>

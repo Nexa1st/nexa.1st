@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import authors from '../data/authors.json';
+---
+<BaseLayout title="About NEXA — NEXA.1ST" description="What NEXA is: a Liquid Glass magazine for AI stories, technology, gaming and honest online-earning guides, by Irfan Ullah and the NEXA editorial team.">
+  <div class="mx-auto" style="max-width:900px;padding:2.5rem 1rem 0">
+    <span class="chip">Publisher handle: NEXA.1ST</span>
+    <h1 class="font-display" style="font-size:2.6rem;font-weight:900;margin-top:.7rem">About NEXA</h1>
+    <div class="glass" style="padding:26px;margin-top:1.2rem">
+      <p style="font-size:1.08rem;line-height:1.8">NEXA is a next-generation digital magazine and blog built around one idea: publish cinematic, practical content about <strong>AI tools, technology, gaming and online earning</strong> — and be honest about all of it. No invented numbers, no fake reviews, no guaranteed-viral promises.</p>
+      <p class="text-dim" style="margin-top:1rem;line-height:1.8">NEXA grows out of a real production workflow: AI short-form series and Reels for English-speaking audiences, gaming cinematics, and tool testing done on actual projects. The guides here are written from that work. The site itself is a static Astro build — fast, free to host, and designed as a macOS-inspired Liquid Glass experience (design inspiration only; NEXA is not an Apple product).</p>
+      <h2 style="font-weight:850;font-size:1.35rem;margin-top:1.6rem">How we work</h2>
+      <ul class="text-dim" style="display:grid;gap:.5rem;margin-top:.6rem;line-height:1.7">
+        <li>• Every published file is quality-checked before it goes live.</li>
+        <li>• Tool pricing is never invented — we link to official sites instead.</li>
+        <li>• Affiliate links are disclosed, manually added, and clearly labelled.</li>
+        <li>• Corrections are made openly, in the open.</li>
+      </ul>
+    </div>
+    <h2 style="font-weight:850;font-size:1.5rem;margin:2rem 0 1rem">The team</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1rem">
+      {authors.map(a => (
+        <div class="glass" style="padding:20px;display:flex;gap:14px">
+          <span aria-hidden="true" class="glass-soft" style="width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex:none">{a.initials}</span>
+          <div><p style="font-weight:800">{a.name}</p><p class="text-faint" style="font-size:.82rem">{a.role}</p><p class="text-dim" style="font-size:.92rem;margin-top:4px">{a.bio}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+import BannerAd from './BannerAd.astro';
+const year = new Date().getFullYear();
+---
+<footer id="siteFooter" style="margin-top:5rem">
+  <div class="mx-auto" style="max-width:1200px;padding:0 1rem">
+    <BannerAd pageType="home" />
+    <div class="glass" style="padding:2rem">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.6rem">
+        <div>
+          <p class="font-display" style="font-size:1.7rem;font-weight:900">NEXA<span class="text-accent">.</span></p>
+          <p class="text-faint" style="font-size:.78rem;font-weight:700;letter-spacing:.14em;margin-top:2px">NEXA.1ST</p>
+          <p class="text-dim" style="font-size:.9rem;margin-top:.5rem">AI stories, technology, gaming and honest online-earning guides — cinematic, practical, and free to read. A Liquid Glass experience inspired by modern macOS design (not an Apple product).</p>
+        </div>
+        <nav aria-label="Explore">
+          <p style="font-weight:750;margin-bottom:.6rem">Explore</p>
+          <ul class="text-dim" style="display:grid;gap:.45rem;font-size:.92rem">
+            <li><a href="/blog/">Blog</a></li><li><a href="/tools/">AI Tools Directory</a></li>
+            <li><a href="/products/">Products &amp; Reviews</a></li><li><a href="/about/">About</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Categories">
+          <p style="font-weight:750;margin-bottom:.6rem">Categories</p>
+          <ul class="text-dim" style="display:grid;gap:.45rem;font-size:.92rem">
+            <li><a href="/blog/category/ai-machine-learning/">AI &amp; Machine Learning</a></li>
+            <li><a href="/blog/category/gaming/">Gaming</a></li>
+            <li><a href="/blog/category/online-business/">Online Business</a></li>
+            <li><a href="/blog/category/digital-marketing/">Digital Marketing</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal and help">
+          <p style="font-weight:750;margin-bottom:.6rem">Legal &amp; Help</p>
+          <ul class="text-dim" style="display:grid;gap:.45rem;font-size:.92rem">
+            <li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Use</a></li>
+            <li><a href="/disclosure/">Affiliate Disclosure</a></li><li><a href="/contact/">Contact</a></li>
+            <li><a href="/rss.xml">RSS Feed</a></li>
+          </ul>
+        </nav>
+      </div>
+      <hr style="border-color:var(--stroke);margin:1.6rem 0 1rem" />
+      <p class="text-faint" style="font-size:.8rem">© {year} NEXA. Design inspired by Apple's visual language; not affiliated with or endorsed by Apple. Some links may be affiliate links — see Disclosure. Advertising is currently not active on this site.</p>
+    </div>
+    <div style="height:110px" aria-hidden="true"></div>
+  </div>
+</footer>

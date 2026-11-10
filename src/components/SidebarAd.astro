@@ -1,0 +1,7 @@
+---
+import AdSlot from './AdSlot.astro';
+import type { AdPageType } from '../config/ads';
+interface Props { pageType?: AdPageType }
+const { pageType = 'article' } = Astro.props as Props;
+---
+<AdSlot placement="sidebar" pageType={pageType} variant="sidebar" />

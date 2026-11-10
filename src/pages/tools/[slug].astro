@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SidebarAd from '../../components/SidebarAd.astro';
+import tools from '../../data/tools.json';
+export function getStaticPaths() { return tools.map(t => ({ params: { slug: t.slug }, props: { tool: t } })); }
+const { tool } = Astro.props as any;
+const others = tools.filter(t => t.slug !== tool.slug && t.category === tool.category).slice(0, 3);
+const crumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: String(Astro.site) },
+  { '@type': 'ListItem', position: 2, name: 'Tools', item: new URL('/tools/', Astro.site).toString() },
+  { '@type': 'ListItem', position: 3, name: tool.name, item: new URL(Astro.url.pathname, Astro.site).toString() } ] };
+---
+<BaseLayout title={`${tool.name} — NEXA Tools`} description={tool.description} jsonLd={[crumbLd]}>
+  <div class="mx-auto" style="max-width:900px;padding:2.5rem 1rem 0">
+    <nav aria-label="Breadcrumb" class="text-faint" style="font-size:.85rem"><a href="/">Home</a> / <a href="/tools/">Tools</a> / {tool.name}</nav>
+    <div class="glass" style="padding:28px;margin-top:1rem">
+      <div aria-hidden="true" style={`height:170px;border-radius:18px;background:${tool.gradient};display:grid;place-items:center;font-size:3.6rem;margin-bottom:18px`}>{tool.emoji}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip">{tool.category}</span><span class="chip">{tool.pricingLabel}</span><span class="chip">By {tool.by}</span></div>
+      <h1 class="font-display" style="font-size:2.3rem;font-weight:900;margin:.7rem 0 .5rem">{tool.name}</h1>
+      <p class="text-dim" style="font-size:1.05rem">{tool.description}</p>
+      <p style="margin-top:1rem"><strong>Best for:</strong> <span class="text-dim">{tool.bestFor}</span></p>
+      <p class="text-faint" style="font-size:.88rem;margin-top:.6rem">Pricing &amp; plans: <strong>{tool.pricingLabel}</strong> — NEXA does not list prices it cannot verify. Always confirm current plans on the official site.</p>
+      <a class="btn magnetic" style="margin-top:1.2rem" href={tool.url} target="_blank" rel="noopener noreferrer">Visit official site ↗</a>
+    </div>
+    <SidebarAd pageType="tools" />
+    {others.length > 0 && <section style="margin-top:2rem"><h2 style="font-weight:800;font-size:1.3rem">More in {tool.category}</h2><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:.8rem">{others.map((t: any) => <a class="chip magnetic" style="min-height:44px;display:inline-flex;align-items:center" href={`/tools/${t.slug}/`}>{t.emoji} {t.name}</a>)}</div></section>}
+  </div>
+</BaseLayout>

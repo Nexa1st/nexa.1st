@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import GlobalSearch from '../components/GlobalSearch';
+import HeroMotion from '../components/HeroMotion';
+import { BlogExplorer } from '../components/Explorers';
+import BannerAd from '../components/BannerAd.astro';
+import NativeAd from '../components/NativeAd.astro';
+import { getPublishedPosts, getPublishedProducts, fmtDate, readingTime, entrySlug } from '../lib/content';
+import tools from '../data/tools.json';
+
+const posts = await getPublishedPosts();
+const products = await getPublishedProducts();
+const featured = posts.filter(p => p.data.featured);
+const heroStory = featured[0] ?? posts[0];
+const trending = posts.filter(p => p.data.trending);
+const latest = posts.slice(0, 6);
+const mostRead = [...posts].sort((a, b) => b.data.popularity - a.data.popularity).slice(0, 4);
+const popularTools = tools.slice(0, 4);
+const explorerItems = posts.map(p => ({ title: p.data.title, description: p.data.description, url: `/blog/${entrySlug(p)}/`, category: p.data.category, tags: p.data.tags, date: fmtDate(p.data.pubDate), gradient: p.data.gradient, emoji: p.data.emoji, meta: `${fmtDate(p.data.pubDate)} · ${readingTime(p.body)} min read` }));
+const discovery = [
+  { name: 'AI & Machine Learning', icon: '🤖', href: '/blog/category/ai-machine-learning/', blurb: 'How AI tools really work, and how creators use them.' },
+  { name: 'Technology', icon: '💻', href: '/blog/category/technology/', blurb: 'Local AI, hardware reality checks and software that matters.' },
+  { name: 'Gaming', icon: '🎮', href: '/blog/category/gaming/', blurb: 'Cinematic gaming series and the money behind gaming content.' },
+  { name: 'Online Business', icon: '💼', href: '/blog/category/online-business/', blurb: 'Honest first steps from content hobby to small business.' },
+  { name: 'Digital Marketing', icon: '🔎', href: '/blog/category/digital-marketing/', blurb: 'Titles, captions, hashtags and discovery that compounds.' },
+  { name: 'Product Reviews', icon: '🛠', href: '/products/', blurb: 'Editorial reviews with disclosures — no invented prices or ratings.' },
+];
+---
+<BaseLayout title="NEXA — AI, Tech, Gaming & Online Earning" description="NEXA is a Liquid Glass magazine: AI stories, trending technology, gaming discoveries and honest online-earning guides.">
+  <!-- HERO -->
+  <section style="position:relative;padding:4.5rem 1rem 3rem;text-align:center;overflow:hidden" aria-label="Hero">
+    <HeroMotion client:load />
+    <div class="mx-auto" style="max-width:900px;position:relative">
+      <span class="chip" data-reveal>✦ NEXA ULTRA HYBRID · V1.0</span>
+      <h1 class="wordmark font-display" style="margin:1rem 0 .4rem">NEXA</h1>
+      <p class="text-dim" style="font-size:clamp(1.05rem,2.6vw,1.35rem);max-width:640px;margin:0 auto">AI stories, trending technology, gaming discoveries and honest online-earning guides — in a Liquid Glass universe.</p>
+      <div style="max-width:560px;margin:1.6rem auto 0" data-reveal>
+        <GlobalSearch client:load />
+      </div>
+      {heroStory && (
+        <div class="glass glass-border-anim" data-reveal style="max-width:640px;margin:1.8rem auto 0;padding:18px;text-align:left">
+          <span class="chip">★ Featured story</span>
+          <h2 style="font-weight:800;font-size:1.3rem;margin:.6rem 0 .3rem">{heroStory.data.title}</h2>
+          <p class="text-dim" style="font-size:.93rem">{heroStory.data.description}</p>
+          <a class="btn magnetic" style="margin-top:12px" href={`/blog/${entrySlug(heroStory)}/`}>Explore the story →</a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <div class="mx-auto" style="max-width:1200px;padding:0 1rem">
+    <BannerAd pageType="home" />
+
+    <!-- TRENDING DASHBOARD (derived from editors' frontmatter flags — not external analytics) -->
+    <section aria-label="Trending dashboard" data-reveal style="margin-top:1rem">
+      <h2 class="font-display" style="font-size:1.9rem;font-weight:850">📊 Trending Dashboard</h2>
+      <p class="text-faint" style="font-size:.82rem">Curated by NEXA editors from article flags in our content files — not live analytics.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:1rem;margin-top:1rem">
+        <div class="glass" style="padding:18px"><h3 style="font-weight:750">🔥 Trending articles</h3><ul style="display:grid;gap:.55rem;margin-top:.7rem;font-size:.93rem">{trending.slice(0,4).map(p => <li><a href={`/blog/${entrySlug(p)}/`}>{p.data.title}</a></li>)}</ul></div>
+        <div class="glass" style="padding:18px"><h3 style="font-weight:750">🆕 Latest tech</h3><ul style="display:grid;gap:.55rem;margin-top:.7rem;font-size:.93rem">{posts.filter(p=>p.data.category==='Technology').concat(latest).slice(0,4).map(p => <li><a href={`/blog/${entrySlug(p)}/`}>{p.data.title}</a></li>)}</ul></div>
+        <div class="glass" style="padding:18px"><h3 style="font-weight:750">🧰 Popular tools</h3><ul style="display:grid;gap:.55rem;margin-top:.7rem;font-size:.93rem">{popularTools.map(t => <li><a href={`/tools/${t.slug}/`}>{t.emoji} {t.name} — {t.category}</a></li>)}</ul></div>
+        <div class="glass" style="padding:18px"><h3 style="font-weight:750">👁 Editors' most-read picks</h3><ul style="display:grid;gap:.55rem;margin-top:.7rem;font-size:.93rem">{mostRead.map(p => <li><a href={`/blog/${entrySlug(p)}/`}>{p.data.title}</a></li>)}</ul></div>
+      </div>
+    </section>
+
+    <!-- EDITORIAL SHOWCASE: magazine layout -->
+    <section aria-label="Editorial showcase" style="margin-top:3.5rem">
+      <h2 class="font-display" style="font-size:1.9rem;font-weight:850" data-reveal>📰 Editorial Showcase</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:1rem;margin-top:1rem">
+        {featured.slice(0,1).map(p => <div data-reveal><ArticleCard post={p} large /></div>)}
+        <div class="snaprow" data-reveal aria-label="More featured stories">
+          {featured.slice(1).map(p => <ArticleCard post={p} />)}
+          {trending.filter(p=>!featured.includes(p)).map(p => <ArticleCard post={p} />)}
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED AI STORIES + LATEST -->
+    <section aria-label="Latest articles" style="margin-top:3.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem">
+        <h2 class="font-display" style="font-size:1.9rem;font-weight:850" data-reveal>⚡ Latest Articles</h2>
+        <a href="/blog/" class="text-accent" style="font-weight:650">View all →</a>
+      </div>
+      <div style="margin-top:1rem" data-reveal><BlogExplorer client:visible items={explorerItems} /></div>
+    </section>
+
+    <!-- AI TOOLS SHOWCASE (distinct strip layout) -->
+    <section aria-label="AI tools showcase" class="glass" style="margin-top:3.5rem;padding:26px" data-reveal>
+      <h2 class="font-display" style="font-size:1.7rem;font-weight:850">🧰 AI Tools Showcase</h2>
+      <p class="text-dim" style="margin:.4rem 0 1rem">The directory only lists real tools with official links — pricing is never invented; check each official site.</p>
+      <div class="snaprow">
+        {tools.slice(0,8).map(t => (
+          <a href={`/tools/${t.slug}/`} class="glass-soft tilt" style="padding:18px;display:block">
+            <div aria-hidden style={`height:84px;border-radius:14px;background:${t.gradient};display:grid;place-items:center;font-size:2rem;margin-bottom:10px`}>{t.emoji}</div>
+            <strong>{t.name}</strong><p class="text-dim" style="font-size:.87rem;margin-top:4px">{t.bestFor}</p>
+            <span class="chip" style="margin-top:8px">{t.pricingLabel}</span>
+          </a>
+        ))}
+      </div>
+      <a class="btn btn-ghost magnetic" href="/tools/" style="margin-top:12px">Open the full directory →</a>
+    </section>
+    <NativeAd pageType="home" />
+
+    <!-- DISCOVERY (distinct icon tiles) -->
+    <section aria-label="Discover topics" style="margin-top:3.5rem">
+      <h2 class="font-display" style="font-size:1.9rem;font-weight:850" data-reveal>🧭 Discover</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:1rem;margin-top:1rem">
+        {discovery.map((d,i) => (
+          <a href={d.href} class="glass tilt" data-reveal style={`padding:20px;text-align:${i%2?'right':'left'}`}>
+            <span aria-hidden style="font-size:2rem">{d.icon}</span>
+            <h3 style="font-weight:780;margin:.5rem 0 .3rem">{d.name}</h3>
+            <p class="text-dim" style="font-size:.87rem">{d.blurb}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- GAMING + EARNING split editorial band -->
+    <section aria-label="Gaming and earning highlights" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:1rem;margin-top:3.5rem">
+      <div class="glass" style="padding:24px" data-reveal>
+        <h2 style="font-weight:850;font-size:1.4rem">🎮 Gaming Discoveries</h2>
+        {posts.filter(p=>p.data.category==='Gaming').slice(0,3).map(p => <p style="margin-top:.8rem"><a href={`/blog/${entrySlug(p)}/`} style="font-weight:650">{p.data.title}</a><br/><span class="text-dim" style="font-size:.88rem">{p.data.description}</span></p>)}
+      </div>
+      <div class="glass" style="padding:24px" data-reveal>
+        <h2 style="font-weight:850;font-size:1.4rem">💼 Online Earning Guides</h2>
+        {posts.filter(p=>['Online Business','Digital Marketing'].includes(p.data.category)).slice(0,3).map(p => <p style="margin-top:.8rem"><a href={`/blog/${entrySlug(p)}/`} style="font-weight:650">{p.data.title}</a><br/><span class="text-dim" style="font-size:.88rem">{p.data.description}</span></p>)}
+      </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS (editorial, no invented prices) -->
+    <section aria-label="Featured products" style="margin-top:3.5rem">
+      <h2 class="font-display" style="font-size:1.9rem;font-weight:850" data-reveal>⭐ Featured Products — Editorial Picks</h2>
+      <p class="text-faint" style="font-size:.85rem">Prices are not listed unless an editor enters a verified one. See our <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1rem">
+        {products.map(pr => (
+          <a href={`/products/${entrySlug(pr)}/`} class="glass tilt" data-reveal style="padding:20px;display:block">
+            <div aria-hidden style={`height:120px;border-radius:16px;background:${pr.data.gradient};display:grid;place-items:center;font-size:2.6rem;margin-bottom:12px`}>{pr.data.emoji}</div>
+            <strong>{pr.data.title}</strong>
+            <p class="text-dim" style="font-size:.9rem;margin-top:4px">{pr.data.description}</p>
+            <span class="chip" style="margin-top:10px">{pr.data.price ? pr.data.price : 'Check price on official site'}</span>
+            {pr.data.editorialRating && <span class="chip" style="margin-top:10px;margin-left:6px">Editorial rating: {pr.data.editorialRating}/5</span>}
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- EDITORIAL RECOMMENDATIONS -->
+    <section aria-label="Editorial recommendations" class="glass glass-border-anim" style="margin-top:3.5rem;padding:26px" data-reveal>
+      <h2 style="font-weight:850;font-size:1.5rem">💎 Editorial Recommendations</h2>
+      <p class="text-dim" style="margin-top:.5rem">Start with the hook system if you publish shorts, the free tool stack if you are setting up, and the gaming-money guide if you want the business picture. Every guide here is written from a real production workflow — no filler, no invented numbers.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <a class="btn magnetic" href="/blog/first-two-seconds-hook-system/">Start with hooks</a>
+        <a class="btn btn-ghost magnetic" href="/blog/free-ai-tool-stack-for-creators/">See the free stack</a>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER (honest static form) -->
+    <section aria-label="Newsletter" class="glass" style="margin-top:3.5rem;padding:28px;text-align:center" data-reveal>
+      <h2 style="font-weight:850;font-size:1.6rem">✉️ The NEXA Brief</h2>
+      <p class="text-dim" style="max-width:520px;margin:.6rem auto 1rem">One practical email when new guides drop. The newsletter is <strong>not connected yet</strong> — this form does not send or store anything until a free provider (for example Buttondown or Mailchimp's free tier) is connected by the site owner.</p>
+      <form id="newsletterForm" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <label class="sr-only" for="nl-email">Email address</label>
+        <input id="nl-email" type="email" required placeholder="you@example.com" class="glass-soft" style="min-height:48px;padding:0 1rem;border-radius:999px;min-width:min(320px,80vw)" />
+        <button class="btn magnetic" type="submit" style="min-height:48px">Notify me</button>
+      </form>
+      <p id="nlMsg" class="text-faint" style="font-size:.85rem;margin-top:.8rem" role="status"></p>
+      <script is:inline>document.getElementById('newsletterForm')?.addEventListener('submit',e=>{e.preventDefault();document.getElementById('nlMsg').textContent='Thanks for your interest — the newsletter provider is not connected yet, so nothing was sent or stored. Check back after launch.';});</script>
+    </section>
+  </div>
+</BaseLayout>

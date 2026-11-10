@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getPublishedPosts } from '../../../lib/content';
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const PER = 4; const total = Math.ceil(posts.length / PER);
+  return Array.from({ length: Math.max(0, total - 1) }, (_, i) => {
+    const page = i + 2;
+    return { params: { page: String(page) }, props: { page, total, posts: posts.slice((page - 1) * PER, page * PER) } };
+  });
+}
+const { page, total, posts } = Astro.props as any;
+---
+<BaseLayout title={`Blog — Page ${page} — NEXA`} description={`NEXA blog, page ${page} of ${total}.`}>
+  <div class="mx-auto" style="max-width:1200px;padding:2.5rem 1rem 0">
+    <h1 class="font-display" style="font-size:2.2rem;font-weight:900">Blog — Page {page}</h1>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1.2rem">
+      {posts.map((p: any) => <ArticleCard post={p} />)}
+    </div>
+    <nav aria-label="Pagination" style="display:flex;gap:8px;justify-content:center;margin-top:1.6rem;align-items:center">
+      <a class="btn btn-ghost magnetic" href={page === 2 ? '/blog/' : `/blog/page/${page - 1}/`}>← Previous</a>
+      <span class="chip" aria-current="page">Page {page} of {total}</span>
+      {page < total && <a class="btn btn-ghost magnetic" href={`/blog/page/${page + 1}/`}>Next →</a>}
+    </nav>
+  </div>
+</BaseLayout>

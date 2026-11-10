@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getPublishedPosts, slugify, CATEGORY_CLUSTER, CLUSTER_INTROS } from '../../../lib/content';
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const cats = [...new Set(posts.map(p => p.data.category))];
+  return cats.map(c => ({ params: { category: slugify(c) }, props: { name: c, posts: posts.filter(p => p.data.category === c) } }));
+}
+const { name, posts } = Astro.props as any;
+const cluster = CATEGORY_CLUSTER[name] ?? name; const intro = CLUSTER_INTROS[cluster] ?? '';
+const siblings = Object.entries(CATEGORY_CLUSTER).filter(([c]) => c !== name);
+const crumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: String(Astro.site) },
+  { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog/', Astro.site).toString() },
+  { '@type': 'ListItem', position: 3, name, item: new URL(Astro.url.pathname, Astro.site).toString() } ] };
+---
+<BaseLayout title={`${name} — NEXA Blog`} description={`Articles in ${name} on NEXA.`} jsonLd={[crumbLd]}>
+  <div class="mx-auto" style="max-width:1200px;padding:2.5rem 1rem 0">
+    <nav aria-label="Breadcrumb" class="text-faint" style="font-size:.85rem"><a href="/">Home</a> / <a href="/blog/">Blog</a> / {name}</nav>
+    <h1 class="font-display" style="font-size:2.4rem;font-weight:900;margin-top:.6rem">{name}</h1>
+    <p class="text-dim" style="margin:.4rem 0 1.2rem">{posts.length} article{posts.length === 1 ? '' : 's'} · Topic cluster: <strong>{cluster}</strong></p>
+    <section aria-label="About this topic" class="glass" style="padding:22px;margin-bottom:1.4rem">
+      <h2 style="font-weight:850;font-size:1.25rem">🏛 {cluster} — pillar hub</h2>
+      <p class="text-dim" style="margin-top:.5rem;line-height:1.75">{intro}</p>
+      <p style="margin-top:.8rem;font-size:.92rem"><strong>Explore sibling clusters:</strong> {siblings.map(([c, cl]) => <a class="chip magnetic" style="margin:4px 4px 0 0;min-height:38px;display:inline-flex;align-items:center" href={`/blog/category/${slugify(c)}/`}>{cl}</a>)}<a class="chip magnetic" style="margin:4px 4px 0 0;min-height:38px;display:inline-flex;align-items:center" href="/products/">Product Reviews</a></p>
+    </section>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem">{posts.map((p: any) => <ArticleCard post={p} />)}</div>
+  </div>
+</BaseLayout>
