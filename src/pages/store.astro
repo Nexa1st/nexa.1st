@@ -101,20 +101,20 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     .trust a{color:var(--gold2);text-decoration:underline}
     /* SPOTLIGHT */
     .spot{position:relative;margin-top:1rem;border:1px solid var(--line);border-radius:24px;background:radial-gradient(700px 300px at 85% -10%, rgba(255,215,0,.12), transparent 60%),var(--glass);overflow:hidden}
-    .spot-stage{min-height:220px;display:flex;align-items:stretch}
-    :global(.spot-slide){display:none;grid-template-columns:250px 1fr;gap:1.6rem;padding:1.3rem;width:100%;align-items:center}
+    .spot-stage{min-height:170px;display:flex;align-items:stretch}
+    :global(.spot-slide){display:none;grid-template-columns:165px 1fr;gap:1.1rem;padding:.9rem 1rem;width:100%;align-items:center}
     :global(.spot-slide.on){display:grid;animation:spotin .55s ease both}
     @keyframes spotin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 
     .spot-img{position:relative;perspective:800px}
-    .spot-img img{width:min(100%,250px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+    .spot-img img{width:min(100%,165px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55)}
     .spot-img{transform-style:preserve-3d}
     .spot-slide.cube-in .spot-img{animation:cubein .8s cubic-bezier(.2,.7,.3,1.2) both}
     @keyframes cubein{0%{transform:perspective(900px) rotateY(-72deg) rotateX(7deg) scale(.82);opacity:0}60%{opacity:1}100%{transform:perspective(900px) rotateY(0deg) rotateX(0deg) scale(1);opacity:1}}
     @media (prefers-reduced-motion: reduce){ .spot-slide.cube-in .spot-img{animation:none} }
     @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
     @media (prefers-reduced-motion: reduce){ .spot-img img{animation:none} .spot-slide.on{animation:none} }
-    .spot-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(10,10,10,.75);color:var(--gold2);font-size:1.4rem;cursor:pointer;line-height:1}
+    .spot-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;font-size:1.1rem;border-radius:50%;border:1px solid var(--line);background:rgba(10,10,10,.75);color:var(--gold2);font-size:1.4rem;cursor:pointer;line-height:1}
     .spot-nav.prev{left:10px}.spot-nav.next{right:10px}
     .spot-nav:hover{background:rgba(212,175,55,.2)}
     /* CIRCULAR MOVING SHOWCASE (owner order 2026-11-11) */
@@ -608,10 +608,10 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
           return '<div class="spot-slide' + (i === 0 ? ' on cube-in' : '') + '" role="group" aria-label="' + esc(p.name) + '">' +
             '<div class="spot-img"><img src="' + p.img + '" alt="' + esc(p.name) + '" width="640" height="640" ' + (i ? 'loading="lazy"' : '') + '><span class="badge b-off" style="top:12px;left:12px">-' + p.off + '% OFF</span></div>' +
             '<div><p class="pcat" style="margin-top:0">' + esc(p.catLabels) + '</p>' +
-            '<h3 style="font-size:1.5rem;font-weight:900;margin:.2rem 0 .4rem;line-height:1.2">' + esc(p.name) + '</h3>' +
-            '<p class="pblurb" style="font-size:.98rem">' + esc(p.blurb) + '</p>' +
+            '<h3 style="font-size:1.12rem;font-weight:900;margin:.15rem 0 .3rem;line-height:1.2">' + esc(p.name) + '</h3>' +
+            '<p class="pblurb" style="font-size:.84rem">' + esc(p.blurb) + '</p>' +
             '<p class="pmeta"><span class="chip">★ ' + p.rating + ' on AliExpress</span>' + (p.sold ? '<span class="chip">' + esc(p.sold) + '</span>' : '') + '<span class="chip" style="color:var(--gold2);border-color:var(--line)">' + esc(p.tag) + '</span></p>' +
-            '<p class="pprice"><span class="now" style="font-size:1.7rem">$' + (+p.price).toFixed(2) + '</span><span class="was">$' + (+p.oldPrice).toFixed(2) + '</span><span class="usd">USD</span></p>' +
+            '<p class="pprice"><span class="now" style="font-size:1.3rem">$' + (+p.price).toFixed(2) + '</span><span class="was">$' + (+p.oldPrice).toFixed(2) + '</span><span class="usd">USD</span></p>' +
             '<div class="pactions" style="max-width:420px"><a class="shop-now shop-now-link" data-product="' + esc(p.name) + '" href="' + p.url + '" target="_blank" rel="sponsored nofollow noopener">SHOP NOW →</a>' +
             '<button type="button" class="details" data-spot-details="' + products.indexOf(p) + '">DETAILS</button></div></div></div>';
         }).join('');
@@ -850,6 +850,9 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     .store-ad .adlbl{display:block;font-size:10px;letter-spacing:.22em;color:#8b8b90;margin-bottom:6px}
     .store-ad .adbox{min-height:60px;display:flex;align-items:center;justify-content:center}
     .store-ad iframe{max-width:100%}
-    @media (max-width:640px){ .spot-slide{grid-template-columns:1fr !important;padding:1.1rem} .spot-img img{width:min(100%,220px)} }
+    .spot-img img{width:165px;height:165px;object-fit:cover;aspect-ratio:auto;border-radius:14px;border:1px solid rgba(212,175,55,.35)}
+    .spot-img{position:relative}
+    .spot-img .badge{position:absolute;top:8px;left:8px;background:#FFD700;color:#141414;font-size:.68rem;font-weight:800;padding:.18rem .45rem;border-radius:999px;letter-spacing:.02em}
+    @media (max-width:640px){ .spot-slide{grid-template-columns:128px 1fr !important;padding:.7rem .75rem;gap:.7rem} .spot-img img{width:128px;height:128px} .spot-stage{min-height:0} .spot .pactions{flex-wrap:wrap;gap:.4rem} }
   </style>
 </StoreLayout>
