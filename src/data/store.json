@@ -1,1 +1,104 @@
-{"products":[{"blurb":"Cordless mini vacuum for car seats, crumbs and tight corners.","img":"/store/car-vacuum.jpg","name":"Wireless Handheld Car Vacuum","oldPrice":51.07,"price":23.49,"rating":4.9,"sold":"10,000+ sold","url":"https://s.click.aliexpress.com/e/_c2JkoGgr"},{"blurb":"Clip-on wireless mic for creators — clearer voice on Reels and TikTok.","img":"/store/lavalier-mic.jpg","name":"XinMic Wireless Lavalier Microphone","oldPrice":44.43,"price":19.55,"rating":4.9,"sold":"5,000+ sold","url":"https://s.click.aliexpress.com/e/_c3LnWNAf"},{"blurb":"Magnetic mount that keeps your phone locked in place on the road.","img":"/store/car-phone-holder.jpg","name":"UGREEN Magnetic Car Phone Holder","oldPrice":28.62,"price":18.03,"rating":4.9,"sold":null,"url":"https://s.click.aliexpress.com/e/_c3VR2qRl"},{"blurb":"One stand for phone, watch and earbuds — a cleaner nightstand.","img":"/store/charger-stand.jpg","name":"3-in-1 Magnetic Wireless Charger Stand","oldPrice":32.08,"price":13.09,"rating":4.9,"sold":"3,000+ sold","url":"https://s.click.aliexpress.com/e/_c3n3gdC3"},{"blurb":"Screen light bar with three colour temperatures — easier on the eyes at night.","img":"/store/monitor-light-bar.jpg","name":"Monitor Light Bar — Eye Care, 3 Color Temps","oldPrice":26.42,"price":10.55,"rating":4.9,"sold":"5,000+ sold","url":"https://s.click.aliexpress.com/e/_c3KN5xGx"},{"blurb":"Extends for group shots, folds into a tripod, remote in the handle.","img":"/store/selfie-tripod.jpg","name":"Selfie Stick Tripod with Bluetooth Remote","oldPrice":23.4,"price":10.15,"rating":4.9,"sold":"10,000+ sold","url":"https://s.click.aliexpress.com/e/_c4PF7nuT"},{"blurb":"Seven cubes that keep a suitcase organised from day one to day last.","img":"/store/packing-cubes.jpg","name":"7-Piece Travel Packing Cubes Set","oldPrice":19.51,"price":8.59,"rating":4.9,"sold":"3,000+ sold","url":"https://s.click.aliexpress.com/e/_c3slxZhl"},{"blurb":"Small prep jobs — garlic, herbs, chillies — without the knife work.","img":"/store/garlic-chopper.jpg","name":"Mini Electric Garlic Chopper","oldPrice":14.46,"price":6.65,"rating":4.9,"sold":"2,000+ sold","url":"https://s.click.aliexpress.com/e/_c3KdpbRp"},{"blurb":"Pour or spray — one glass bottle for controlled cooking oil.","img":"/store/oil-sprayer.jpg","name":"2-in-1 Oil Sprayer Bottle, 470ml Glass","oldPrice":14.04,"price":6.55,"rating":4.7,"sold":"10,000+ sold","url":"https://s.click.aliexpress.com/e/_c3ayHe1t"}],"updated":"2026-11-10"}
+{
+ "products": [
+  {
+   "blurb": "Cordless mini vacuum for car seats, crumbs and tight corners.",
+   "img": "/store/car-vacuum.webp",
+   "name": "Wireless Handheld Car Vacuum",
+   "oldPrice": 51.07,
+   "price": 23.49,
+   "rating": 4.9,
+   "sold": "10,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c2JkoGgr",
+   "tag": "HOT SALE"
+  },
+  {
+   "blurb": "Clip-on wireless mic for creators — clearer voice on Reels and TikTok.",
+   "img": "/store/lavalier-mic.webp",
+   "name": "XinMic Wireless Lavalier Microphone",
+   "oldPrice": 44.43,
+   "price": 19.55,
+   "rating": 4.9,
+   "sold": "5,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3LnWNAf",
+   "tag": "TRENDING"
+  },
+  {
+   "blurb": "Magnetic mount that keeps your phone locked in place on the road.",
+   "img": "/store/car-phone-holder.webp",
+   "name": "UGREEN Magnetic Car Phone Holder",
+   "oldPrice": 28.62,
+   "price": 18.03,
+   "rating": 4.9,
+   "sold": null,
+   "url": "https://s.click.aliexpress.com/e/_c3VR2qRl",
+   "tag": "NEW DEAL"
+  },
+  {
+   "blurb": "One stand for phone, watch and earbuds — a cleaner nightstand.",
+   "img": "/store/charger-stand.webp",
+   "name": "3-in-1 Magnetic Wireless Charger Stand",
+   "oldPrice": 32.08,
+   "price": 13.09,
+   "rating": 4.9,
+   "sold": "3,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3n3gdC3",
+   "tag": "TRENDING"
+  },
+  {
+   "blurb": "Screen light bar with three colour temperatures — easier on the eyes at night.",
+   "img": "/store/monitor-light-bar.webp",
+   "name": "Monitor Light Bar — Eye Care, 3 Color Temps",
+   "oldPrice": 26.42,
+   "price": 10.55,
+   "rating": 4.9,
+   "sold": "5,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3KN5xGx",
+   "tag": "TRENDING"
+  },
+  {
+   "blurb": "Extends for group shots, folds into a tripod, remote in the handle.",
+   "img": "/store/selfie-tripod.webp",
+   "name": "Selfie Stick Tripod with Bluetooth Remote",
+   "oldPrice": 23.4,
+   "price": 10.15,
+   "rating": 4.9,
+   "sold": "10,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c4PF7nuT",
+   "tag": "HOT SALE"
+  },
+  {
+   "blurb": "Seven cubes that keep a suitcase organised from the first day to the last.",
+   "img": "/store/packing-cubes.webp",
+   "name": "7-Piece Travel Packing Cubes Set",
+   "oldPrice": 19.51,
+   "price": 8.59,
+   "rating": 4.9,
+   "sold": "3,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3slxZhl",
+   "tag": "TRENDING"
+  },
+  {
+   "blurb": "Small prep jobs — garlic, herbs, chillies — without the knife work.",
+   "img": "/store/garlic-chopper.webp",
+   "name": "Mini Electric Garlic Chopper",
+   "oldPrice": 14.46,
+   "price": 6.65,
+   "rating": 4.9,
+   "sold": "2,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3KdpbRp",
+   "tag": "NEW DEAL"
+  },
+  {
+   "blurb": "Pour or spray — one glass bottle for controlled cooking oil.",
+   "img": "/store/oil-sprayer.webp",
+   "name": "2-in-1 Oil Sprayer Bottle, 470ml Glass",
+   "oldPrice": 14.04,
+   "price": 6.55,
+   "rating": 4.7,
+   "sold": "10,000+ sold",
+   "url": "https://s.click.aliexpress.com/e/_c3ayHe1t",
+   "tag": "HOT SALE"
+  }
+ ],
+ "updated": "2026-11-10"
+}
