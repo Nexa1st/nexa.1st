@@ -15,6 +15,10 @@ const products = await getPublishedProducts();
     <div class="glass" style="padding:16px;margin:1rem 0" role="note">
       <strong>Disclosure:</strong> Some links on product pages may be affiliate links, entered manually by our editors. If you buy through one, NEXA may earn a commission at no extra cost to you. Prices are shown only when an editor has entered a verified one — otherwise the button says “Check price”. Ratings, when shown, are explicitly <em>editorial</em> opinions. Full details: <a href="/disclosure/" style="text-decoration:underline">Affiliate Disclosure</a>.
     </div>
+    <a href="/store/" class="glass" style="padding:16px;margin:0 0 1rem;display:flex;align-items:center;gap:14px;text-decoration:none">
+      <span aria-hidden="true" style="font-size:1.9rem">🛒</span>
+      <span><strong style="font-size:1.05rem">NEXA Store — AliExpress Gadget Picks →</strong><br /><span class="text-dim" style="font-size:.9rem">Trending gadgets with deal prices and direct Shop Now links. Looking to buy rather than read a review? Start here.</span></span>
+    </a>
     <BannerAd pageType="products" />
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:1rem;margin-top:1rem">
       {products.map(pr => (
