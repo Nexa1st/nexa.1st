@@ -15,7 +15,7 @@ const shelves = [
   <style>
     .sf-hero { background: radial-gradient(1100px 480px at 15% -10%, rgba(245,179,1,.28), transparent 60%), radial-gradient(900px 500px at 95% 0%, rgba(20,184,166,.25), transparent 55%), linear-gradient(135deg, #0b1226, #12203a 55%, #0d2b2e); border: 1px solid rgba(255,255,255,.08); }
     .sf-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-    .sf-track { display: flex; gap: 1rem; width: max-content; animation: sf-scroll 26s linear infinite; }
+    .sf-track { display: flex; gap: 1rem; width: max-content; will-change: transform; animation: sf-scroll 18s linear infinite; }
     .sf-marquee:hover .sf-track { animation-play-state: paused; }
     @keyframes sf-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     @keyframes sf-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
