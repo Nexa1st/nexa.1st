@@ -26,6 +26,7 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
 ---
 <StoreLayout title="IRFAN-GD — Premium Electronics & Smart Gadgets Store" description="Discover premium technology at IRFAN-GD: trending car tech, smartphone accessories, wireless charging, computer accessories and creator equipment — curated picks with direct AliExpress seller links, USD prices." jsonLd={[itemListLd]}>
   <style>
+    :global(#main img){max-width:100%}
     .gold-text{background:linear-gradient(92deg,#fff 15%,var(--gold2) 55%,var(--gold) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
     .sec{margin-top:3rem}
     .sec-h{font-size:1.5rem;font-weight:900;letter-spacing:.02em;margin:0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
@@ -100,18 +101,32 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     .trust a{color:var(--gold2);text-decoration:underline}
     /* SPOTLIGHT */
     .spot{position:relative;margin-top:1rem;border:1px solid var(--line);border-radius:24px;background:radial-gradient(700px 300px at 85% -10%, rgba(255,215,0,.12), transparent 60%),var(--glass);overflow:hidden}
-    .spot-stage{min-height:300px;display:flex;align-items:stretch}
+    .spot-stage{min-height:220px;display:flex;align-items:stretch}
     .spot-slide{display:none;grid-template-columns:1fr 1fr;gap:1.4rem;padding:1.4rem;width:100%;align-items:center}
     .spot-slide.on{display:grid;animation:spotin .55s ease both}
     @keyframes spotin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
     @media (max-width:640px){ .spot-slide{grid-template-columns:1fr;padding:1.1rem} }
     .spot-img{position:relative;perspective:800px}
-    .spot-img img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55);transition:transform .35s ease;animation:floaty 6s ease-in-out infinite}
+    .spot-img img{width:min(100%,250px);margin:0 auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(212,175,55,.35);box-shadow:0 24px 60px rgba(0,0,0,.55);transition:transform .35s ease;animation:floaty 6s ease-in-out infinite}
     @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
     @media (prefers-reduced-motion: reduce){ .spot-img img{animation:none} .spot-slide.on{animation:none} }
     .spot-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(10,10,10,.75);color:var(--gold2);font-size:1.4rem;cursor:pointer;line-height:1}
     .spot-nav.prev{left:10px}.spot-nav.next{right:10px}
     .spot-nav:hover{background:rgba(212,175,55,.2)}
+    /* CIRCULAR MOVING SHOWCASE (owner order 2026-11-11) */
+    .orbit-band{margin-top:1rem;border:1px solid var(--line);border-radius:20px;background:radial-gradient(520px 200px at 50% -40px,rgba(212,175,55,.13),transparent 70%),#0d0d0f;padding:16px 0 12px;overflow:hidden}
+    .orbit-title{text-align:center;font-size:11px;letter-spacing:.24em;color:var(--gold2);font-weight:700;margin-bottom:12px}
+    .orbit-mask{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+    .orbit-track{display:flex;gap:16px;width:max-content}
+    .orbit-track.go{animation:orbitmove 30s linear infinite}
+    .orbit-band:hover .orbit-track{animation-play-state:paused}
+    @keyframes orbitmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    :global(.orbit-band .orbit-item){flex:0 0 auto;width:118px;text-align:center;cursor:pointer;background:none;border:none;font:inherit;color:inherit;padding:0;display:block}
+    :global(.orbit-band .orbit-ring){width:104px;height:104px;margin:0 auto;border-radius:50%;padding:3px;background:conic-gradient(from 210deg,var(--gold),#5c4a12,var(--gold2),#5c4a12,var(--gold));box-shadow:0 8px 22px rgba(0,0,0,.5);display:block}
+    .orbit-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#fff}
+    .orbit-name{margin-top:8px;font-size:11px;font-weight:600;color:#e9e9ec;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:28px}
+    .orbit-price{font-size:12px;font-weight:800;color:var(--gold2);display:block}
+    @media (prefers-reduced-motion: reduce){ .orbit-track{animation:none} }
     .spot-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
     .spot-dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--gold);background:transparent;cursor:pointer;padding:0}
     .spot-dots button.on{background:var(--gold2)}
@@ -158,6 +173,11 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
     .pdlg img.pdimg{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px}
     .pdlg .x{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);border:1px solid var(--line);color:#fff;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;z-index:2}
   </style>
+  <style is:inline>
+    .orbit-band .orbit-ring{width:104px !important;height:104px !important}
+    .orbit-band .orbit-ring img{width:100% !important;height:100% !important;border-radius:50%;object-fit:cover;display:block}
+    .orbit-band .orbit-item{width:118px !important}
+  </style>
 
   <div class="wrap">
     <section class="hero" aria-label="IRFAN-GD store hero">
@@ -189,6 +209,12 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
         <button type="button" class="spot-nav next" id="spotNext" aria-label="Next featured product">›</button>
         <div class="spot-dots" id="spotDots" role="tablist" aria-label="Featured products"></div>
       </div>
+    </section>
+
+    <!-- CIRCULAR MOVING SHOWCASE (owner order 2026-11-11: small products, circle shape, right-to-left) -->
+    <section class="orbit-band" aria-label="Moving product showcase">
+      <div class="orbit-title">&#10022; TRENDING SHOWCASE &#10022;</div>
+      <div class="orbit-mask"><div class="orbit-track" id="orbitTrack"></div></div>
     </section>
 
     <section class="sec" id="categories" aria-label="Product categories">
@@ -595,6 +621,26 @@ const pdata = all.map(p => ({ name: p.name, blurb: p.blurb, img: p.img, price: p
         stage.querySelectorAll('.shop-now-link').forEach(function(a){ a.addEventListener('click', function(){ track('affiliate_click', { product: a.getAttribute('data-product') || '' }); }); });
         auto();
       }
+
+      /* ---------- CIRCULAR MOVING SHOWCASE ---------- */
+      (function(){
+        var track = document.getElementById('orbitTrack'); if (!track) return;
+        var items = '';
+        products.forEach(function(p, i){
+          if (p.vis === false) return;
+          items += '<button type="button" class="orbit-item" data-orbit="' + i + '" aria-label="' + esc(p.name) + '">'
+            + '<span class="orbit-ring"><img src="' + p.img + '" alt="' + esc(p.name) + '" loading="lazy"></span>'
+            + '<span class="orbit-name">' + esc(p.name) + '</span>'
+            + '<span class="orbit-price">$' + (+p.price).toFixed(2) + '</span></button>';
+        });
+        track.innerHTML = items + items;
+        // animation sirf tab jab poora set track mein aa jaye (warna pehla paint dev tools mein bada render hota hai)
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ track.classList.add('go'); }); });
+        track.addEventListener('click', function(e){
+          var b = e.target.closest('.orbit-item'); if (!b) return;
+          openDetails(+b.getAttribute('data-orbit'));
+        });
+      })();
 
       /* ---------- SEARCH SUGGESTIONS ---------- */
       var sug = document.getElementById('suggest');
