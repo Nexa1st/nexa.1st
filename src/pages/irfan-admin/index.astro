@@ -226,6 +226,32 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     .lights .r{background:#ff5f57}.lights .y{background:#febc2e}.lights .g{background:#28c840}
     #themeToggle{margin-left:auto;flex:none;background:rgba(255,255,255,.14);border:1px solid var(--stroke2);color:var(--txt);border-radius:999px;padding:.45rem .8rem;font:inherit;font-size:.83rem;font-weight:700;cursor:pointer;box-shadow:none;backdrop-filter:blur(8px)}
     html[data-theme="day"] #themeToggle{background:rgba(255,255,255,.65)}
+    /* ---------- V7 sidebar: grouped menu, badges, plan card ---------- */
+    .nav .grp{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim2);margin:.85rem .45rem .3rem;font-weight:800}
+    .nav .grp:first-child{margin-top:0}
+    .nav a .cnt{margin-left:auto;font-size:.7rem;font-weight:800;background:rgba(255,255,255,.16);border:1px solid var(--stroke);border-radius:999px;padding:.05rem .5rem;font-variant-numeric:tabular-nums}
+    html[data-theme="day"] .nav a .cnt{background:rgba(31,60,86,.08)}
+    .nav a .chev{margin-left:auto;color:var(--dim2);font-size:.75rem}
+    .nav a .cnt + .chev{margin-left:.4rem}
+    .plan{margin-top:1rem;padding:.85rem .9rem;border-radius:16px;background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid var(--stroke)}
+    html[data-theme="day"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.75),rgba(240,246,250,.55))}
+    .plan b{font-size:.86rem;display:block}
+    .plan p{font-size:.74rem;color:var(--dim);margin:.3rem 0 .55rem}
+    .plan .bar{height:6px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+    html[data-theme="day"] .plan .bar{background:rgba(31,60,86,.12)}
+    .plan .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+    .feat{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.1rem}
+    .feat button{padding:.55rem 1rem;border-radius:999px;background:var(--panel);border:1px solid var(--stroke);color:var(--txt);font:inherit;font-size:.86rem;font-weight:700;cursor:pointer;box-shadow:none;backdrop-filter:blur(10px)}
+    .feat button:hover{border-color:var(--stroke2);transform:translateY(-1px)}
+    .feat button.warnb:hover{border-color:var(--amber)}
+    #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(16px);background:#0b1116;color:#fff;padding:.7rem 1.1rem;border-radius:12px;font-size:.88rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:60;box-shadow:0 14px 34px rgba(0,0,0,.4);max-width:92vw;text-align:center}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    body.compact .card{padding:.85rem .95rem}
+    body.compact .stat{padding:.8rem .9rem}
+    body.compact .stat .val{font-size:1.5rem}
+    body.compact .main{padding-top:.9rem}
+    body.compact .ann{padding:.75rem .9rem}
+    body.compact .pcard img{height:100px}
   </style>
 </head>
 <body>
@@ -237,12 +263,27 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <div><b>IRFAN-GD</b><span>Admin V2</span></div>
       </div>
       <nav class="nav" aria-label="Dashboard">
+        <div class="grp">Dashboard</div>
         <a href="/irfan-admin/" class="on"><i>▦</i> Overview</a>
+        <a href="#analytics"><i>📊</i> Analytics</a>
+        <div class="grp">Manage</div>
         <a href="/store/"><i>🛍️</i> Storefront</a>
-        <a href="/store/"><i>🏷️</i> Products</a>
-        <a href="/#tools"><i>🧰</i> Tools</a>
+        <a href="#catalogue"><i>🏷️</i> Products <span class="cnt">{vis.length + hidden.length}</span></a>
+        <a href="#announcements"><i>📣</i> Announcements <span class="cnt">{announcements.length}</span></a>
+        <a href="#import"><i>📥</i> Imports</a>
+        <div class="grp">System</div>
+        <a href="#activity"><i>🧾</i> Activity log</a>
+        <a href="/#tools"><i>🧰</i> Tools <span class="chev">›</span></a>
         <a href="/disclosure/"><i>📄</i> Disclosure</a>
+        <a href="/privacy/"><i>🔒</i> Privacy</a>
+        <a href="/"><i>⚙️</i> NEXA site <span class="chev">›</span></a>
       </nav>
+      <div class="plan">
+        <b>🚀 Free plan — $0</b>
+        <p>Catalogue slots used: {vis.length + hidden.length} products on the free stack. Weekly refresh runs Mondays.</p>
+        <div class="bar"><i style={`width:${Math.round(vis.length / (vis.length + hidden.length) * 100)}%`}></i></div>
+        <p style="margin:.45rem 0 0">{Math.round(vis.length / (vis.length + hidden.length) * 100)}% of the catalogue is live</p>
+      </div>
       <p class="foot">Affiliate showcase — sales happen on AliExpress.<br /><a href="/store/">← Back to the store</a></p>
     </aside>
 
@@ -270,6 +311,13 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <a href="#catalogue">🏷️ Products</a>
         <a href="#import">📥 Import CSV</a>
         <button type="button" class="off" disabled title="New products are added only with the owner's approval (weekly refresh)">＋ Add product</button>
+      </div>
+      <div class="feat" aria-label="Dashboard tools">
+        <button type="button" id="btnShare">🔗 Copy dashboard link</button>
+        <button type="button" id="btnExport">⬇️ Export summary (.txt)</button>
+        <button type="button" id="btnPrint">🖨️ Print view</button>
+        <button type="button" id="btnDensity">🗜️ Compact view</button>
+        <button type="button" class="warnb" id="btnRefresh">↻ Refresh data</button>
       </div>
       <nav class="tabs" aria-label="Dashboard views">
         <a href="/irfan-admin/" class="on">Overview</a>
@@ -454,9 +502,16 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     </main>
   </div>
 
+  <div id="toast" role="status" aria-live="polite"></div>
   <script is:inline>
     (function(){
       function el(id){ return document.getElementById(id); }
+      var D = null;
+      function toast(msg){
+        var t = el('toast'); if (!t) return;
+        t.textContent = msg; t.className = 'show';
+        setTimeout(function(){ t.className = ''; }, 2600);
+      }
       function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
       function notConnected(){
         el('whoami').textContent = 'Database not connected yet';
@@ -469,6 +524,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         return r.json();
       }).then(function(d){
         if (!d || !d.connected) { notConnected(); return; }
+        D = d;
         el('whoami').textContent = d.email || 'owner';
         el('lastSync').textContent = d.lastSync || 'never';
         el('clicks7').textContent = d.clicks7d;
@@ -562,6 +618,49 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
           paintThemeBtn();
         });
       }
+
+      var bShare = el('btnShare');
+      if (bShare) bShare.addEventListener('click', function(){
+        var url = location.origin + '/irfan-admin/';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function(){ toast('Dashboard link copied: ' + url); }, function(){ toast(url); });
+        } else { toast(url); }
+      });
+      var bExport = el('btnExport');
+      if (bExport) bExport.addEventListener('click', function(){
+        if (!D) { toast('Data has not loaded yet — wait a moment and retry.'); return; }
+        var lines = [
+          'IRFAN-GD Business Dashboard — summary',
+          'Exported: ' + new Date().toLocaleString(),
+          'Mode: ' + (D.email || 'public') + ' · Last GA4 sync: ' + (D.lastSync || 'never'),
+          'Affiliate clicks (7 days): ' + D.clicks7d,
+          'Affiliate clicks (30 days): ' + D.clicks30d,
+          'Imported earnings: $' + (+D.earnings.total).toFixed(2) + ' across ' + D.earnings.rows + ' report rows',
+          '',
+          'Top products (30 days):'
+        ];
+        (D.topProducts || []).forEach(function(t){ lines.push('- ' + t.product + ': ' + t.clicks + ' clicks'); });
+        if (!D.topProducts || !D.topProducts.length) lines.push('- none recorded yet');
+        var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'irfan-gd-dashboard-summary.txt';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+        toast('Summary downloaded — only real figures, as shown on this page.');
+      });
+      var bPrint = el('btnPrint');
+      if (bPrint) bPrint.addEventListener('click', function(){ window.print(); });
+      var bDensity = el('btnDensity');
+      if (bDensity) bDensity.addEventListener('click', function(){
+        var on = document.body.classList.toggle('compact');
+        try { localStorage.setItem('irfan-dash-density', on ? 'compact' : 'normal'); } catch (e) {}
+        bDensity.textContent = on ? '🗜️ Normal view' : '🗜️ Compact view';
+        toast(on ? 'Compact view on — cards are tighter.' : 'Normal view restored.');
+      });
+      try { if (localStorage.getItem('irfan-dash-density') === 'compact') { document.body.classList.add('compact'); if (bDensity) bDensity.textContent = '🗜️ Normal view'; } } catch (e) {}
+      var bRefresh = el('btnRefresh');
+      if (bRefresh) bRefresh.addEventListener('click', function(){ toast('Refreshing — reloading the latest figures…'); setTimeout(function(){ location.reload(); }, 500); });
 
       var searchEl = el('dashSearch');
       if (searchEl) {
