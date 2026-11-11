@@ -24,7 +24,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
-  <script is:inline>try{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}catch(e){}</script>
+  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');if(st){document.documentElement.dataset.style=st;document.documentElement.dataset.theme=(st==='current')?(localStorage.getItem('irfan-dash-theme')||'night'):(st==='sequoia'?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
   <style>
     :root{
       --bg:#0a3442; --panel:rgba(16,52,66,.55); --panel2:rgba(23,68,84,.42);
@@ -252,6 +252,56 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     body.compact .main{padding-top:.9rem}
     body.compact .ann{padding:.75rem .9rem}
     body.compact .pcard img{height:100px}
+    /* ---------- OWNER STYLE PACKS (previews via ?style=) ---------- */
+    /* 1 · Sequoia Sunrise — warm peach dawn */
+    html[data-style="sequoia"]{--gold:#c2701d;--gold2:#a85a10;--green:#1d9e75;--amber:#c2701d;--txt:#33241a;--dim:#6f5747;--dim2:#9a7f6d;--stroke:rgba(120,70,30,.16);--stroke2:rgba(120,70,30,.30)}
+    html[data-style="sequoia"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(255,190,110,.65), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,225,190,.7), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(240,160,90,.4), transparent 60%),linear-gradient(155deg,#fdf3e3 0%, #f7e3c8 55%, #eecfa8 100%)}
+    html[data-style="sequoia"] .side{background:linear-gradient(180deg,rgba(255,250,240,.8),rgba(252,238,218,.65))}
+    html[data-style="sequoia"] .glass{--panel:rgba(255,251,244,.66);--panel2:rgba(255,244,228,.5);background:linear-gradient(155deg,rgba(255,251,244,.66),rgba(255,244,228,.5));box-shadow:0 16px 34px rgba(140,85,25,.18), inset 0 1px 0 rgba(255,255,255,.8)}
+    html[data-style="sequoia"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(255,246,232,.88));border-color:rgba(120,70,30,.12)}
+    html[data-style="sequoia"] .nav a.on{color:#33241a;background:linear-gradient(120deg,rgba(255,160,60,.30),rgba(255,160,60,.14))}
+    html[data-style="sequoia"] .nav a:hover{color:#33241a}
+    html[data-style="sequoia"] .chip b{color:#33241a}
+    html[data-style="sequoia"] td, html[data-style="sequoia"] th{border-bottom-color:rgba(120,70,30,.13);color:#4a3423}
+    html[data-style="sequoia"] .notice code{background:rgba(255,255,255,.6);color:#4a3423}
+    html[data-style="sequoia"] input[type=file]{color:#4a3423}
+    html[data-style="sequoia"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.7),rgba(255,240,220,.5))}
+    html[data-style="sequoia"] .plan .bar{background:rgba(120,70,30,.14)}
+    html[data-style="sequoia"] #themeToggle{background:rgba(255,255,255,.6)}
+    /* 2 · Sonoma Mint — fresh green glass */
+    html[data-style="sonoma"]{--gold:#8a6414;--gold2:#6f5008;--txt:#14301f;--dim:#41604c;--dim2:#6d8a76;--stroke:rgba(25,90,50,.15);--stroke2:rgba(25,90,50,.28)}
+    html[data-style="sonoma"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(150,240,190,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(220,255,235,.75), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(120,210,160,.4), transparent 60%),linear-gradient(155deg,#f2fbf4 0%, #dff2e2 55%, #c4e5cd 100%)}
+    html[data-style="sonoma"] .side{background:linear-gradient(180deg,rgba(250,255,250,.8),rgba(232,248,236,.65))}
+    html[data-style="sonoma"] .glass{background:linear-gradient(155deg,rgba(255,255,255,.66),rgba(238,250,240,.5));box-shadow:0 16px 34px rgba(25,90,50,.16), inset 0 1px 0 rgba(255,255,255,.8)}
+    html[data-style="sonoma"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(240,250,242,.88));border-color:rgba(25,90,50,.12)}
+    html[data-style="sonoma"] .nav a.on{color:#14301f;background:linear-gradient(120deg,rgba(60,200,120,.28),rgba(60,200,120,.12))}
+    html[data-style="sonoma"] .nav a:hover{color:#14301f}
+    html[data-style="sonoma"] .chip b{color:#14301f}
+    html[data-style="sonoma"] td, html[data-style="sonoma"] th{border-bottom-color:rgba(25,90,50,.12);color:#274434}
+    html[data-style="sonoma"] .notice code{background:rgba(255,255,255,.6);color:#274434}
+    html[data-style="sonoma"] input[type=file]{color:#274434}
+    html[data-style="sonoma"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.7),rgba(235,250,238,.5))}
+    html[data-style="sonoma"] .plan .bar{background:rgba(25,90,50,.13)}
+    html[data-style="sonoma"] #themeToggle{background:rgba(255,255,255,.6)}
+    /* 3 · Tahoe Midnight — deep blue night */
+    html[data-style="tahoe"]{--txt:#eef4ff;--dim:#a9bde0;--dim2:#7d93bd;--stroke:rgba(150,180,255,.18);--stroke2:rgba(150,180,255,.34)}
+    html[data-style="tahoe"] body{background:radial-gradient(1100px 620px at 88% -12%, rgba(90,130,255,.28), transparent 60%),radial-gradient(900px 720px at -12% 22%, rgba(50,80,180,.30), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(30,50,130,.4), transparent 60%),linear-gradient(155deg,#16294d 0%, #0b1830 55%, #060f20 100%)}
+    html[data-style="tahoe"] .side{background:linear-gradient(180deg,rgba(14,28,56,.85),rgba(10,20,42,.75))}
+    html[data-style="tahoe"] .glass{background:linear-gradient(155deg,rgba(24,44,82,.55),rgba(18,34,66,.42))}
+    html[data-style="tahoe"] .glass.light{background:linear-gradient(150deg,rgba(52,84,140,.88),rgba(38,66,116,.84));color:#dceaff;border-color:rgba(150,180,255,.22)}
+    html[data-style="tahoe"] .glass.light h2, html[data-style="tahoe"] .glass.light h3{color:#eef4ff}
+    html[data-style="tahoe"] .glass.light p, html[data-style="tahoe"] .glass.light .pmeta{color:#b9cdf2}
+    html[data-style="tahoe"] .glass.light .chart-note{color:#93aadd}
+    html[data-style="tahoe"] .stat.light .lbl{color:#a9bde0}
+    html[data-style="tahoe"] .stat.light .hint{color:#8498c2}
+    html[data-style="tahoe"] .stat.light .val{color:#f2f7ff}
+    /* 4 · Graphite Pro — dark grey pro */
+    html[data-style="graphite"]{--txt:#f4f4f6;--dim:#b9b9c2;--dim2:#83838f;--stroke:rgba(255,255,255,.14);--stroke2:rgba(255,255,255,.28);--gold:#d8b25c;--gold2:#c9a227}
+    html[data-style="graphite"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(255,255,255,.10), transparent 55%),radial-gradient(850px 650px at 55% 118%, rgba(0,0,0,.5), transparent 60%),linear-gradient(155deg,#3a3a40 0%, #232327 55%, #131316 100%)}
+    html[data-style="graphite"] .side{background:linear-gradient(180deg,rgba(28,28,32,.88),rgba(20,20,24,.8))}
+    html[data-style="graphite"] .glass{background:linear-gradient(155deg,rgba(52,52,58,.60),rgba(38,38,44,.46))}
+    html[data-style="graphite"] .glass.light{background:linear-gradient(150deg,rgba(235,238,242,.90),rgba(205,212,220,.82))}
+    html[data-style="graphite"] .tabs a.on{background:#f4f4f6;color:#131316;border-color:#f4f4f6}
   </style>
 </head>
 <body>
@@ -612,6 +662,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       if (themeBtn) {
         paintThemeBtn();
         themeBtn.addEventListener('click', function(){
+          if (document.documentElement.dataset.style) { toast('Ye sirf preview hai — pasand aaye to chat mein us style ka naam bata dein, wahi asal theme ban jayegi.'); return; }
           var next = document.documentElement.dataset.theme === 'day' ? 'night' : 'day';
           document.documentElement.dataset.theme = next;
           try { localStorage.setItem('irfan-dash-theme', next); } catch (e) {}
