@@ -1,5 +1,17 @@
 ---
 import store from '../../data/store.json';
+const nowPkt = new Date(Date.now() + 5 * 3600 * 1000);
+const hourPkt = nowPkt.getUTCHours();
+const greetWord = hourPkt < 12 ? 'Good morning' : hourPkt < 17 ? 'Good afternoon' : 'Good evening';
+const dateLine = nowPkt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const day30 = 86400000;
+const fmtDay = (t: number) => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const announcements = [
+  { tag: 'SYNC', when: 'Daily · 11:00 AM PKT', title: 'GA4 clicks sync runs automatically every day', body: 'The irfan-ga4-sync Worker pulls the last 30 days of affiliate_click events from Google Analytics into this dashboard. No manual step is needed once it is active.' },
+  { tag: 'STORE', when: 'Mondays · ~11:44 AM PKT', title: 'Weekly store refresh prepares new product candidates', body: 'New AliExpress electronics are verified (price, rating, sold count on the real listing) and proposed here — nothing is added or hidden without the owner\'s approval tap.' },
+  { tag: 'ADS', when: 'Live since 2026-11-11', title: 'Adsterra ads are live on the site (Banner + Native only)', body: 'Consent-gated, no popunder, no social bar. Six restricted advertiser categories were authorized for account-wide unlinking; written confirmation that the restrictions are ACTIVE is still awaited.' },
+  { tag: 'SEO', when: 'Checked daily', title: 'Google indexing is monitored every day', body: 'Homepage is indexed in Search Console; the 8 articles are being pushed for indexing and the sitemap state is re-checked daily.' },
+];
 const vis = (store.products as any[]).filter(p => p.visible);
 const hidden = (store.products as any[]).filter(p => !p.visible);
 ---
@@ -136,6 +148,27 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     .minirow .c{font-weight:800;font-variant-numeric:tabular-nums}
     @media (max-width:1180px){ .layout{grid-template-columns:1fr} .col-rail{position:static} }
     .qa a:hover{border-color:var(--gold)}
+    .glass.light{background:linear-gradient(150deg,rgba(235,248,252,.88),rgba(205,232,242,.78));color:#17323f;border-color:rgba(255,255,255,.55);box-shadow:0 14px 30px rgba(0,10,16,.30), inset 0 1px 0 rgba(255,255,255,.8)}
+    .glass.light h2,.glass.light h3{color:#17323f}
+    .glass.light p,.glass.light .pmeta{color:#40606f}
+    .glass.light .chart-note{color:#5d7f8f}
+    .tabs{display:flex;gap:.45rem;flex-wrap:wrap;margin:0 0 1.1rem}
+    .tabs a{padding:.5rem 1rem;border-radius:999px;background:rgba(235,248,252,.20);border:1px solid var(--stroke);color:var(--dim);text-decoration:none;font-size:.86rem;font-weight:700;backdrop-filter:blur(10px)}
+    .tabs a.on{background:#0b1116;color:#fff;border-color:#0b1116}
+    .tabs a:hover{color:#fff;border-color:var(--stroke2)}
+    .tabs a.on:hover{color:#fff}
+    .stat.light .lbl{color:#40606f}
+    .stat.light .hint{color:#5d7f8f}
+    .ann{padding:1rem 1.1rem;margin-bottom:.8rem}
+    .ann:last-child{margin-bottom:0}
+    .ann .ahead{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+    .ann .tag{font-size:.68rem;font-weight:800;letter-spacing:.08em;background:#0b1116;color:#fff;border-radius:999px;padding:.18rem .55rem}
+    .ann .when{font-size:.76rem;color:#5d7f8f}
+    .ann h3{font-size:.98rem;margin:.45rem 0 .25rem}
+    .ann p{font-size:.88rem;margin:0}
+    .bigbars{display:flex;align-items:flex-end;gap:10px;height:150px;margin-top:.5rem}
+    .bigbars .bar{flex:1;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#7fd8ef,#2b9dbd);min-height:4px}
+    .bigbars .bar.zero{background:rgba(23,50,63,.14)}
     .qa button.off{opacity:.55;cursor:not-allowed}
     .bars{display:flex;align-items:flex-end;gap:3px;height:120px;margin-top:.35rem}
     .bars .bar{flex:1;min-width:3px;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,#eec25e,#bd8524)}
@@ -190,8 +223,8 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       </div>
       <div class="topbar">
         <div>
-          <h1>Business Dashboard</h1>
-          <p class="sub">Affiliate clicks, top products &amp; imported earnings — real figures only.</p>
+          <h1>{greetWord}, Irfan</h1>
+          <p class="sub">{dateLine} · IRFAN-GD business dashboard — affiliate clicks, top products &amp; imported earnings, real figures only.</p>
         </div>
         <div class="chiprow">
           <span class="chip"><span class="dot"></span> Mode: <b id="whoami">checking…</b></span>
@@ -204,26 +237,34 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <a href="#import">📥 Import CSV</a>
         <button type="button" class="off" disabled title="New products are added only with the owner's approval (weekly refresh)">＋ Add product</button>
       </div>
+      <nav class="tabs" aria-label="Dashboard views">
+        <a href="/irfan-admin/" class="on">Overview</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#catalogue">Products</a>
+        <a href="#announcements">Announcements</a>
+        <a href="#import">Imports</a>
+        <a href="#activity">Activity log</a>
+      </nav>
 
       <section class="glass notice" role="note">
         <strong>📊 IRFAN-GD is an AliExpress affiliate showcase.</strong>
         <p>This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until the D1 database is connected — no figure on this page is estimated or fabricated. <strong>Access mode (owner decision, 2026-11-11): viewing is currently open without a login</strong> — the owner chose to run the dashboard without the Cloudflare Access lock for now. Actions that change data (CSV import, manual sync) stay <strong>disabled</strong> until the owner configures the Access lock; configuring it later re-secures this page automatically. This page is not linked from the public site and carries <code>noindex</code>.</p>
       </section>
 
-      <div class="grid2">
-        <section class="glass card" aria-label="Clicks chart">
-          <h2><i>📊</i> Clicks — Last 30 Days</h2>
-          <div id="bars" class="bars" role="img" aria-label="Daily affiliate clicks, bar chart"></div>
-          <p class="chart-note" id="barsNote">Bars fill in after the first GA4 sync.</p>
+      <div class="grid2" id="analytics">
+        <section class="glass card light" aria-label="Clicks chart">
+          <h2><i>📊</i> Clicks — Last 30 Days, by Period</h2>
+          <div id="bars" class="bigbars" role="img" aria-label="Affiliate clicks by 5-day period, bar chart"></div>
+          <p class="chart-note" id="barsNote">Six bars — one per 5-day period. They fill in after the first GA4 sync.</p>
         </section>
-        <section class="glass card" aria-label="Click share">
+        <section class="glass card light" aria-label="Click share">
           <h2><i>🎯</i> Click Share by Product</h2>
           <div class="donut-wrap">
             <svg width="150" height="150" viewBox="0 0 120 120" role="img" aria-label="Donut chart of click share by product">
-              <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(160,225,245,.16)" stroke-width="16"></circle>
+              <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(23,50,63,.14)" stroke-width="16"></circle>
               <g id="donutSegs"></g>
-              <text id="donutTotal" x="60" y="58" text-anchor="middle" font-size="17" font-weight="800" fill="#f2fbff">0</text>
-              <text x="60" y="76" text-anchor="middle" font-size="8.5" fill="#7ba3b5">CLICKS · 30D</text>
+              <text id="donutTotal" x="60" y="58" text-anchor="middle" font-size="17" font-weight="800" fill="#17323f">0</text>
+              <text x="60" y="76" text-anchor="middle" font-size="8.5" fill="#5d7f8f">CLICKS · 30D</text>
             </svg>
             <ul id="donutLegend" class="legend"></ul>
           </div>
@@ -232,25 +273,45 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       </div>
 
       <section class="stats" aria-label="Key figures">
-        <div class="glass stat" style="--acc:#4f8cff">
+        <div class="glass stat light" style="--acc:#4f8cff">
           <div class="lbl">Affiliate clicks · 7 days <i>🖱️</i></div>
           <div class="val mono" id="clicks7">—</div>
           <div class="hint">From GA4, synced daily</div>
         </div>
-        <div class="glass stat" style="--acc:#38e1ff">
+        <div class="glass stat light" style="--acc:#38e1ff">
           <div class="lbl">Affiliate clicks · 30 days <i>📈</i></div>
           <div class="val mono" id="clicks30">—</div>
           <div class="hint">Rolling 30-day total</div>
         </div>
-        <div class="glass stat" style="--acc:#8b5cf6">
+        <div class="glass stat light" style="--acc:#8b5cf6">
           <div class="lbl">Products live <i>🛍️</i></div>
           <div class="val">{vis.length}</div>
           <div class="hint">{hidden.length} hidden — records kept</div>
         </div>
-        <div class="glass stat" style="--acc:#34d399">
+        <div class="glass stat light" style="--acc:#34d399">
           <div class="lbl">Imported earnings <i>💰</i></div>
           <div class="val mono" id="earnTotal">—</div>
           <div class="hint"><span id="earnRows">0</span> report rows · last import: <span id="earnLast">never</span></div>
+        </div>
+        <div class="glass stat light" style="--acc:#e2603f">
+          <div class="lbl">Products hidden <i>🙈</i></div>
+          <div class="val">{hidden.length}</div>
+          <div class="hint">Records + links kept, never deleted</div>
+        </div>
+        <div class="glass stat light" style="--acc:#2b9dbd">
+          <div class="lbl">Catalogue live share <i>🎯</i></div>
+          <div class="val">{Math.round(vis.length / (vis.length + hidden.length) * 100)}%</div>
+          <div class="hint">{vis.length} of {vis.length + hidden.length} products on the storefront</div>
+        </div>
+        <div class="glass stat light" style="--acc:#b98a1f">
+          <div class="lbl">Report rows imported <i>📥</i></div>
+          <div class="val mono" id="earnRowsCard">0</div>
+          <div class="hint">From official Portals CSV reports</div>
+        </div>
+        <div class="glass stat light" style="--acc:#7fb069">
+          <div class="lbl">Data sources live <i>🔌</i></div>
+          <div class="val">2<span style="font-size:1rem;color:#5d7f8f"> / 3</span></div>
+          <div class="hint">Store catalogue ✓ · Database ✓ · GA4 sync — pending first run</div>
         </div>
       </section>
 
@@ -301,7 +362,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         </section>
       </aside>
      </div>
-      <div class="grid2" style="display:none" aria-hidden="true">
+      <div class="grid2">
         <section class="glass card" aria-label="Top products">
           <h2><i>🏆</i> Top-Performing Products</h2>
           <table id="topTable"><tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2"><span class="unavail">NOT CONNECTED</span> — figures appear after the first GA4 sync.</td></tr></table>
@@ -340,7 +401,18 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <p class="chart-note" id="catNote">Showing all {vis.length + hidden.length} products. “Approve · View” opens the product's live AliExpress listing in a new tab — nothing on this page changes the store by itself.</p>
       </section>
 
-      <section class="glass card" aria-label="Admin activity">
+      <section id="announcements" style="margin-bottom:1.1rem" aria-label="Announcements">
+        <h2 style="font-size:1.15rem;margin:0 0 .8rem">📣 Announcements</h2>
+        {announcements.map(a => (
+          <article class="glass ann light">
+            <div class="ahead"><span class="tag">{a.tag}</span><span class="when">{a.when}</span></div>
+            <h3>{a.title}</h3>
+            <p>{a.body}</p>
+          </article>
+        ))}
+      </section>
+
+      <section class="glass card" id="activity" aria-label="Admin activity">
         <h2><i>🧾</i> Admin Activity Log</h2>
         <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
         <p>Once the Access lock is configured, login sessions and every dashboard action are recorded here from the D1 database (Cloudflare's own Access log, in the Zero Trust dashboard, keeps only 24 hours on the free plan — this D1 log is the durable record). In the current no-lock mode, no sessions are recorded.</p>
@@ -375,6 +447,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         if (d.earnings) {
           el('earnTotal').textContent = '$' + (+d.earnings.total).toFixed(2);
           el('earnRows').textContent = d.earnings.rows;
+          el('earnRowsCard').textContent = d.earnings.rows;
           el('earnLast').textContent = d.earnings.lastImport || 'never';
           var earnPct = Math.max(0, Math.min(100, (+d.earnings.total) / 100 * 100));
           el('ringEarn').setAttribute('stroke-dasharray', earnPct + ' 100');
@@ -397,11 +470,18 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
             if (v > max) max = v;
             total30 += v;
           }
-          el('bars').innerHTML = days.map(function(x){
-            var h = x.v > 0 ? Math.max(6, Math.round(x.v / (max || 1) * 100)) : 3;
-            return '<div class="bar' + (x.v > 0 ? '' : ' zero') + '" style="height:' + h + '%" title="' + x.key + ' — ' + x.v + ' clicks"></div>';
+          var periods = [];
+          for (var g = 0; g < 6; g++) {
+            var slice = days.slice(g * 5, g * 5 + 5);
+            var sum = slice.reduce(function(a, x){ return a + x.v; }, 0);
+            periods.push({ from: slice[0].key, to: slice[slice.length - 1].key, v: sum });
+          }
+          var pmax = periods.reduce(function(a, p){ return Math.max(a, p.v); }, 0);
+          el('bars').innerHTML = periods.map(function(p){
+            var h = p.v > 0 ? Math.max(8, Math.round(p.v / (pmax || 1) * 100)) : 3;
+            return '<div class="bar' + (p.v > 0 ? '' : ' zero') + '" style="height:' + h + '%" title="' + p.from + ' to ' + p.to + ' — ' + p.v + ' clicks"></div>';
           }).join('');
-          el('barsNote').textContent = total30 > 0 ? 'Total: ' + total30 + ' clicks in the last 30 days (hover a bar for its day).' : 'No clicks in the last 30 days yet — bars fill in after the first GA4 sync.';
+          el('barsNote').textContent = total30 > 0 ? 'Total: ' + total30 + ' clicks in the last 30 days — each bar covers 5 days (hover for its dates).' : 'No clicks in the last 30 days yet — the six period bars fill in after the first GA4 sync.';
         })();
         (function(){
           var tops = d.topProducts || [];
