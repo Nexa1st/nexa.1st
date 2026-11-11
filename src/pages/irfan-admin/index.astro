@@ -8,90 +8,210 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IRFAN-GD Owner Dashboard — Staging</title>
+  <title>IRFAN-GD Business Dashboard</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
   <style>
-    body{margin:0;background:#080808;color:#fff;font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
-    .wrap{max-width:1000px;margin:0 auto;padding:1.2rem 1rem 3rem}
-    .warn{border:1px solid #D4AF37;background:rgba(212,175,55,.08);border-radius:16px;padding:1rem 1.1rem}
-    .warn strong{color:#FFD700}
-    .card{border:1px solid rgba(212,175,55,.25);background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border-radius:18px;padding:1.1rem 1.1rem;margin-top:1.1rem}
-    h1{font-size:1.5rem;margin:.4rem 0}
-    h2{font-size:1.08rem;margin:.1rem 0 .6rem;color:#FFD700;letter-spacing:.03em}
-    p, li{color:#A1A1AA;font-size:.93rem}
-    .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:.8rem;margin-top:.6rem}
-    .stat div{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:.8rem}
-    .stat b{display:block;font-size:1.25rem;color:#fff}
-    .unavail{color:#f0b429;font-weight:800;letter-spacing:.04em}
+    :root{
+      --bg:#05070d; --panel:rgba(16,24,40,.66); --panel2:rgba(23,34,54,.55);
+      --stroke:rgba(148,184,255,.16); --stroke2:rgba(148,184,255,.28);
+      --txt:#eef3ff; --dim:#9db1cf; --dim2:#6f84a6;
+      --gold:#D4AF37; --gold2:#FFD700; --cyan:#38e1ff; --blue:#4f8cff; --violet:#8b5cf6;
+      --green:#34d399; --amber:#f0b429; --red:#ff8a8a;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;overflow-x:clip}
+    body{
+      color:var(--txt); line-height:1.55; min-height:100vh;
+      font-family:ui-sans-system,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1100px 600px at 85% -10%, rgba(56,225,255,.14), transparent 60%),
+        radial-gradient(900px 700px at -10% 25%, rgba(79,140,255,.16), transparent 60%),
+        radial-gradient(800px 600px at 55% 115%, rgba(139,92,246,.12), transparent 60%),
+        linear-gradient(160deg,#070b16 0%, #05070d 55%, #04060b 100%);
+      background-attachment:fixed;
+    }
+    /* ---------- shell ---------- */
+    .shell{display:grid;grid-template-columns:224px 1fr;min-height:100vh}
+    .side{
+      position:sticky;top:0;height:100vh;padding:1.1rem .9rem;
+      background:linear-gradient(180deg,rgba(10,16,30,.85),rgba(8,12,22,.78));
+      border-right:1px solid var(--stroke);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      display:flex;flex-direction:column;gap:1.1rem;
+    }
+    .brand{display:flex;align-items:center;gap:.65rem;padding:.2rem .35rem}
+    .brand img{width:40px;height:40px;border-radius:12px;border:1px solid var(--stroke2);object-fit:cover}
+    .brand b{font-size:.98rem;letter-spacing:.04em;display:block;line-height:1.15}
+    .brand span{font-size:.7rem;color:var(--dim2);letter-spacing:.14em;text-transform:uppercase}
+    .nav{display:flex;flex-direction:column;gap:.25rem}
+    .nav a{
+      display:flex;align-items:center;gap:.6rem;padding:.55rem .65rem;border-radius:11px;
+      color:var(--dim);text-decoration:none;font-size:.9rem;border:1px solid transparent;
+    }
+    .nav a i{font-style:normal;width:1.15rem;text-align:center;opacity:.9}
+    .nav a.on{color:#fff;background:linear-gradient(120deg,rgba(79,140,255,.22),rgba(56,225,255,.10));border-color:var(--stroke)}
+    .nav a:hover{color:#fff;border-color:var(--stroke)}
+    .side .foot{margin-top:auto;font-size:.72rem;color:var(--dim2);padding:0 .35rem}
+    .side .foot a{color:var(--gold2);text-decoration:none}
+    /* ---------- main ---------- */
+    .main{padding:1.3rem 1.4rem 3rem;min-width:0}
+    .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+    .topbar h1{font-size:1.55rem;margin:0;letter-spacing:.01em}
+    .topbar .sub{color:var(--dim);font-size:.9rem;margin-top:.15rem}
+    .chiprow{display:flex;gap:.5rem;flex-wrap:wrap}
+    .chip{
+      display:inline-flex;align-items:center;gap:.45rem;padding:.42rem .75rem;border-radius:999px;
+      background:var(--panel);border:1px solid var(--stroke);font-size:.8rem;color:var(--dim);
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    }
+    .chip b{color:#fff;font-weight:700}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+    /* ---------- glass cards ---------- */
+    .glass{
+      background:linear-gradient(155deg,var(--panel),var(--panel2));
+      border:1px solid var(--stroke);border-radius:20px;
+      backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+      box-shadow:0 18px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .notice{padding:1rem 1.15rem;margin-bottom:1.1rem}
+    .notice strong{color:var(--gold2);letter-spacing:.02em}
+    .notice p{margin:.35rem 0 0;color:var(--dim);font-size:.9rem}
+    .notice code{background:rgba(255,255,255,.07);border:1px solid var(--stroke);border-radius:6px;padding:.05rem .35rem;font-size:.85em;color:#dbe7ff}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));gap:.95rem;margin-bottom:1.1rem}
+    .stat{padding:1.05rem 1.1rem;position:relative;overflow:hidden;transition:transform .25s ease, border-color .25s ease}
+    .stat:hover{transform:translateY(-4px);border-color:var(--stroke2)}
+    .stat::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--acc,var(--blue));opacity:.85}
+    .stat .lbl{font-size:.78rem;color:var(--dim);letter-spacing:.09em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+    .stat .lbl i{font-style:normal;font-size:1rem;opacity:.85}
+    .stat .val{font-size:1.9rem;font-weight:800;letter-spacing:.01em;margin-top:.3rem;font-variant-numeric:tabular-nums}
+    .stat .hint{font-size:.78rem;color:var(--dim2);margin-top:.15rem}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem}
+    .card{padding:1.15rem 1.2rem}
+    .card h2{font-size:1.02rem;margin:0 0 .7rem;color:#fff;letter-spacing:.03em;display:flex;align-items:center;gap:.5rem}
+    .card h2 i{font-style:normal}
+    .card p{color:var(--dim);font-size:.9rem}
     table{width:100%;border-collapse:collapse;font-size:.9rem}
-    td, th{padding:.45rem .5rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;color:#d6d6da}
-    a{color:#FFD700}
-    code{background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.05rem .35rem;font-size:.85em}
-    button{background:linear-gradient(92deg,#D4AF37,#FFD700);color:#171106;border:0;border-radius:10px;padding:.55rem 1rem;font-weight:800;cursor:pointer;font:inherit;font-size:.9rem}
+    td, th{padding:.5rem .5rem;border-bottom:1px solid rgba(148,184,255,.10);text-align:left;color:#dbe4f5}
+    th{color:var(--dim);font-weight:600;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase}
+    tr:last-child td{border-bottom:0}
+    .unavail{color:var(--amber);font-weight:800;letter-spacing:.04em}
+    button{
+      background:linear-gradient(92deg,var(--gold),var(--gold2));color:#171106;border:0;border-radius:11px;
+      padding:.55rem 1.05rem;font-weight:800;cursor:pointer;font:inherit;font-size:.9rem;
+      box-shadow:0 6px 18px rgba(212,175,55,.25);
+    }
+    button:hover{filter:brightness(1.06)}
     button[disabled]{opacity:.5;cursor:wait}
     input[type=file]{color:#d6d6da;font:inherit;font-size:.9rem}
-    .ok{color:#7dd87d;font-weight:700}.err{color:#ff8a8a;font-weight:700}
+    .ok{color:var(--green);font-weight:700}.err{color:var(--red);font-weight:700}
     .mono{font-variant-numeric:tabular-nums}
+    a{color:var(--gold2)}
+    @media (max-width:900px){ .grid2{grid-template-columns:1fr} }
+    @media (max-width:760px){
+      .shell{grid-template-columns:1fr}
+      .side{position:static;height:auto;flex-direction:row;align-items:center;flex-wrap:wrap;padding:.8rem}
+      .nav{flex-direction:row;flex-wrap:wrap}
+      .nav a{padding:.45rem .55rem}
+      .side .foot{display:none}
+      .main{padding:1rem .9rem 2.4rem}
+      .topbar h1{font-size:1.3rem}
+    }
+    @media (prefers-reduced-motion:reduce){ .stat{transition:none} .stat:hover{transform:none} }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <p style="display:flex;align-items:center;gap:10px"><img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" style="border-radius:50%;border:2px solid #D4AF37" /><strong style="letter-spacing:.05em">IRFAN-GD · OWNER DASHBOARD</strong></p>
-    <h1>Business Dashboard</h1>
-    <div class="warn" role="note">
-      <strong>📊 IRFAN-GD BUSINESS DASHBOARD — IRFAN-GD is an AliExpress affiliate showcase.</strong>
-      <p style="margin:.4rem 0 0">This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until the D1 database is connected — no figure on this page is estimated or fabricated. <strong>Access mode (owner decision, 2026-11-11): viewing is currently open without a login</strong> — the owner chose to run the dashboard without the Cloudflare Access lock for now. Actions that change data (CSV import, manual sync) stay <strong>disabled</strong> until the owner configures the Access lock; configuring it later re-secures this page automatically. This page is not linked from the public site and carries <code>noindex</code>.</p>
-      <p style="margin:.4rem 0 0">Signed in as: <strong id="whoami" style="color:#fff">checking…</strong> · Last GA4 sync: <strong id="lastSync" style="color:#fff">—</strong></p>
-    </div>
-
-    <section class="card" aria-label="Affiliate clicks">
-      <h2>Affiliate Clicks (GA4 → D1)</h2>
-      <div class="stat">
-        <div><b class="mono" id="clicks7">—</b><span>Affiliate clicks, last 7 days</span></div>
-        <div><b class="mono" id="clicks30">—</b><span>Affiliate clicks, last 30 days</span></div>
-        <div><b>{vis.length}</b><span>Products live on the storefront</span></div>
-        <div><b>{hidden.length}</b><span>Products hidden (records kept)</span></div>
+  <div class="shell">
+    <aside class="side">
+      <div class="brand">
+        <img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" />
+        <div><b>IRFAN-GD</b><span>Admin V2</span></div>
       </div>
-      <p style="margin-top:.8rem"><button type="button" id="syncBtn">Sync GA4 now</button> <span id="syncMsg" role="status"></span></p>
-      <h2 style="margin-top:1.2rem">Top-Performing Products (by real clicks)</h2>
-      <table id="topTable"><tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2"><span class="unavail">NOT CONNECTED</span> — figures appear after the first GA4 sync.</td></tr></table>
-    </section>
+      <nav class="nav" aria-label="Dashboard">
+        <a href="/irfan-admin/" class="on"><i>▦</i> Overview</a>
+        <a href="/store/"><i>🛍️</i> Storefront</a>
+        <a href="/store/"><i>🏷️</i> Products</a>
+        <a href="/#tools"><i>🧰</i> Tools</a>
+        <a href="/disclosure/"><i>📄</i> Disclosure</a>
+      </nav>
+      <p class="foot">Affiliate showcase — sales happen on AliExpress.<br /><a href="/store/">← Back to the store</a></p>
+    </aside>
 
-    <section class="card" aria-label="Earnings imports">
-      <h2>Earnings — Imported from AliExpress Portals Reports</h2>
-      <div class="stat">
-        <div><b class="mono" id="earnTotal">—</b><span>Total imported commission (USD, from your reports only)</span></div>
-        <div><b class="mono" id="earnRows">—</b><span>Imported report rows</span></div>
-        <div><b id="earnLast">—</b><span>Last import</span></div>
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Business Dashboard</h1>
+          <p class="sub">Affiliate clicks, top products &amp; imported earnings — real figures only.</p>
+        </div>
+        <div class="chiprow">
+          <span class="chip"><span class="dot"></span> Mode: <b id="whoami">checking…</b></span>
+          <span class="chip">Last GA4 sync: <b id="lastSync">—</b></span>
+        </div>
       </div>
-      <form id="importForm" style="margin-top:1rem">
-        <label style="display:block;font-weight:700;color:#d6d6da;font-size:.92rem">Import a Portals CSV report (max 2 MB — enabled once the Access lock is configured)
-          <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
-        </label>
-        <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
-        <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported rows are stored in the D1 database. While the dashboard runs without the Access lock, importing stays disabled so nobody can alter the figures.</p>
-      </form>
-    </section>
 
-    <section class="card" aria-label="Product catalogue">
-      <h2>Product Catalogue (current storefront data)</h2>
-      <table>
-        <tr><th>Product</th><th>Price (USD)</th><th>Rating</th><th>Sold</th><th>Status</th></tr>
-        {(store.products as any[]).map(p => (
-          <tr><td>{p.name}</td><td>${p.price.toFixed(2)}</td><td>★ {p.rating}</td><td>{p.sold || '—'}</td><td>{p.visible ? 'Live' : 'Hidden'}</td></tr>
-        ))}
-      </table>
-    </section>
+      <section class="glass notice" role="note">
+        <strong>📊 IRFAN-GD is an AliExpress affiliate showcase.</strong>
+        <p>This dashboard shows only: affiliate clicks (from GA4), top-performing products, and earnings <em>imported by the owner from official AliExpress Portals reports</em>. IRFAN-GD never collects payments and never sees customer payment data. Panels show <span class="unavail">NOT CONNECTED</span> until the D1 database is connected — no figure on this page is estimated or fabricated. <strong>Access mode (owner decision, 2026-11-11): viewing is currently open without a login</strong> — the owner chose to run the dashboard without the Cloudflare Access lock for now. Actions that change data (CSV import, manual sync) stay <strong>disabled</strong> until the owner configures the Access lock; configuring it later re-secures this page automatically. This page is not linked from the public site and carries <code>noindex</code>.</p>
+      </section>
 
-    <section class="card" aria-label="Admin activity">
-      <h2>Admin Activity Log</h2>
-      <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
-      <p>Once the Access lock is configured, login sessions and every dashboard action are recorded here from the D1 database (Cloudflare's own Access log, in the Zero Trust dashboard, keeps only 24 hours on the free plan — this D1 log is the durable record). In the current no-lock mode, no sessions are recorded.</p>
-    </section>
+      <section class="stats" aria-label="Key figures">
+        <div class="glass stat" style="--acc:#4f8cff">
+          <div class="lbl">Affiliate clicks · 7 days <i>🖱️</i></div>
+          <div class="val mono" id="clicks7">—</div>
+          <div class="hint">From GA4, synced daily</div>
+        </div>
+        <div class="glass stat" style="--acc:#38e1ff">
+          <div class="lbl">Affiliate clicks · 30 days <i>📈</i></div>
+          <div class="val mono" id="clicks30">—</div>
+          <div class="hint">Rolling 30-day total</div>
+        </div>
+        <div class="glass stat" style="--acc:#8b5cf6">
+          <div class="lbl">Products live <i>🛍️</i></div>
+          <div class="val">{vis.length}</div>
+          <div class="hint">{hidden.length} hidden — records kept</div>
+        </div>
+        <div class="glass stat" style="--acc:#34d399">
+          <div class="lbl">Imported earnings <i>💰</i></div>
+          <div class="val mono" id="earnTotal">—</div>
+          <div class="hint"><span id="earnRows">0</span> report rows · last import: <span id="earnLast">never</span></div>
+        </div>
+      </section>
 
-    <p style="margin-top:1.4rem"><a href="/store/">← Back to the store</a></p>
+      <div class="grid2">
+        <section class="glass card" aria-label="Top products">
+          <h2><i>🏆</i> Top-Performing Products</h2>
+          <table id="topTable"><tr><th>Product</th><th>Clicks (30d)</th></tr><tr><td colspan="2"><span class="unavail">NOT CONNECTED</span> — figures appear after the first GA4 sync.</td></tr></table>
+          <p style="margin-top:.9rem"><button type="button" id="syncBtn">Sync GA4 now</button> <span id="syncMsg" role="status"></span></p>
+        </section>
+
+        <section class="glass card" aria-label="Earnings imports">
+          <h2><i>📥</i> Earnings — Portals CSV Import</h2>
+          <form id="importForm">
+            <label style="display:block;font-weight:700;color:#dbe4f5;font-size:.92rem">Import a Portals CSV report (max 2 MB — enabled once the Access lock is configured)
+              <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
+            </label>
+            <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
+            <p>Validation: file type and size checked server-side; the file's SHA-256 hash is recorded, so the same file can never be imported twice; each row is checked (date, product, amount) and duplicate rows are skipped and counted; a malformed file is rejected completely — nothing is partially imported. Imported rows are stored in the D1 database. While the dashboard runs without the Access lock, importing stays disabled so nobody can alter the figures.</p>
+          </form>
+        </section>
+      </div>
+
+      <section class="glass card" style="margin-bottom:1.1rem" aria-label="Product catalogue">
+        <h2><i>🗂️</i> Product Catalogue (current storefront data)</h2>
+        <table>
+          <tr><th>Product</th><th>Price (USD)</th><th>Rating</th><th>Sold</th><th>Status</th></tr>
+          {(store.products as any[]).map(p => (
+            <tr><td>{p.name}</td><td>${p.price.toFixed(2)}</td><td>★ {p.rating}</td><td>{p.sold || '—'}</td><td>{p.visible ? 'Live' : 'Hidden'}</td></tr>
+          ))}
+        </table>
+      </section>
+
+      <section class="glass card" aria-label="Admin activity">
+        <h2><i>🧾</i> Admin Activity Log</h2>
+        <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
+        <p>Once the Access lock is configured, login sessions and every dashboard action are recorded here from the D1 database (Cloudflare's own Access log, in the Zero Trust dashboard, keeps only 24 hours on the free plan — this D1 log is the durable record). In the current no-lock mode, no sessions are recorded.</p>
+      </section>
+    </main>
   </div>
 
   <script is:inline>
