@@ -24,7 +24,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
-  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');if(st){document.documentElement.dataset.style=st;document.documentElement.dataset.theme=(st==='current')?(localStorage.getItem('irfan-dash-theme')||'night'):(st==='sequoia'?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
+  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');if(st){document.documentElement.dataset.style=st;document.documentElement.dataset.theme=(st==='current')?(localStorage.getItem('irfan-dash-theme')||'night'):(['sequoia','sonoma','ventura','catalina','mojave'].indexOf(st)>=0?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
   <style>
     :root{
       --bg:#0a3442; --panel:rgba(16,52,66,.55); --panel2:rgba(23,68,84,.42);
@@ -302,6 +302,51 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="graphite"] .glass{background:linear-gradient(155deg,rgba(52,52,58,.60),rgba(38,38,44,.46))}
     html[data-style="graphite"] .glass.light{background:linear-gradient(150deg,rgba(235,238,242,.90),rgba(205,212,220,.82))}
     html[data-style="graphite"] .tabs a.on{background:#f4f4f6;color:#131316;border-color:#f4f4f6}
+    /* 6 · Ventura Sky — clean blue-white */
+    html[data-style="ventura"]{--gold:#a87f14;--gold2:#8a6414;--txt:#12283c;--dim:#476a86;--dim2:#7593ab;--stroke:rgba(30,80,130,.14);--stroke2:rgba(30,80,130,.28)}
+    html[data-style="ventura"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(140,200,255,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(235,245,255,.8), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(160,215,250,.45), transparent 60%),linear-gradient(155deg,#f6fbff 0%, #e2eef8 55%, #cbdfef 100%)}
+    html[data-style="ventura"] .side{background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(240,248,253,.66))}
+    html[data-style="ventura"] .glass{background:linear-gradient(155deg,rgba(255,255,255,.68),rgba(240,248,253,.52));box-shadow:0 16px 34px rgba(30,80,130,.15), inset 0 1px 0 rgba(255,255,255,.85)}
+    html[data-style="ventura"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.96),rgba(242,249,253,.9));border-color:rgba(30,80,130,.10)}
+    html[data-style="ventura"] .nav a.on{color:#12283c;background:linear-gradient(120deg,rgba(60,150,255,.26),rgba(60,150,255,.12))}
+    html[data-style="ventura"] .nav a:hover{color:#12283c}
+    html[data-style="ventura"] .chip b{color:#12283c}
+    html[data-style="ventura"] td, html[data-style="ventura"] th{border-bottom-color:rgba(30,80,130,.12);color:#27435c}
+    html[data-style="ventura"] .notice code{background:rgba(255,255,255,.65);color:#27435c}
+    html[data-style="ventura"] input[type=file]{color:#27435c}
+    html[data-style="ventura"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.72),rgba(238,248,253,.52))}
+    html[data-style="ventura"] .plan .bar{background:rgba(30,80,130,.12)}
+    html[data-style="ventura"] #themeToggle{background:rgba(255,255,255,.65)}
+    /* 7 · Catalina Lavender — soft violet light */
+    html[data-style="catalina"]{--gold:#a87f14;--gold2:#8a6414;--txt:#2c2140;--dim:#5c4f7d;--dim2:#8a7fa8;--stroke:rgba(90,60,160,.15);--stroke2:rgba(90,60,160,.29)}
+    html[data-style="catalina"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(200,170,255,.5), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,215,240,.5), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(170,160,250,.4), transparent 60%),linear-gradient(155deg,#faf6ff 0%, #ece4fa 55%, #dacdf2 100%)}
+    html[data-style="catalina"] .side{background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(246,240,253,.64))}
+    html[data-style="catalina"] .glass{background:linear-gradient(155deg,rgba(255,255,255,.66),rgba(246,240,253,.5));box-shadow:0 16px 34px rgba(90,60,160,.16), inset 0 1px 0 rgba(255,255,255,.85)}
+    html[data-style="catalina"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(248,244,253,.89));border-color:rgba(90,60,160,.11)}
+    html[data-style="catalina"] .nav a.on{color:#2c2140;background:linear-gradient(120deg,rgba(160,110,255,.28),rgba(160,110,255,.13))}
+    html[data-style="catalina"] .nav a:hover{color:#2c2140}
+    html[data-style="catalina"] .chip b{color:#2c2140}
+    html[data-style="catalina"] td, html[data-style="catalina"] th{border-bottom-color:rgba(90,60,160,.12);color:#40335e}
+    html[data-style="catalina"] .notice code{background:rgba(255,255,255,.62);color:#40335e}
+    html[data-style="catalina"] input[type=file]{color:#40335e}
+    html[data-style="catalina"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.7),rgba(244,238,253,.5))}
+    html[data-style="catalina"] .plan .bar{background:rgba(90,60,160,.13)}
+    html[data-style="catalina"] #themeToggle{background:rgba(255,255,255,.62)}
+    /* 8 · Mojave Sand — desert warm light */
+    html[data-style="mojave"]{--gold:#b07d1e;--gold2:#8f6410;--txt:#38301f;--dim:#6d6046;--dim2:#9a8c6c;--stroke:rgba(130,105,50,.17);--stroke2:rgba(130,105,50,.31)}
+    html[data-style="mojave"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(255,225,160,.6), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,250,235,.8), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(235,200,130,.42), transparent 60%),linear-gradient(155deg,#fbf6e9 0%, #f1e7cd 55%, #e2d0a4 100%)}
+    html[data-style="mojave"] .side{background:linear-gradient(180deg,rgba(255,253,245,.82),rgba(250,242,222,.66))}
+    html[data-style="mojave"] .glass{background:linear-gradient(155deg,rgba(255,253,246,.68),rgba(250,243,226,.52));box-shadow:0 16px 34px rgba(130,105,50,.17), inset 0 1px 0 rgba(255,255,255,.85)}
+    html[data-style="mojave"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(251,246,233,.89));border-color:rgba(130,105,50,.12)}
+    html[data-style="mojave"] .nav a.on{color:#38301f;background:linear-gradient(120deg,rgba(230,180,70,.32),rgba(230,180,70,.15))}
+    html[data-style="mojave"] .nav a:hover{color:#38301f}
+    html[data-style="mojave"] .chip b{color:#38301f}
+    html[data-style="mojave"] td, html[data-style="mojave"] th{border-bottom-color:rgba(130,105,50,.13);color:#4f4429}
+    html[data-style="mojave"] .notice code{background:rgba(255,255,255,.62);color:#4f4429}
+    html[data-style="mojave"] input[type=file]{color:#4f4429}
+    html[data-style="mojave"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.72),rgba(250,243,224,.52))}
+    html[data-style="mojave"] .plan .bar{background:rgba(130,105,50,.14)}
+    html[data-style="mojave"] #themeToggle{background:rgba(255,255,255,.62)}
   </style>
 </head>
 <body>
