@@ -24,6 +24,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
+  <script is:inline>try{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}catch(e){}</script>
   <style>
     :root{
       --bg:#0a3442; --panel:rgba(16,52,66,.55); --panel2:rgba(23,68,84,.42);
@@ -194,11 +195,43 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       .topbar h1{font-size:1.3rem}
     }
     @media (prefers-reduced-motion:reduce){ .stat{transition:none} .stat:hover{transform:none} }
+    /* ---------- macOS Day theme ---------- */
+    html[data-theme="day"]{
+      --bg:#dfe9f2; --panel:rgba(255,255,255,.62); --panel2:rgba(246,250,253,.50);
+      --stroke:rgba(31,60,86,.14); --stroke2:rgba(31,60,86,.26);
+      --txt:#13222e; --dim:#476273; --dim2:#758d9c;
+      --gold:#a87f14; --gold2:#8a6414; --green:#0f9d74; --amber:#b97f16; --red:#c24343;
+    }
+    html[data-theme="day"] body{
+      background:
+        radial-gradient(1000px 620px at 88% -12%, rgba(140,200,255,.45), transparent 60%),
+        radial-gradient(900px 700px at -12% 22%, rgba(255,196,220,.35), transparent 58%),
+        radial-gradient(850px 650px at 55% 118%, rgba(190,230,200,.40), transparent 60%),
+        linear-gradient(155deg,#f4f8fb 0%, #dfe9f2 55%, #cfdde9 100%);
+    }
+    html[data-theme="day"] .side{background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(240,246,250,.60))}
+    html[data-theme="day"] .glass{box-shadow:0 16px 34px rgba(31,60,86,.16), inset 0 1px 0 rgba(255,255,255,.75)}
+    html[data-theme="day"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(238,246,250,.85));border-color:rgba(31,60,86,.10)}
+    html[data-theme="day"] .nav a.on{color:#13222e;background:linear-gradient(120deg,rgba(56,150,255,.22),rgba(56,150,255,.10))}
+    html[data-theme="day"] .nav a:hover{color:#13222e}
+    html[data-theme="day"] .chip b{color:#13222e}
+    html[data-theme="day"] td, html[data-theme="day"] th{border-bottom-color:rgba(31,60,86,.12);color:#22394a}
+    html[data-theme="day"] .notice code{background:rgba(255,255,255,.6);color:#22394a}
+    html[data-theme="day"] input[type=file]{color:#22394a}
+    html[data-theme="day"] .minirow{border-bottom-color:rgba(31,60,86,.10)}
+    html[data-theme="day"] .btn-ghost{background:rgba(255,255,255,.55)}
+    html[data-theme="day"] .bars .bar.zero, html[data-theme="day"] .bigbars .bar.zero{background:rgba(31,60,86,.14)}
+    .lights{display:flex;gap:8px;padding:.15rem .35rem 0}
+    .lights i{width:12px;height:12px;border-radius:50%;display:block;box-shadow:inset 0 0 2px rgba(0,0,0,.25)}
+    .lights .r{background:#ff5f57}.lights .y{background:#febc2e}.lights .g{background:#28c840}
+    #themeToggle{margin-left:auto;flex:none;background:rgba(255,255,255,.14);border:1px solid var(--stroke2);color:var(--txt);border-radius:999px;padding:.45rem .8rem;font:inherit;font-size:.83rem;font-weight:700;cursor:pointer;box-shadow:none;backdrop-filter:blur(8px)}
+    html[data-theme="day"] #themeToggle{background:rgba(255,255,255,.65)}
   </style>
 </head>
 <body>
   <div class="shell">
     <aside class="side">
+      <div class="lights" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="g"></i></div>
       <div class="brand">
         <img src="/store/avatar.webp" alt="IRFAN-GD logo" width="40" height="40" />
         <div><b>IRFAN-GD</b><span>Admin V2</span></div>
@@ -219,6 +252,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       <div class="glass searchbar" role="search">
         <span class="mag" aria-hidden="true">🔍</span>
         <input id="dashSearch" type="search" placeholder="Search products in the catalogue…" aria-label="Search products in the catalogue" />
+        <button type="button" id="themeToggle" aria-label="Switch between day and night theme">🌙 Night</button>
         <img class="avatar" src="/store/avatar.webp" alt="IRFAN-GD" width="38" height="38" />
       </div>
       <div class="topbar">
@@ -372,7 +406,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <section class="glass card" id="import" aria-label="Earnings imports">
           <h2><i>📥</i> Earnings — Portals CSV Import</h2>
           <form id="importForm">
-            <label style="display:block;font-weight:700;color:#e2f2fa;font-size:.92rem">Import a Portals CSV report (max 2 MB — enabled once the Access lock is configured)
+            <label style="display:block;font-weight:700;font-size:.92rem">Import a Portals CSV report (max 2 MB — enabled once the Access lock is configured)
               <input type="file" id="csvFile" name="file" accept=".csv,text/csv" required style="display:block;margin-top:.5rem" />
             </label>
             <p style="margin:.6rem 0"><button type="submit" id="importBtn">Import CSV</button> <span id="importMsg" role="status"></span></p>
@@ -513,6 +547,21 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
           el('railLog').innerHTML = d.log.slice(0, 5).map(function(l){ return '<div class="minirow"><span class="n">' + esc(l.action) + (l.detail ? ' — ' + esc(l.detail) : '') + '</span><span class="c">' + esc(l.result) + '</span></div>'; }).join('');
         }
       }).catch(function(){ notConnected(); });
+
+      var themeBtn = el('themeToggle');
+      function paintThemeBtn(){
+        if (!themeBtn) return;
+        themeBtn.textContent = document.documentElement.dataset.theme === 'day' ? '☀️ Day' : '🌙 Night';
+      }
+      if (themeBtn) {
+        paintThemeBtn();
+        themeBtn.addEventListener('click', function(){
+          var next = document.documentElement.dataset.theme === 'day' ? 'night' : 'day';
+          document.documentElement.dataset.theme = next;
+          try { localStorage.setItem('irfan-dash-theme', next); } catch (e) {}
+          paintThemeBtn();
+        });
+      }
 
       var searchEl = el('dashSearch');
       if (searchEl) {
