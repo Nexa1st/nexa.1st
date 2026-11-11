@@ -24,7 +24,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
-  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');if(st){document.documentElement.dataset.style=st;document.documentElement.dataset.theme=(st==='current')?(localStorage.getItem('irfan-dash-theme')||'night'):(['sequoia','sonoma','ventura','catalina','mojave'].indexOf(st)>=0?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
+  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');var savedStyle=localStorage.getItem('irfan-dash-style');if(st){document.documentElement.dataset.style=st;if(st!=='current')document.documentElement.dataset.theme=(['sequoia','sonoma','ventura','catalina','mojave','bigsur'].indexOf(st)>=0?'day':'night');else document.documentElement.dataset.theme=(localStorage.getItem('irfan-dash-theme')||'night');}else if(savedStyle){document.documentElement.dataset.style=savedStyle;document.documentElement.dataset.theme=(['sequoia','sonoma','ventura','catalina','mojave','bigsur'].indexOf(savedStyle)>=0?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
   <style>
     :root{
       --bg:#0a3442; --panel:rgba(16,52,66,.55); --panel2:rgba(23,68,84,.42);
@@ -295,13 +295,30 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="tahoe"] .stat.light .lbl{color:#a9bde0}
     html[data-style="tahoe"] .stat.light .hint{color:#8498c2}
     html[data-style="tahoe"] .stat.light .val{color:#f2f7ff}
-    /* 4 · Graphite Pro — dark grey pro */
-    html[data-style="graphite"]{--txt:#f4f4f6;--dim:#b9b9c2;--dim2:#83838f;--stroke:rgba(255,255,255,.14);--stroke2:rgba(255,255,255,.28);--gold:#d8b25c;--gold2:#c9a227}
-    html[data-style="graphite"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(255,255,255,.10), transparent 55%),radial-gradient(850px 650px at 55% 118%, rgba(0,0,0,.5), transparent 60%),linear-gradient(155deg,#3a3a40 0%, #232327 55%, #131316 100%)}
-    html[data-style="graphite"] .side{background:linear-gradient(180deg,rgba(28,28,32,.88),rgba(20,20,24,.8))}
-    html[data-style="graphite"] .glass{background:linear-gradient(155deg,rgba(52,52,58,.60),rgba(38,38,44,.46))}
-    html[data-style="graphite"] .glass.light{background:linear-gradient(150deg,rgba(235,238,242,.90),rgba(205,212,220,.82))}
-    html[data-style="graphite"] .tabs a.on{background:#f4f4f6;color:#131316;border-color:#f4f4f6}
+    /* 4 · Graphite Pro — dark grey glass, white cards (V2/V7 video style) */
+    html[data-style="graphite"]{--gold:#FFD700;--gold2:#FFD700;--cyan:#38e1ff;--blue:#4f8cff;--violet:#8b5cf6;--green:#34d399;--amber:#f0b429;--red:#ff8a8a;--txt:#f2fbff;--dim:#a9cbda;--dim2:#7ba3b5;--stroke:rgba(160,225,245,.16);--stroke2:rgba(160,225,245,.32)}
+    html[data-style="graphite"] body{background:radial-gradient(1100px 620px at 85% -10%, rgba(150,160,175,.20), transparent 60%),radial-gradient(900px 720px at -10% 25%, rgba(90,95,105,.28), transparent 60%),radial-gradient(800px 600px at 55% 115%, rgba(0,0,0,.45), transparent 60%),linear-gradient(160deg,#3d3d44 0%, #232328 55%, #101013 100%)}
+    html[data-style="graphite"] .side{background:linear-gradient(180deg,rgba(24,24,28,.88),rgba(17,17,20,.82));border-right-color:rgba(255,255,255,.10)}
+    html[data-style="graphite"] .glass{background:linear-gradient(155deg,rgba(46,46,53,.58),rgba(32,32,38,.44));border-color:rgba(255,255,255,.13);box-shadow:0 18px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.09)}
+    html[data-style="graphite"] .glass.light{background:linear-gradient(150deg,rgba(240,244,250,.94),rgba(214,222,232,.88));color:#1b2733;border-color:rgba(255,255,255,.5);box-shadow:0 14px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.85)}
+    html[data-style="graphite"] .glass.light h2, html[data-style="graphite"] .glass.light h3{color:#1b2733}
+    html[data-style="graphite"] .glass.light p, html[data-style="graphite"] .glass.light .pmeta{color:#45566a}
+    html[data-style="graphite"] .glass.light .chart-note{color:#61758c}
+    html[data-style="graphite"] .stat.light .lbl{color:#45566a}
+    html[data-style="graphite"] .stat.light .hint{color:#61758c}
+    html[data-style="graphite"] .ann .when{color:#61758c}
+    html[data-style="graphite"] .nav a.on{color:#fff;background:linear-gradient(120deg,rgba(255,255,255,.20),rgba(255,255,255,.08));border-color:rgba(255,255,255,.16)}
+    html[data-style="graphite"] .nav a .cnt{background:rgba(255,255,255,.14)}
+    html[data-style="graphite"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.10),rgba(255,255,255,.04))}
+    html[data-style="graphite"] .plan .bar{background:rgba(255,255,255,.16)}
+    html[data-style="graphite"] #themeToggle{background:rgba(255,255,255,.10)}
+    /* Style picker */
+    .stylebar{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;margin:0 0 1.1rem}
+    .stylebar .slbl{font-size:.78rem;color:var(--dim2);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-right:.2rem}
+    .stylebar button{display:inline-flex;align-items:center;gap:.45rem;padding:.42rem .75rem;border-radius:999px;background:var(--panel);border:1px solid var(--stroke);color:var(--dim);font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;box-shadow:none;backdrop-filter:blur(10px)}
+    .stylebar button .sw{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.25);display:inline-block;flex:none}
+    .stylebar button.on{color:#fff;border-color:var(--gold);background:linear-gradient(120deg,rgba(212,175,55,.28),rgba(212,175,55,.12))}
+    .stylebar button:hover{color:#fff;border-color:var(--stroke2)}
     /* 6 · Ventura Sky — clean blue-white */
     html[data-style="ventura"]{--gold:#a87f14;--gold2:#8a6414;--txt:#12283c;--dim:#476a86;--dim2:#7593ab;--stroke:rgba(30,80,130,.14);--stroke2:rgba(30,80,130,.28)}
     html[data-style="ventura"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(140,200,255,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(235,245,255,.8), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(160,215,250,.45), transparent 60%),linear-gradient(155deg,#f6fbff 0%, #e2eef8 55%, #cbdfef 100%)}
@@ -347,6 +364,21 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="mojave"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.72),rgba(250,243,224,.52))}
     html[data-style="mojave"] .plan .bar{background:rgba(130,105,50,.14)}
     html[data-style="mojave"] #themeToggle{background:rgba(255,255,255,.62)}
+    /* 9 · Big Sur Rose — rose-pink dawn (light) */
+    html[data-style="bigsur"]{--gold:#a87f14;--gold2:#8a6414;--txt:#3a2330;--dim:#75566a;--dim2:#a18395;--stroke:rgba(150,70,110,.15);--stroke2:rgba(150,70,110,.29)}
+    html[data-style="bigsur"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(255,175,205,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,240,243,.8), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(250,180,165,.42), transparent 60%),linear-gradient(155deg,#fdf5f7 0%, #f7e3ea 55%, #efccd9 100%)}
+    html[data-style="bigsur"] .side{background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(252,240,244,.64))}
+    html[data-style="bigsur"] .glass{background:linear-gradient(155deg,rgba(255,255,255,.66),rgba(252,240,244,.5));box-shadow:0 16px 34px rgba(150,70,110,.15), inset 0 1px 0 rgba(255,255,255,.85)}
+    html[data-style="bigsur"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(253,244,247,.89));border-color:rgba(150,70,110,.11)}
+    html[data-style="bigsur"] .nav a.on{color:#3a2330;background:linear-gradient(120deg,rgba(255,130,175,.30),rgba(255,130,175,.14))}
+    html[data-style="bigsur"] .nav a:hover{color:#3a2330}
+    html[data-style="bigsur"] .chip b{color:#3a2330}
+    html[data-style="bigsur"] td, html[data-style="bigsur"] th{border-bottom-color:rgba(150,70,110,.12);color:#55334a}
+    html[data-style="bigsur"] .notice code{background:rgba(255,255,255,.62);color:#55334a}
+    html[data-style="bigsur"] input[type=file]{color:#55334a}
+    html[data-style="bigsur"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.7),rgba(252,238,243,.5))}
+    html[data-style="bigsur"] .plan .bar{background:rgba(150,70,110,.13)}
+    html[data-style="bigsur"] #themeToggle{background:rgba(255,255,255,.62)}
   </style>
 </head>
 <body>
@@ -406,6 +438,18 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         <a href="#catalogue">🏷️ Products</a>
         <a href="#import">📥 Import CSV</a>
         <button type="button" class="off" disabled title="New products are added only with the owner's approval (weekly refresh)">＋ Add product</button>
+      </div>
+      <div class="stylebar" id="styleBar" aria-label="Theme styles">
+        <span class="slbl">🎨 Style</span>
+        <button type="button" data-style-pick="current"><span class="sw" style="background:linear-gradient(135deg,#12566b,#38e1ff)"></span>Current</button>
+        <button type="button" data-style-pick="sequoia"><span class="sw" style="background:linear-gradient(135deg,#ffd9a0,#f0a35e)"></span>Sequoia</button>
+        <button type="button" data-style-pick="sonoma"><span class="sw" style="background:linear-gradient(135deg,#c9f2d4,#5ecf8a)"></span>Sonoma</button>
+        <button type="button" data-style-pick="ventura"><span class="sw" style="background:linear-gradient(135deg,#eaf5ff,#7db9f0)"></span>Ventura</button>
+        <button type="button" data-style-pick="catalina"><span class="sw" style="background:linear-gradient(135deg,#efe6ff,#b18cff)"></span>Catalina</button>
+        <button type="button" data-style-pick="mojave"><span class="sw" style="background:linear-gradient(135deg,#fdf3d0,#e3b959)"></span>Mojave</button>
+        <button type="button" data-style-pick="bigsur"><span class="sw" style="background:linear-gradient(135deg,#ffe3ec,#ff8fb5)"></span>Big Sur</button>
+        <button type="button" data-style-pick="tahoe"><span class="sw" style="background:linear-gradient(135deg,#16294d,#4f8cff)"></span>Tahoe</button>
+        <button type="button" data-style-pick="graphite"><span class="sw" style="background:linear-gradient(135deg,#3d3d44,#101013)"></span>Graphite</button>
       </div>
       <div class="feat" aria-label="Dashboard tools">
         <button type="button" id="btnShare">🔗 Copy dashboard link</button>
@@ -707,11 +751,18 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       if (themeBtn) {
         paintThemeBtn();
         themeBtn.addEventListener('click', function(){
-          if (document.documentElement.dataset.style) { toast('Ye sirf preview hai — pasand aaye to chat mein us style ka naam bata dein, wahi asal theme ban jayegi.'); return; }
           var next = document.documentElement.dataset.theme === 'day' ? 'night' : 'day';
-          document.documentElement.dataset.theme = next;
+          if (next === 'night') {
+            delete document.documentElement.dataset.style;
+            try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
+            document.documentElement.dataset.theme = 'night';
+          } else {
+            try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
+            document.documentElement.dataset.theme = 'day';
+          }
           try { localStorage.setItem('irfan-dash-theme', next); } catch (e) {}
           paintThemeBtn();
+          paintStyleBar();
         });
       }
 
@@ -757,6 +808,33 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       try { if (localStorage.getItem('irfan-dash-density') === 'compact') { document.body.classList.add('compact'); if (bDensity) bDensity.textContent = '🗜️ Normal view'; } } catch (e) {}
       var bRefresh = el('btnRefresh');
       if (bRefresh) bRefresh.addEventListener('click', function(){ toast('Refreshing — reloading the latest figures…'); setTimeout(function(){ location.reload(); }, 500); });
+
+      var DAY_STYLES = ['sequoia', 'sonoma', 'ventura', 'catalina', 'mojave', 'bigsur'];
+      function paintStyleBar(){
+        var cur = document.documentElement.dataset.style || 'current';
+        document.querySelectorAll('[data-style-pick]').forEach(function(b){
+          b.classList.toggle('on', b.getAttribute('data-style-pick') === cur);
+        });
+      }
+      document.querySelectorAll('[data-style-pick]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var pick = b.getAttribute('data-style-pick');
+          if (pick === 'current') {
+            delete document.documentElement.dataset.style;
+            try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
+            document.documentElement.dataset.theme = 'night';
+            try { localStorage.setItem('irfan-dash-theme', 'night'); } catch (e) {}
+          } else {
+            document.documentElement.dataset.style = pick;
+            document.documentElement.dataset.theme = DAY_STYLES.indexOf(pick) >= 0 ? 'day' : 'night';
+            try { localStorage.setItem('irfan-dash-style', pick); } catch (e) {}
+          }
+          paintThemeBtn();
+          paintStyleBar();
+          toast('Style: ' + b.textContent.trim() + ' — ye pasand ab yaad rahegi.');
+        });
+      });
+      paintStyleBar();
 
       var searchEl = el('dashSearch');
       if (searchEl) {
