@@ -16,10 +16,11 @@ export async function onRequestGet(context) {
     const d = new Date(Date.now() - days * 86400000);
     return d.toISOString().slice(0, 10);
   };
-  const [c7, c30, top, earn, lastImp, sync, log] = await Promise.all([
+  const [c7, c30, top, daily, earn, lastImp, sync, log] = await Promise.all([
     env.DB.prepare('SELECT COALESCE(SUM(clicks),0) AS n FROM daily_clicks WHERE date >= ?1').bind(since(7)).first(),
     env.DB.prepare('SELECT COALESCE(SUM(clicks),0) AS n FROM daily_clicks WHERE date >= ?1').bind(since(30)).first(),
     env.DB.prepare('SELECT product, SUM(clicks) AS clicks FROM daily_clicks WHERE date >= ?1 GROUP BY product ORDER BY clicks DESC LIMIT 10').bind(since(30)).all(),
+    env.DB.prepare('SELECT date, SUM(clicks) AS clicks FROM daily_clicks WHERE date >= ?1 GROUP BY date ORDER BY date ASC').bind(since(30)).all(),
     env.DB.prepare('SELECT COALESCE(SUM(amount),0) AS total, COUNT(*) AS rows FROM earnings').first(),
     env.DB.prepare('SELECT imported_at FROM import_files ORDER BY id DESC LIMIT 1').first(),
     env.DB.prepare('SELECT last_sync FROM sync_state WHERE id = 1').first(),
@@ -33,6 +34,7 @@ export async function onRequestGet(context) {
     clicks7d: c7 ? c7.n : 0,
     clicks30d: c30 ? c30.n : 0,
     topProducts: (top && top.results) || [],
+    dailySeries: (daily && daily.results) || [],
     earnings: {
       total: earn ? earn.total : 0,
       rows: earn ? earn.rows : 0,
