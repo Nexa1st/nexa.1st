@@ -1,5 +1,5 @@
 ---
-title: "How AI Video Generators Actually Work — A Creator's Plain-English Guide"
+title: "How AI Video Generators Work — A Creator's Guide"
 description: "Text prompts, reference images, frames and motion: what really happens inside an AI video generator, and why your first two seconds decide everything."
 pubDate: 2026-11-08
 category: "AI & Machine Learning"

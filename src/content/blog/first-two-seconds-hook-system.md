@@ -1,5 +1,5 @@
 ---
-title: "The First Two Seconds: A Hook System for AI Shorts That Holds Attention"
+title: "The First Two Seconds: A Hook System for AI Shorts"
 description: "Extreme hooks are a design problem, not luck. A practical system for opening AI videos so a viewer understands the impossible thing instantly."
 pubDate: 2026-11-04
 category: "Creator Guides"
@@ -16,6 +16,10 @@ longTailKeywords: ["how to hook viewers in the first two seconds of a video"]
 searchIntent: "informational"
 targetCountry: "US"
 cluster: "AI Tools & Tutorials"
+faqs:
+  - { q: "What makes a good hook in the first two seconds of a short video?", a: "Start with the payoff's question, not the story: the first visual should make a viewer think \"what is happening here?\" Proven patterns include impossible scale, opening mid-action, a familiar thing in the wrong place, a before/after change inside one shot, and a face reacting to something off-frame." }
+  - { q: "Should a short video start with the beginning of the story?", a: "No. Write the final twist first, then the hook that promises it. A simple 15-second map: 0-2s the hook, 2-6s the situation becomes clear, 6-11s escalation, 11-15s the payoff, twist, or a loop back to the opening frame." }
+  - { q: "Does sound matter for the opening hook?", a: "Yes. A strong, matched sound effect in the opening moment raises retention more than background music left at its default start. When music is used, shift it so its strongest part lands on the video's strongest moment." }
 ---
 
 ## The opening frame is the whole pitch

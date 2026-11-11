@@ -1,5 +1,5 @@
 ---
-title: "Short-Form SEO: Titles, Captions and Hashtags That Earn Discovery"
+title: "Short-Form SEO: Titles, Captions & Hashtags"
 description: "Search and suggested feeds both run on text signals. How to write titles, captions and hashtag sets that help the right viewers find your clips."
 pubDate: 2026-10-27
 category: "Digital Marketing"
@@ -15,6 +15,10 @@ searchIntent: "informational"
 targetCountry: "US"
 cluster: "Digital Marketing"
 pillar: true
+faqs:
+  - { q: "How do platforms decide who sees a short video?", a: "Platforms read the title, caption, hashtags, on-screen context and early viewer behaviour before anyone watches. Strong text does not rescue a weak clip, but weak text buries a strong one." }
+  - { q: "How many hashtags should a short video use?", a: "A small, relevant set: a couple of broad discovery tags plus specific ones for the subject and the series. Tags that do not match the content may win a click and lose the viewer — and watch time is the signal that compounds." }
+  - { q: "Why does every clip in a series need a unique caption?", a: "Reusing one caption block across a whole series trains the platform to treat the posts as duplicates. Write a fresh caption per clip: what happens, a genuine question viewers can answer in comments, and the series context." }
 ---
 
 ## Your clip is judged by its text before it is watched

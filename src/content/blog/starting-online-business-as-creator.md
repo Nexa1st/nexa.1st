@@ -1,5 +1,5 @@
 ---
-title: "Starting an Online Business as a Creator: The Honest First Steps"
+title: "Starting an Online Business as a Creator"
 description: "No overnight promises. The realistic sequence for turning a content hobby into a small online business: audience, offer, proof, then systems."
 pubDate: 2026-10-30
 category: "Online Business"
@@ -15,6 +15,10 @@ searchIntent: "informational"
 targetCountry: "US"
 cluster: "Online Business"
 pillar: true
+faqs:
+  - { q: "What is the first step to starting an online business as a creator?", a: "Pick one audience and one problem. \"Everyone\" is not an audience — choose the viewer you already understand and the specific thing you reliably give them." }
+  - { q: "What should a creator's first paid offer be?", a: "Something small and real: an editing service, a template pack, or a done-for-you version of what your videos demonstrate. Price it from the work involved, deliver it well, and collect real testimonials — never invented ones." }
+  - { q: "What should new creators ignore?", a: "Income screenshots without context, courses promising guaranteed results, and any \"opportunity\" that requires paying to unlock earnings. If a platform program is real, its rules are published on the platform itself." }
 ---
 
 ## The part nobody posts about

@@ -1,5 +1,5 @@
 ---
-title: "The Free AI Tool Stack We Actually Use for Short-Form Video"
+title: "The Free AI Tool Stack for Short-Form Video"
 description: "A realistic, free-first stack for AI creators: ideation, generation, editing, captions and publishing — with honest notes on what free tiers can and cannot do."
 pubDate: 2026-11-06
 category: "AI & Machine Learning"
