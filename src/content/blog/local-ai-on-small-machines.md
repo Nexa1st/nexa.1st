@@ -1,5 +1,5 @@
 ---
-title: "Running AI Locally on a Small Machine: What Is Realistic (and What Is Not)"
+title: "Running AI Locally on a Small Machine: Honest Limits"
 description: "Local AI is genuinely useful — within limits. Small models on modest hardware: what runs well, what crawls, and how to set expectations honestly."
 pubDate: 2026-10-24
 category: "Technology"
@@ -16,6 +16,10 @@ searchIntent: "informational"
 targetCountry: "US"
 cluster: "Technology"
 pillar: true
+faqs:
+  - { q: "Can a small computer without a GPU run AI models locally?", a: "Yes, small models — around half a billion to a few billion parameters — respond in seconds on a modest machine and handle drafting, summarising, simple Q&A and basic code completion. Mid-size models may load but answer slowly, and large models are effectively unusable without serious RAM and preferably a GPU." }
+  - { q: "What are good uses for a small local AI model?", a: "First drafts and headline variations while offline, summarising your own notes and transcripts, a private scratchpad for ideas you do not want in a cloud service, and learning how prompts and context behave at zero cost." }
+  - { q: "What should you not use a small local model for?", a: "Anything where a wrong answer is expensive, anything needing current information, and long creative writing where quality differences are obvious. Use a cloud assistant within its current free limits for those, and verify important facts either way." }
 ---
 
 ## Local AI's real appeal

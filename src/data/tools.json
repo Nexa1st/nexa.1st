@@ -1,1 +1,146 @@
-[{"bestFor":"Scripts, hooks, captions and idea development","by":"OpenAI","category":"AI Assistant","description":"Conversational AI assistant from OpenAI for writing, brainstorming, coding help and analysis. Check the official site for current plans and limits — they change over time.","emoji":"💬","gradient":"linear-gradient(135deg,#0ea5e9,#22c55e)","name":"ChatGPT","pricingLabel":"Check official site","slug":"chatgpt","url":"https://chatgpt.com"},{"bestFor":"Long documents, careful rewriting and analysis","by":"Anthropic","category":"AI Assistant","description":"AI assistant from Anthropic, widely used for long-form writing, document work and coding. Verify current plans and availability on the official site.","emoji":"🧠","gradient":"linear-gradient(135deg,#f59e0b,#ef4444)","name":"Claude","pricingLabel":"Check official site","slug":"claude","url":"https://claude.ai"},{"bestFor":"Research assistance inside the Google ecosystem","by":"Google","category":"AI Assistant","description":"Google's AI assistant, integrated across Google products. Features and limits vary by region and plan — confirm on the official site.","emoji":"✨","gradient":"linear-gradient(135deg,#3b82f6,#8b5cf6)","name":"Gemini","pricingLabel":"Check official site","slug":"gemini","url":"https://gemini.google.com"},{"bestFor":"Thumbnails, posters and quick social designs","by":"Canva","category":"Design","description":"Browser-based design platform for thumbnails, posters and social graphics, with templates and brand tools. Confirm current free/paid feature split on the official site.","emoji":"🎨","gradient":"linear-gradient(135deg,#06b6d4,#8b5cf6)","name":"Canva","pricingLabel":"Check official site","slug":"canva","url":"https://www.canva.com"},{"bestFor":"Fast vertical edits and captions for Reels/TikTok","by":"ByteDance","category":"Video Editing","description":"Video editor available on mobile, desktop and web, popular with short-form creators for captions, effects and fast exports. Check the official site for the current feature set.","emoji":"✂️","gradient":"linear-gradient(135deg,#111827,#374151)","name":"CapCut","pricingLabel":"Check official site","slug":"capcut","url":"https://www.capcut.com"},{"bestFor":"Screen recording, gameplay capture and live streams","by":"OBS Project","category":"Streaming & Recording","description":"Free and open-source software for video recording and live streaming, maintained by the OBS Project. Download only from the official site.","emoji":"📺","gradient":"linear-gradient(135deg,#1f2937,#6366f1)","name":"OBS Studio","pricingLabel":"Free / Open Source","slug":"obs-studio","url":"https://obsproject.com"},{"bestFor":"Cinematic colour grading and finishing","by":"Blackmagic Design","category":"Video Editing","description":"Professional editing, colour, effects and audio post-production suite from Blackmagic Design. The official site lists the current free and Studio versions — check which you need there.","emoji":"🎬","gradient":"linear-gradient(135deg,#7c3aed,#db2777)","name":"DaVinci Resolve","pricingLabel":"Check official site","slug":"davinci-resolve","url":"https://www.blackmagicdesign.com/products/davinciresolve"},{"bestFor":"Private, offline experiments with small local models","by":"Ollama","category":"Local AI","description":"Tool for running open language models locally on your own machine. Model availability and sizes change — see the official site and model library before downloading anything large.","emoji":"🦙","gradient":"linear-gradient(135deg,#334155,#0ea5e9)","name":"Ollama","pricingLabel":"Free / Open Source","slug":"ollama","url":"https://ollama.com"},{"bestFor":"Code hosting and static-site deployment pipelines","by":"GitHub / Microsoft","category":"Development","description":"Platform for hosting Git repositories, collaboration and CI. Plan details and limits are listed on the official site.","emoji":"🐙","gradient":"linear-gradient(135deg,#0f172a,#475569)","name":"GitHub","pricingLabel":"Check official site","slug":"github","url":"https://github.com"},{"bestFor":"Free static hosting for Astro and other generators","by":"Cloudflare","category":"Hosting","description":"Static site hosting that deploys from a Git repository to a global network, with a free pages.dev subdomain. Confirm current free-plan limits on the official site before relying on them.","emoji":"☁️","gradient":"linear-gradient(135deg,#f97316,#facc15)","name":"Cloudflare Pages","pricingLabel":"Check official site","slug":"cloudflare-pages","url":"https://pages.cloudflare.com"},{"bestFor":"Blogs, content sites and documentation","by":"Astro Community","category":"Development","description":"The web framework this site is built with: content-focused, static-first, and ships minimal JavaScript by default using islands for interactive parts.","emoji":"🚀","gradient":"linear-gradient(135deg,#f97316,#a855f7)","name":"Astro","pricingLabel":"Free / Open Source","slug":"astro","url":"https://astro.build"},{"bestFor":"Content calendars and production notes","by":"Notion Labs","category":"Productivity","description":"Workspace for notes, docs and project tracking used by many creators to plan content calendars. Check the official site for current plans.","emoji":"📝","gradient":"linear-gradient(135deg,#e5e7eb,#9ca3af)","name":"Notion","pricingLabel":"Check official site","slug":"notion","url":"https://www.notion.com"}]
+[
+ {
+  "bestFor": "Scripts, hooks, captions and idea development",
+  "by": "OpenAI",
+  "category": "AI Assistant",
+  "description": "Conversational AI assistant from OpenAI for writing, brainstorming, coding help and analysis. Check the official site for current plans and limits.",
+  "emoji": "💬",
+  "gradient": "linear-gradient(135deg,#0ea5e9,#22c55e)",
+  "name": "ChatGPT",
+  "pricingLabel": "Check official site",
+  "slug": "chatgpt",
+  "url": "https://chatgpt.com"
+ },
+ {
+  "bestFor": "Long documents, careful rewriting and analysis",
+  "by": "Anthropic",
+  "category": "AI Assistant",
+  "description": "AI assistant from Anthropic, widely used for long-form writing, document work and coding. Verify current plans and availability on the official site.",
+  "emoji": "🧠",
+  "gradient": "linear-gradient(135deg,#f59e0b,#ef4444)",
+  "name": "Claude",
+  "pricingLabel": "Check official site",
+  "slug": "claude",
+  "url": "https://claude.ai"
+ },
+ {
+  "bestFor": "Research assistance inside the Google ecosystem",
+  "by": "Google",
+  "category": "AI Assistant",
+  "description": "Google's AI assistant, integrated across Google products. Features and limits vary by region and plan — confirm on the official site.",
+  "emoji": "✨",
+  "gradient": "linear-gradient(135deg,#3b82f6,#8b5cf6)",
+  "name": "Gemini",
+  "pricingLabel": "Check official site",
+  "slug": "gemini",
+  "url": "https://gemini.google.com"
+ },
+ {
+  "bestFor": "Thumbnails, posters and quick social designs",
+  "by": "Canva",
+  "category": "Design",
+  "description": "Browser-based design platform for thumbnails, posters and social graphics, with templates and brand tools. Check the official site for the free/paid split.",
+  "emoji": "🎨",
+  "gradient": "linear-gradient(135deg,#06b6d4,#8b5cf6)",
+  "name": "Canva",
+  "pricingLabel": "Check official site",
+  "slug": "canva",
+  "url": "https://www.canva.com"
+ },
+ {
+  "bestFor": "Fast vertical edits and captions for Reels/TikTok",
+  "by": "ByteDance",
+  "category": "Video Editing",
+  "description": "Video editor on mobile, desktop and web, popular with short-form creators for captions, effects and fast exports. Check the official site for features.",
+  "emoji": "✂️",
+  "gradient": "linear-gradient(135deg,#111827,#374151)",
+  "name": "CapCut",
+  "pricingLabel": "Check official site",
+  "slug": "capcut",
+  "url": "https://www.capcut.com"
+ },
+ {
+  "bestFor": "Screen recording, gameplay capture and live streams",
+  "by": "OBS Project",
+  "category": "Streaming & Recording",
+  "description": "Free and open-source software for video recording and live streaming, maintained by the OBS Project. Download only from the official site.",
+  "emoji": "📺",
+  "gradient": "linear-gradient(135deg,#1f2937,#6366f1)",
+  "name": "OBS Studio",
+  "pricingLabel": "Free / Open Source",
+  "slug": "obs-studio",
+  "url": "https://obsproject.com"
+ },
+ {
+  "bestFor": "Cinematic colour grading and finishing",
+  "by": "Blackmagic Design",
+  "category": "Video Editing",
+  "description": "Professional editing, colour, effects and audio suite from Blackmagic Design. The official site lists the current free and Studio versions.",
+  "emoji": "🎬",
+  "gradient": "linear-gradient(135deg,#7c3aed,#db2777)",
+  "name": "DaVinci Resolve",
+  "pricingLabel": "Check official site",
+  "slug": "davinci-resolve",
+  "url": "https://www.blackmagicdesign.com/products/davinciresolve"
+ },
+ {
+  "bestFor": "Private, offline experiments with small local models",
+  "by": "Ollama",
+  "category": "Local AI",
+  "description": "Tool for running open language models locally on your own machine. Model availability and sizes change — see the official site before downloading.",
+  "emoji": "🦙",
+  "gradient": "linear-gradient(135deg,#334155,#0ea5e9)",
+  "name": "Ollama",
+  "pricingLabel": "Free / Open Source",
+  "slug": "ollama",
+  "url": "https://ollama.com"
+ },
+ {
+  "bestFor": "Code hosting and static-site deployment pipelines",
+  "by": "GitHub / Microsoft",
+  "category": "Development",
+  "description": "Platform for hosting Git repositories, collaboration and CI. Plan details and limits are listed on the official site.",
+  "emoji": "🐙",
+  "gradient": "linear-gradient(135deg,#0f172a,#475569)",
+  "name": "GitHub",
+  "pricingLabel": "Check official site",
+  "slug": "github",
+  "url": "https://github.com"
+ },
+ {
+  "bestFor": "Free static hosting for Astro and other generators",
+  "by": "Cloudflare",
+  "category": "Hosting",
+  "description": "Static site hosting that deploys from a Git repository to a global network, with a free pages.dev subdomain. Confirm free-plan limits on the official site.",
+  "emoji": "☁️",
+  "gradient": "linear-gradient(135deg,#f97316,#facc15)",
+  "name": "Cloudflare Pages",
+  "pricingLabel": "Check official site",
+  "slug": "cloudflare-pages",
+  "url": "https://pages.cloudflare.com"
+ },
+ {
+  "bestFor": "Blogs, content sites and documentation",
+  "by": "Astro Community",
+  "category": "Development",
+  "description": "The web framework this site is built with: content-focused, static-first, and ships minimal JavaScript by default using islands for interactive parts.",
+  "emoji": "🚀",
+  "gradient": "linear-gradient(135deg,#f97316,#a855f7)",
+  "name": "Astro",
+  "pricingLabel": "Free / Open Source",
+  "slug": "astro",
+  "url": "https://astro.build"
+ },
+ {
+  "bestFor": "Content calendars and production notes",
+  "by": "Notion Labs",
+  "category": "Productivity",
+  "description": "Workspace for notes, docs and project tracking used by many creators to plan content calendars. Check the official site for current plans.",
+  "emoji": "📝",
+  "gradient": "linear-gradient(135deg,#e5e7eb,#9ca3af)",
+  "name": "Notion",
+  "pricingLabel": "Check official site",
+  "slug": "notion",
+  "url": "https://www.notion.com"
+ }
+]

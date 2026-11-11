@@ -46,6 +46,14 @@ export const CATEGORY_CLUSTER: Record<string, string> = {
   'Digital Marketing': 'Digital Marketing',
   'Online Business': 'Online Business',
 };
+export const CATEGORY_SEO: Record<string, { title: string; description: string }> = {
+  'AI & Machine Learning': { title: 'AI & Machine Learning for Creators — Guides & Explainers | NEXA', description: 'How modern AI actually works, in plain English for creators: models, limits and the directing skills that turn random generations into publishable stories.' },
+  'Creator Guides': { title: 'Creator Guides & AI Tool Tutorials | NEXA', description: 'Hands-on creator tutorials and the free AI tool stacks behind a real short-form workflow — honest notes on what free tiers can and cannot do.' },
+  'Technology': { title: 'Technology for Creators — Local AI, Software & Setup | NEXA', description: 'Technology without the hype: local AI, realistic hardware expectations and the software choices that decide what a small creator can actually build.' },
+  'Gaming': { title: 'Gaming Creator Guides — Series, Income & Craft | NEXA', description: 'Gaming as craft and business: turning gameplay into cinematic series people follow, and understanding where gaming creator income really comes from.' },
+  'Digital Marketing': { title: 'Digital Marketing for Creators — Discovery, SEO & Growth | NEXA', description: 'Discovery is a system, not luck: titles, captions, hashtags and measurement habits that help the right viewers find your work. Tested patterns only.' },
+  'Online Business': { title: 'Online Business for Creators — Honest Starter Guides | NEXA', description: 'The honest road from content hobby to small online business: audience first, trust second, a small real offer third. No overnight promises.' },
+};
 export const CLUSTERS = ['Artificial Intelligence', 'AI Tools & Tutorials', 'Technology', 'Gaming', 'Digital Marketing', 'Online Business', 'Product Reviews'] as const;
 export const CLUSTER_INTROS: Record<string, string> = {
   'Artificial Intelligence': 'How modern AI actually works — explained in plain English for creators. These guides cover the models, the limits and the directing skills that turn unpredictable generations into publishable stories.',
