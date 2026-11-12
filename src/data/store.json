@@ -1,154 +1,325 @@
 {
- "products": [
-  {
-   "blurb": "Cordless mini vacuum for car seats, crumbs and tight corners.",
-   "img": "/store/car-vacuum.webp",
-   "name": "Wireless Handheld Car Vacuum",
-   "oldPrice": 51.07,
-   "price": 23.49,
-   "rating": 4.9,
-   "sold": "10,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c2JkoGgr",
-   "tag": "HOT SALE",
-   "categories": [
-    "car-tech"
-   ],
-   "keywords": "car vacuum cleaner cordless handheld auto detailing",
-   "editorsPick": true,
-   "visible": true
-  },
-  {
-   "blurb": "Clip-on wireless mic for creators — clearer voice on Reels and TikTok.",
-   "img": "/store/lavalier-mic.webp",
-   "name": "XinMic Wireless Lavalier Microphone",
-   "oldPrice": 44.43,
-   "price": 19.55,
-   "rating": 4.9,
-   "sold": "5,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3LnWNAf",
-   "tag": "TRENDING",
-   "categories": [
-    "creator-equipment"
-   ],
-   "keywords": "wireless microphone lavalier clip-on recording video creators",
-   "editorsPick": true,
-   "visible": true
-  },
-  {
-   "blurb": "Magnetic mount that keeps your phone locked in place on the road.",
-   "img": "/store/car-phone-holder.webp",
-   "name": "UGREEN Magnetic Car Phone Holder",
-   "oldPrice": 28.62,
-   "price": 18.03,
-   "rating": 4.9,
-   "sold": null,
-   "url": "https://s.click.aliexpress.com/e/_c3VR2qRl",
-   "tag": "NEW DEAL",
-   "categories": [
-    "car-tech",
-    "phone-accessories"
-   ],
-   "keywords": "magnetic car phone holder mount dashboard ugreen",
-   "editorsPick": false,
-   "visible": true
-  },
-  {
-   "blurb": "One stand for phone, watch and earbuds — a cleaner nightstand.",
-   "img": "/store/charger-stand.webp",
-   "name": "3-in-1 Magnetic Wireless Charger Stand",
-   "oldPrice": 32.08,
-   "price": 13.09,
-   "rating": 4.9,
-   "sold": "3,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3n3gdC3",
-   "tag": "TRENDING",
-   "categories": [
-    "phone-accessories",
-    "wireless-charging"
-   ],
-   "keywords": "wireless charger stand magnetic 3 in 1 phone watch earbuds",
-   "editorsPick": false,
-   "visible": true
-  },
-  {
-   "blurb": "Screen light bar with three colour temperatures — easier on the eyes at night.",
-   "img": "/store/monitor-light-bar.webp",
-   "name": "Monitor Light Bar — Eye Care, 3 Color Temps",
-   "oldPrice": 26.42,
-   "price": 10.55,
-   "rating": 4.9,
-   "sold": "5,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3KN5xGx",
-   "tag": "TRENDING",
-   "categories": [
-    "computer-accessories"
-   ],
-   "keywords": "monitor light bar screen lamp desk computer eye care usb",
-   "editorsPick": false,
-   "visible": true
-  },
-  {
-   "blurb": "Extends for group shots, folds into a tripod, remote in the handle.",
-   "img": "/store/selfie-tripod.webp",
-   "name": "Selfie Stick Tripod with Bluetooth Remote",
-   "oldPrice": 23.4,
-   "price": 10.15,
-   "rating": 4.9,
-   "sold": "10,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c4PF7nuT",
-   "tag": "HOT SALE",
-   "categories": [
-    "creator-equipment"
-   ],
-   "keywords": "selfie stick tripod bluetooth remote phone stand vlogging",
-   "editorsPick": false,
-   "visible": true
-  },
-  {
-   "blurb": "Seven cubes that keep a suitcase organised from the first day to the last.",
-   "img": "/store/packing-cubes.webp",
-   "name": "7-Piece Travel Packing Cubes Set",
-   "oldPrice": 19.51,
-   "price": 8.59,
-   "rating": 4.9,
-   "sold": "3,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3slxZhl",
-   "tag": "TRENDING",
-   "categories": [],
-   "keywords": "",
-   "editorsPick": false,
-   "visible": false
-  },
-  {
-   "blurb": "Small prep jobs — garlic, herbs, chillies — without the knife work.",
-   "img": "/store/garlic-chopper.webp",
-   "name": "Mini Electric Garlic Chopper",
-   "oldPrice": 14.46,
-   "price": 6.65,
-   "rating": 4.9,
-   "sold": "2,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3KdpbRp",
-   "tag": "NEW DEAL",
-   "categories": [],
-   "keywords": "",
-   "editorsPick": false,
-   "visible": false
-  },
-  {
-   "blurb": "Pour or spray — one glass bottle for controlled cooking oil.",
-   "img": "/store/oil-sprayer.webp",
-   "name": "2-in-1 Oil Sprayer Bottle, 470ml Glass",
-   "oldPrice": 14.04,
-   "price": 6.55,
-   "rating": 4.7,
-   "sold": "10,000+ sold",
-   "url": "https://s.click.aliexpress.com/e/_c3ayHe1t",
-   "tag": "HOT SALE",
-   "categories": [],
-   "keywords": "",
-   "editorsPick": false,
-   "visible": false
-  }
- ],
- "updated": "2026-11-10"
+  "products": [
+    {
+      "blurb": "Cordless mini vacuum for car seats, crumbs and tight corners.",
+      "img": "/store/car-vacuum.webp",
+      "name": "Wireless Handheld Car Vacuum",
+      "oldPrice": 51.07,
+      "price": 23.49,
+      "rating": 4.9,
+      "sold": "10,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c2JkoGgr",
+      "tag": "HOT SALE",
+      "categories": [
+        "car-tech"
+      ],
+      "keywords": "car vacuum cleaner cordless handheld auto detailing",
+      "editorsPick": true,
+      "visible": true
+    },
+    {
+      "blurb": "Clip-on wireless mic for creators — clearer voice on Reels and TikTok.",
+      "img": "/store/lavalier-mic.webp",
+      "name": "XinMic Wireless Lavalier Microphone",
+      "oldPrice": 44.43,
+      "price": 19.55,
+      "rating": 4.9,
+      "sold": "5,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3LnWNAf",
+      "tag": "TRENDING",
+      "categories": [
+        "creator-equipment"
+      ],
+      "keywords": "wireless microphone lavalier clip-on recording video creators",
+      "editorsPick": true,
+      "visible": true
+    },
+    {
+      "blurb": "Magnetic mount that keeps your phone locked in place on the road.",
+      "img": "/store/car-phone-holder.webp",
+      "name": "UGREEN Magnetic Car Phone Holder",
+      "oldPrice": 28.62,
+      "price": 18.03,
+      "rating": 4.9,
+      "sold": null,
+      "url": "https://s.click.aliexpress.com/e/_c3VR2qRl",
+      "tag": "NEW DEAL",
+      "categories": [
+        "car-tech",
+        "phone-accessories"
+      ],
+      "keywords": "magnetic car phone holder mount dashboard ugreen",
+      "editorsPick": false,
+      "visible": true
+    },
+    {
+      "blurb": "One stand for phone, watch and earbuds — a cleaner nightstand.",
+      "img": "/store/charger-stand.webp",
+      "name": "3-in-1 Magnetic Wireless Charger Stand",
+      "oldPrice": 32.08,
+      "price": 13.09,
+      "rating": 4.9,
+      "sold": "3,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3n3gdC3",
+      "tag": "TRENDING",
+      "categories": [
+        "phone-accessories",
+        "wireless-charging"
+      ],
+      "keywords": "wireless charger stand magnetic 3 in 1 phone watch earbuds",
+      "editorsPick": false,
+      "visible": true
+    },
+    {
+      "blurb": "Screen light bar with three colour temperatures — easier on the eyes at night.",
+      "img": "/store/monitor-light-bar.webp",
+      "name": "Monitor Light Bar — Eye Care, 3 Color Temps",
+      "oldPrice": 26.42,
+      "price": 10.55,
+      "rating": 4.9,
+      "sold": "5,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3KN5xGx",
+      "tag": "TRENDING",
+      "categories": [
+        "computer-accessories"
+      ],
+      "keywords": "monitor light bar screen lamp desk computer eye care usb",
+      "editorsPick": false,
+      "visible": true
+    },
+    {
+      "blurb": "Extends for group shots, folds into a tripod, remote in the handle.",
+      "img": "/store/selfie-tripod.webp",
+      "name": "Selfie Stick Tripod with Bluetooth Remote",
+      "oldPrice": 23.4,
+      "price": 10.15,
+      "rating": 4.9,
+      "sold": "10,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c4PF7nuT",
+      "tag": "HOT SALE",
+      "categories": [
+        "creator-equipment"
+      ],
+      "keywords": "selfie stick tripod bluetooth remote phone stand vlogging",
+      "editorsPick": false,
+      "visible": true
+    },
+    {
+      "blurb": "Seven cubes that keep a suitcase organised from the first day to the last.",
+      "img": "/store/packing-cubes.webp",
+      "name": "7-Piece Travel Packing Cubes Set",
+      "oldPrice": 19.51,
+      "price": 8.59,
+      "rating": 4.9,
+      "sold": "3,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3slxZhl",
+      "tag": "TRENDING",
+      "categories": [],
+      "keywords": "",
+      "editorsPick": false,
+      "visible": false
+    },
+    {
+      "blurb": "Small prep jobs — garlic, herbs, chillies — without the knife work.",
+      "img": "/store/garlic-chopper.webp",
+      "name": "Mini Electric Garlic Chopper",
+      "oldPrice": 14.46,
+      "price": 6.65,
+      "rating": 4.9,
+      "sold": "2,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3KdpbRp",
+      "tag": "NEW DEAL",
+      "categories": [],
+      "keywords": "",
+      "editorsPick": false,
+      "visible": false
+    },
+    {
+      "blurb": "Pour or spray — one glass bottle for controlled cooking oil.",
+      "img": "/store/oil-sprayer.webp",
+      "name": "2-in-1 Oil Sprayer Bottle, 470ml Glass",
+      "oldPrice": 14.04,
+      "price": 6.55,
+      "rating": 4.7,
+      "sold": "10,000+ sold",
+      "url": "https://s.click.aliexpress.com/e/_c3ayHe1t",
+      "tag": "HOT SALE",
+      "categories": [],
+      "keywords": "",
+      "editorsPick": false,
+      "visible": false
+    },
+    {
+      "blurb": "RGB colour-changing night light lamp with remote.",
+      "categories": [
+        "creator-equipment"
+      ],
+      "editorsPick": false,
+      "img": "/store/p005-night-light.webp",
+      "keywords": "rgb color changing night light lamp remote creator equipment",
+      "name": "RGB Color Changing Night Light Lamp with Remote",
+      "oldPrice": 21.91,
+      "price": 8.39,
+      "rating": 4.8,
+      "sold": "5000+ sold",
+      "tag": "NEW DEAL",
+      "url": "https://s.click.aliexpress.com/e/_c3vdyaZN",
+      "visible": true
+    },
+    {
+      "blurb": "Aluminium foldable adjustable laptop stand.",
+      "categories": [
+        "computer-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p006-laptop-stand.webp",
+      "keywords": "aluminum foldable laptop stand adjustable computer accessories",
+      "name": "Aluminum Foldable Laptop Stand Adjustable",
+      "oldPrice": 17.7,
+      "price": 7.75,
+      "rating": 4.5,
+      "sold": "5000+ sold",
+      "tag": "HOT SALE",
+      "url": "https://s.click.aliexpress.com/e/_c442kTUR",
+      "visible": true
+    },
+    {
+      "blurb": "UGREEN magnetic MagSafe car phone holder for air vents.",
+      "categories": [
+        "car-tech",
+        "phone-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p008-car-holder-magsafe.webp",
+      "keywords": "ugreen magnetic car phone holder air vent magsafe tech accessories",
+      "name": "UGREEN Magnetic Car Phone Holder Air Vent MagSafe",
+      "oldPrice": 16.73,
+      "price": 7.7,
+      "rating": 4.9,
+      "sold": "5000+ sold",
+      "tag": "TRENDING",
+      "url": "https://s.click.aliexpress.com/e/_c4UUw35h",
+      "visible": true
+    },
+    {
+      "blurb": "10,000mAh power bank with built-in USB-C cable and PD fast charging.",
+      "categories": [
+        "phone-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p009-power-bank.webp",
+      "keywords": "toocki power bank 10000mah built usb c cable pd 22 5w phone accessories",
+      "name": "Toocki Power Bank 10000mAh Built-in USB-C Cable PD 22.5W",
+      "oldPrice": 38.32,
+      "price": 17.19,
+      "rating": 4.8,
+      "sold": "3000+ sold",
+      "tag": "HOT SALE",
+      "url": "https://s.click.aliexpress.com/e/_c38feKFh",
+      "visible": true
+    },
+    {
+      "blurb": "Universal travel adapter with USB-C PD and USB ports.",
+      "categories": [
+        "phone-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p011-travel-adapter.webp",
+      "keywords": "universal travel adapter anrmesun 4 ac 2 usb c pd 25w device print phone accessories",
+      "name": "Universal Travel Adapter ANRMESUN 4 AC + 2 USB-A + 2 USB-C (USB-C PD 25W per device print)",
+      "oldPrice": 33.18,
+      "price": 16.59,
+      "rating": 4.8,
+      "sold": "2000+ sold",
+      "tag": "TRENDING",
+      "url": "https://s.click.aliexpress.com/e/_c3pU3xMX",
+      "visible": true
+    },
+    {
+      "blurb": "Find My compatible Bluetooth trackers, 4-pack with cases.",
+      "categories": [
+        "phone-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p012-trackers.webp",
+      "keywords": "hoco find my compatible trackers 4 pack cases phone accessories",
+      "name": "HOCO Find My Compatible Trackers 4-Pack with Cases",
+      "oldPrice": 33.31,
+      "price": 27.3,
+      "rating": 4.8,
+      "sold": "2000+ sold",
+      "tag": "NEW DEAL",
+      "url": "https://s.click.aliexpress.com/e/_c3KmLHSF",
+      "visible": true
+    },
+    {
+      "blurb": "Monster magnetic clip-on mini Bluetooth speaker.",
+      "categories": [
+        "phone-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p013-speaker.webp",
+      "keywords": "monster m3 magnetic clip mini bluetooth speaker phone accessories",
+      "name": "Monster M3 Magnetic Clip-On Mini Bluetooth Speaker",
+      "oldPrice": 55.45,
+      "price": 23.29,
+      "rating": 4.8,
+      "sold": "2000+ sold",
+      "tag": "TRENDING",
+      "url": "https://s.click.aliexpress.com/e/_c44c9QWP",
+      "visible": true
+    },
+    {
+      "blurb": "Smart RGBIC neon LED strip lights with app and music sync.",
+      "categories": [
+        "creator-equipment"
+      ],
+      "editorsPick": false,
+      "img": "/store/p022-led-strip.webp",
+      "keywords": "smart wifi bluetooth rgbic neon led strip lights 2m creator equipment",
+      "name": "Smart WiFi and Bluetooth RGBIC Neon LED Strip Lights (2m Bluetooth)",
+      "oldPrice": 20.94,
+      "price": 9.25,
+      "rating": 4.4,
+      "sold": "182 sold",
+      "tag": "NEW DEAL",
+      "url": "https://s.click.aliexpress.com/e/_c3GFgcUP",
+      "visible": true
+    },
+    {
+      "blurb": "Baseus wireless portable car tyre inflator with LCD display.",
+      "categories": [
+        "car-tech"
+      ],
+      "editorsPick": false,
+      "img": "/store/p026-car-inflator.webp",
+      "keywords": "baseus wireless car air pump portable tire inflator lcd display supermini pro tech",
+      "name": "Baseus Wireless Car Air Pump Portable Tire Inflator with LCD Display (SuperMini Pro)",
+      "oldPrice": 74.24,
+      "price": 45.72,
+      "rating": 4.9,
+      "sold": "10000+ sold",
+      "tag": "HOT SALE",
+      "url": "https://s.click.aliexpress.com/e/_c3oojL3z",
+      "visible": true
+    },
+    {
+      "blurb": "Baseus 7-in-1 USB-C hub with 4K HDMI and 100W PD.",
+      "categories": [
+        "computer-accessories"
+      ],
+      "editorsPick": false,
+      "img": "/store/p027-usb-hub.webp",
+      "keywords": "baseus 7 1 gen 2 usb c hub 4k 60hz hdmi pd 100w silver computer accessories",
+      "name": "Baseus 7-in-1 Gen 2 USB C HUB 4K@60Hz HDMI PD 100W (Silver)",
+      "oldPrice": 52.81,
+      "price": 26.39,
+      "rating": 4.9,
+      "sold": "5000+ sold",
+      "tag": "HOT SALE",
+      "url": "https://s.click.aliexpress.com/e/_c2IhobQF",
+      "visible": true
+    }
+  ],
+  "updated": "2026-11-12"
 }
