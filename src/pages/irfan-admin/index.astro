@@ -24,7 +24,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="IRFAN-GD business dashboard: affiliate clicks, top-performing products and earnings imported from official AliExpress Portals reports." />
   <link rel="icon" type="image/webp" href="/store/avatar.webp" />
-  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');var savedStyle=localStorage.getItem('irfan-dash-style');if(st){document.documentElement.dataset.style=st;if(st!=='current')document.documentElement.dataset.theme=(['sequoia','sonoma','ventura','catalina','mojave','bigsur'].indexOf(st)>=0?'day':'night');else document.documentElement.dataset.theme=(localStorage.getItem('irfan-dash-theme')||'night');}else if(savedStyle){document.documentElement.dataset.style=savedStyle;document.documentElement.dataset.theme=(['sequoia','sonoma','ventura','catalina','mojave','bigsur'].indexOf(savedStyle)>=0?'day':'night');}else if(th){document.documentElement.dataset.theme=th;}else{var t=localStorage.getItem('irfan-dash-theme');if(t){document.documentElement.dataset.theme=t;}}}catch(e){}</script>
+  <script is:inline>try{var q=new URLSearchParams(location.search);var st=q.get('style');var th=q.get('theme');var savedStyle=localStorage.getItem('irfan-dash-style');var savedTheme=localStorage.getItem('irfan-dash-theme');var DAY=['sequoia','sonoma','ventura','catalina','mojave','bigsur','glass'];function themeFor(s){if(DAY.indexOf(s)>=0){return (s==='glass'&&(th?th==='night':savedTheme==='night'))?'night':'day';}return 'night';}if(st){if(st==='current'){document.documentElement.dataset.theme=(savedTheme||'night');}else{document.documentElement.dataset.style=st;document.documentElement.dataset.theme=themeFor(st);}}else if(savedStyle){if(savedStyle==='current'){document.documentElement.dataset.theme=(savedTheme||'night');}else{document.documentElement.dataset.style=savedStyle;document.documentElement.dataset.theme=themeFor(savedStyle);}}else if(th){document.documentElement.dataset.style='glass';document.documentElement.dataset.theme=th;}else{document.documentElement.dataset.style='glass';document.documentElement.dataset.theme=(savedTheme==='night'?'night':'day');}}catch(e){}</script>
   <style>
     :root{
       --bg:#0a3442; --panel:rgba(16,52,66,.55); --panel2:rgba(23,68,84,.42);
@@ -379,6 +379,98 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="bigsur"] .plan{background:linear-gradient(150deg,rgba(255,255,255,.7),rgba(252,238,243,.5))}
     html[data-style="bigsur"] .plan .bar{background:rgba(150,70,110,.13)}
     html[data-style="bigsur"] #themeToggle{background:rgba(255,255,255,.62)}
+    /* 10 · Glass — light frosted glass, lavender accents (reference look) */
+    html[data-style="glass"]{--gold:#7c5cff;--gold2:#5b3df0;--cyan:#38bdf8;--blue:#6366f1;--violet:#8b5cf6;--green:#0ea371;--amber:#b97f16;--red:#d64545;--txt:#23263a;--dim:#5a5f78;--dim2:#8a8fa8;--stroke:rgba(124,92,255,.16);--stroke2:rgba(124,92,255,.32)}
+    html[data-style="glass"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(199,181,255,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,205,230,.45), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(170,210,255,.45), transparent 60%),linear-gradient(160deg,#f6f4fc 0%, #ece8f6 55%, #ddd8ef 100%)}
+    html[data-style="glass"] .side{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(246,243,252,.62));border-right-color:rgba(124,92,255,.14)}
+    html[data-style="glass"] .glass{--panel:rgba(255,255,255,.62);--panel2:rgba(248,246,255,.48);background:linear-gradient(155deg,rgba(255,255,255,.68),rgba(248,246,255,.52));border:1px solid rgba(255,255,255,.75);border-radius:24px;box-shadow:0 18px 40px rgba(90,70,160,.14), inset 0 1px 0 rgba(255,255,255,.9)}
+    html[data-style="glass"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(246,242,253,.85));border-color:rgba(124,92,255,.12)}
+    html[data-style="glass"] .glass.light h2, html[data-style="glass"] .glass.light h3{color:#23263a}
+    html[data-style="glass"] .glass.light p, html[data-style="glass"] .glass.light .pmeta{color:#5a5f78}
+    html[data-style="glass"] .glass.light .chart-note{color:#8a8fa8}
+    html[data-style="glass"] .stat.light .lbl{color:#5a5f78}
+    html[data-style="glass"] .stat.light .hint{color:#8a8fa8}
+    html[data-style="glass"] .ann .when{color:#8a8fa8}
+    html[data-style="glass"] .nav a{color:#5a5f78}
+    html[data-style="glass"] .nav a.on{color:#23263a;background:linear-gradient(120deg,rgba(139,92,246,.24),rgba(139,92,246,.10));border-color:rgba(124,92,255,.25)}
+    html[data-style="glass"] .nav a:hover{color:#23263a}
+    html[data-style="glass"] .nav a .cnt{background:rgba(124,92,255,.10)}
+    html[data-style="glass"] .chip{background:rgba(255,255,255,.65);color:#5a5f78}
+    html[data-style="glass"] .chip b{color:#23263a}
+    html[data-style="glass"] td, html[data-style="glass"] th{border-bottom-color:rgba(124,92,255,.12);color:#2a2f45}
+    html[data-style="glass"] .notice code{background:rgba(255,255,255,.7);color:#2a2f45}
+    html[data-style="glass"] input[type=file]{color:#2a2f45}
+    html[data-style="glass"] .minirow{border-bottom-color:rgba(124,92,255,.10)}
+    html[data-style="glass"] .btn-ghost{background:rgba(255,255,255,.6)}
+    html[data-style="glass"] .btn-dark{background:#17122e;color:#fff}
+    html[data-style="glass"] .bars .bar.zero, html[data-style="glass"] .bigbars .bar.zero{background:rgba(124,92,255,.14)}
+    html[data-style="glass"] .bars .bar{background:linear-gradient(180deg,#c4b5fd,#8b5cf6)}
+    html[data-style="glass"] .bigbars .bar{background:linear-gradient(180deg,#a78bfa,#7c5cff)}
+    html[data-style="glass"] button{background:linear-gradient(92deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 6px 18px rgba(124,92,255,.35)}
+    html[data-style="glass"] .qa a, html[data-style="glass"] .qa button{background:rgba(255,255,255,.65);color:#23263a}
+    html[data-style="glass"] .feat button{background:rgba(255,255,255,.65);color:#23263a}
+    html[data-style="glass"] .tabs a{background:rgba(255,255,255,.55);color:#5a5f78}
+    html[data-style="glass"] .tabs a.on{background:linear-gradient(120deg,#8b5cf6,#6d28d9);color:#fff;border-color:#6d28d9}
+    html[data-style="glass"] .tabs a:hover{color:#23263a}
+    html[data-style="glass"] .tabs a.on:hover{color:#fff}
+    html[data-style="glass"] #themeToggle{background:rgba(255,255,255,.7)}
+    html[data-style="glass"] .stylebar button{background:rgba(255,255,255,.6);color:#5a5f78}
+    html[data-style="glass"] .stylebar button.on{color:#fff;border-color:#7c5cff;background:linear-gradient(120deg,rgba(139,92,246,.9),rgba(109,40,217,.9))}
+    html[data-style="glass"] .stylebar button:hover{color:#23263a}
+    html[data-style="glass"] .searchbar{border-radius:999px}
+    html[data-style="glass"] .plan{background:linear-gradient(150deg,#2e2456,#17122e);border-color:rgba(139,92,246,.5);box-shadow:0 14px 32px rgba(76,45,180,.35)}
+    html[data-style="glass"] .plan b{color:#fff}
+    html[data-style="glass"] .plan p{color:#c9c2f0}
+    html[data-style="glass"] .plan .bar{background:rgba(255,255,255,.18)}
+    html[data-style="glass"] .plan .bar i{background:linear-gradient(90deg,#a78bfa,#e9d5ff)}
+    html[data-style="glass"] .gauge svg circle:first-child{stroke:rgba(124,92,255,.16)}
+    html[data-style="glass"] .gauge text{fill:#23263a}
+    html[data-style="glass"] .gauge .gl{color:#8a8fa8}
+    html[data-style="glass"] .gauge .gv{color:#23263a}
+    html[data-style="glass"] .donut-wrap svg circle:first-child{stroke:rgba(124,92,255,.16)}
+    html[data-style="glass"] .donut-wrap svg text{fill:#8a8fa8}
+    html[data-style="glass"] .donut-wrap #donutTotal{fill:#23263a}
+    html[data-style="glass"] .legend{color:#5a5f78}
+    /* Glass in Night mode — darkened frosted panels, same layout & accents */
+    html[data-style="glass"][data-theme="night"]{--txt:#eceaf6;--dim:#b3aed0;--dim2:#8a84a8;--stroke:rgba(180,160,255,.20);--stroke2:rgba(180,160,255,.38);--gold:#a78bfa;--gold2:#c4b5fd;--green:#34d399;--amber:#f0b429;--red:#ff8a8a}
+    html[data-style="glass"][data-theme="night"] .glass.light{color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(124,92,255,.30), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(80,60,160,.35), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(50,35,110,.40), transparent 60%),linear-gradient(160deg,#1b1626 0%, #14101f 55%, #0e0b16 100%)}
+    html[data-style="glass"][data-theme="night"] .side{background:linear-gradient(180deg,rgba(30,24,52,.85),rgba(22,18,40,.75));border-right-color:rgba(180,160,255,.16)}
+    html[data-style="glass"][data-theme="night"] .glass{--panel:rgba(46,38,80,.55);--panel2:rgba(34,28,62,.45);background:linear-gradient(155deg,rgba(46,38,80,.58),rgba(34,28,62,.46));border-color:rgba(180,160,255,.20);box-shadow:0 18px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08)}
+    html[data-style="glass"][data-theme="night"] .glass.light{background:linear-gradient(150deg,rgba(58,48,96,.85),rgba(44,36,76,.82));border-color:rgba(180,160,255,.18)}
+    html[data-style="glass"][data-theme="night"] .glass.light h2, html[data-style="glass"][data-theme="night"] .glass.light h3{color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .glass.light p, html[data-style="glass"][data-theme="night"] .glass.light .pmeta{color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .glass.light .chart-note{color:#8a84a8}
+    html[data-style="glass"][data-theme="night"] .stat.light .lbl{color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .stat.light .hint{color:#8a84a8}
+    html[data-style="glass"][data-theme="night"] .ann .when{color:#8a84a8}
+    html[data-style="glass"][data-theme="night"] .nav a{color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .nav a.on{color:#fff;background:linear-gradient(120deg,rgba(139,92,246,.35),rgba(139,92,246,.15));border-color:rgba(180,160,255,.30)}
+    html[data-style="glass"][data-theme="night"] .nav a:hover{color:#fff}
+    html[data-style="glass"][data-theme="night"] .nav a .cnt{background:rgba(180,160,255,.14)}
+    html[data-style="glass"][data-theme="night"] .chip{background:rgba(46,38,80,.6);color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .chip b{color:#fff}
+    html[data-style="glass"][data-theme="night"] td, html[data-style="glass"][data-theme="night"] th{border-bottom-color:rgba(180,160,255,.14);color:#dfe0f2}
+    html[data-style="glass"][data-theme="night"] .notice code{background:rgba(255,255,255,.08);color:#dfe0f2}
+    html[data-style="glass"][data-theme="night"] input[type=file]{color:#dfe0f2}
+    html[data-style="glass"][data-theme="night"] .minirow{border-bottom-color:rgba(180,160,255,.12)}
+    html[data-style="glass"][data-theme="night"] .btn-ghost{background:rgba(255,255,255,.08);color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .qa a, html[data-style="glass"][data-theme="night"] .qa button{background:rgba(46,38,80,.6);color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .feat button{background:rgba(46,38,80,.6);color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .tabs a{background:rgba(46,38,80,.55);color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .tabs a.on{background:linear-gradient(120deg,#8b5cf6,#6d28d9);color:#fff}
+    html[data-style="glass"][data-theme="night"] .tabs a:hover{color:#fff}
+    html[data-style="glass"][data-theme="night"] #themeToggle{background:rgba(255,255,255,.10)}
+    html[data-style="glass"][data-theme="night"] .stylebar button{background:rgba(46,38,80,.6);color:#b3aed0}
+    html[data-style="glass"][data-theme="night"] .stylebar button:hover{color:#fff}
+    html[data-style="glass"][data-theme="night"] .gauge svg circle:first-child{stroke:rgba(180,160,255,.18)}
+    html[data-style="glass"][data-theme="night"] .gauge text{fill:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .gauge .gl{color:#8a84a8}
+    html[data-style="glass"][data-theme="night"] .gauge .gv{color:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .donut-wrap svg circle:first-child{stroke:rgba(180,160,255,.18)}
+    html[data-style="glass"][data-theme="night"] .donut-wrap svg text{fill:#8a84a8}
+    html[data-style="glass"][data-theme="night"] .donut-wrap #donutTotal{fill:#eceaf6}
+    html[data-style="glass"][data-theme="night"] .legend{color:#b3aed0}
   </style>
 </head>
 <body>
@@ -442,6 +534,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       <div class="stylebar" id="styleBar" aria-label="Theme styles">
         <span class="slbl">🎨 Style</span>
         <button type="button" data-style-pick="current"><span class="sw" style="background:linear-gradient(135deg,#12566b,#38e1ff)"></span>Current</button>
+        <button type="button" data-style-pick="glass"><span class="sw" style="background:linear-gradient(135deg,#f6f4fc,#a78bfa)"></span>Glass</button>
         <button type="button" data-style-pick="sequoia"><span class="sw" style="background:linear-gradient(135deg,#ffd9a0,#f0a35e)"></span>Sequoia</button>
         <button type="button" data-style-pick="sonoma"><span class="sw" style="background:linear-gradient(135deg,#c9f2d4,#5ecf8a)"></span>Sonoma</button>
         <button type="button" data-style-pick="ventura"><span class="sw" style="background:linear-gradient(135deg,#eaf5ff,#7db9f0)"></span>Ventura</button>
@@ -753,9 +846,14 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
         themeBtn.addEventListener('click', function(){
           var next = document.documentElement.dataset.theme === 'day' ? 'night' : 'day';
           if (next === 'night') {
-            delete document.documentElement.dataset.style;
-            try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
-            document.documentElement.dataset.theme = 'night';
+            if (document.documentElement.dataset.style === 'glass') {
+              document.documentElement.dataset.theme = 'night';
+              try { localStorage.setItem('irfan-dash-style', 'glass'); } catch (e) {}
+            } else {
+              delete document.documentElement.dataset.style;
+              try { localStorage.setItem('irfan-dash-style', 'current'); } catch (e) {}
+              document.documentElement.dataset.theme = 'night';
+            }
           } else {
             try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
             document.documentElement.dataset.theme = 'day';
@@ -809,7 +907,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
       var bRefresh = el('btnRefresh');
       if (bRefresh) bRefresh.addEventListener('click', function(){ toast('Refreshing — reloading the latest figures…'); setTimeout(function(){ location.reload(); }, 500); });
 
-      var DAY_STYLES = ['sequoia', 'sonoma', 'ventura', 'catalina', 'mojave', 'bigsur'];
+      var DAY_STYLES = ['sequoia', 'sonoma', 'ventura', 'catalina', 'mojave', 'bigsur', 'glass'];
       function paintStyleBar(){
         var cur = document.documentElement.dataset.style || 'current';
         document.querySelectorAll('[data-style-pick]').forEach(function(b){
@@ -821,7 +919,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
           var pick = b.getAttribute('data-style-pick');
           if (pick === 'current') {
             delete document.documentElement.dataset.style;
-            try { localStorage.removeItem('irfan-dash-style'); } catch (e) {}
+            try { localStorage.setItem('irfan-dash-style', 'current'); } catch (e) {}
             document.documentElement.dataset.theme = 'night';
             try { localStorage.setItem('irfan-dash-theme', 'night'); } catch (e) {}
           } else {
