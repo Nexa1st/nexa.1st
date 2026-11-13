@@ -84,7 +84,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     .glass{
       background:linear-gradient(155deg,var(--panel),var(--panel2));
       border:1px solid var(--stroke);border-radius:20px;
-      backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+      backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
       box-shadow:0 18px 40px rgba(0,10,16,.45), inset 0 1px 0 rgba(255,255,255,.10);
     }
     .notice{padding:1rem 1.15rem;margin-bottom:1.1rem}
@@ -94,10 +94,10 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));gap:.95rem;margin-bottom:1.1rem}
     .stat{padding:1.05rem 1.1rem;position:relative;overflow:hidden;transition:transform .25s ease, border-color .25s ease}
     .stat:hover{transform:translateY(-4px);border-color:var(--stroke2)}
-    .stat::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--acc,var(--blue));opacity:.85}
+    .stat::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;border-radius:4px 4px 0 0;background:var(--acc,var(--blue));opacity:1}
     .stat .lbl{font-size:.78rem;color:var(--dim);letter-spacing:.09em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
     .stat .lbl i{font-style:normal;font-size:1rem;opacity:.85}
-    .stat .val{font-size:1.9rem;font-weight:800;letter-spacing:.01em;margin-top:.3rem;font-variant-numeric:tabular-nums}
+    .stat .val{font-size:1.9rem;font-weight:800;letter-spacing:.01em;line-height:1.12;margin-top:.3rem;font-variant-numeric:tabular-nums}
     .stat .hint{font-size:.78rem;color:var(--dim2);margin-top:.15rem}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem}
     .card{padding:1.15rem 1.2rem}
@@ -187,13 +187,30 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     @media (max-width:900px){ .grid2{grid-template-columns:1fr} }
     @media (max-width:760px){
       .shell{grid-template-columns:1fr}
-      .side{position:static;height:auto;flex-direction:row;align-items:center;flex-wrap:wrap;padding:.8rem}
-      .nav{flex-direction:row;flex-wrap:wrap}
-      .nav a{padding:.45rem .55rem}
+      .side{position:static;height:auto;flex-direction:row;align-items:center;flex-wrap:wrap;padding:.8rem;gap:.7rem}
+      .brand{flex:1 1 100%}
+      .nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1 1 100%;padding-bottom:.15rem}
+      .nav::-webkit-scrollbar{display:none}
+      .nav .grp{display:none}
+      .nav a{padding:.45rem .55rem;flex:none}
+      .plan{flex:1 1 100%;margin-top:.2rem}
       .side .foot{display:none}
       .main{padding:1rem .9rem 2.4rem}
       .topbar h1{font-size:1.3rem}
+      .gauges{justify-content:center}
     }
+    @media (max-width:480px){
+      .main{padding:.85rem .75rem 2rem}
+      .topbar h1{font-size:1.2rem}
+      .card{padding:1rem}
+      .stat .val{font-size:1.7rem}
+      .feat button{padding:.5rem .8rem;font-size:.82rem}
+      .stylebar button{padding:.38rem .6rem;font-size:.78rem}
+      .searchbar{padding:.45rem .5rem .45rem .85rem}
+      .chip{padding:.36rem .6rem;font-size:.76rem}
+    }
+    .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    @media (max-width:760px){ .tblwrap table{min-width:620px} }
     @media (prefers-reduced-motion:reduce){
       *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;animation-delay:0ms !important;transition-duration:.01ms !important;transition-delay:0ms !important}
       .stat{transition:none} .stat:hover{transform:none}
@@ -385,19 +402,21 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="bigsur"] #themeToggle{background:rgba(255,255,255,.62)}
     /* 10 · Glass — light frosted glass, lavender accents (reference look) */
     html[data-style="glass"]{--gold:#7c5cff;--gold2:#5b3df0;--cyan:#38bdf8;--blue:#6366f1;--violet:#8b5cf6;--green:#0ea371;--amber:#b97f16;--red:#d64545;--txt:#23263a;--dim:#5a5f78;--dim2:#8a8fa8;--stroke:rgba(124,92,255,.16);--stroke2:rgba(124,92,255,.32)}
-    html[data-style="glass"] body{background:radial-gradient(1000px 620px at 88% -12%, rgba(199,181,255,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,205,230,.45), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(170,210,255,.45), transparent 60%),linear-gradient(160deg,#f6f4fc 0%, #ece8f6 55%, #ddd8ef 100%)}
+    html[data-style="glass"] body{background:repeating-linear-gradient(0deg, rgba(124,92,255,.05) 0px, rgba(124,92,255,.05) 1px, transparent 1px, transparent 52px),repeating-linear-gradient(90deg, rgba(124,92,255,.05) 0px, rgba(124,92,255,.05) 1px, transparent 1px, transparent 52px),radial-gradient(1000px 620px at 88% -12%, rgba(199,181,255,.55), transparent 60%),radial-gradient(900px 700px at -12% 22%, rgba(255,205,230,.45), transparent 58%),radial-gradient(850px 650px at 55% 118%, rgba(170,210,255,.45), transparent 60%),linear-gradient(160deg,#f6f4fc 0%, #ece8f6 55%, #ddd8ef 100%)}
     html[data-style="glass"] .side{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(246,243,252,.62));border-right-color:rgba(124,92,255,.14)}
-    html[data-style="glass"] .glass{--panel:rgba(255,255,255,.62);--panel2:rgba(248,246,255,.48);background:linear-gradient(155deg,rgba(255,255,255,.68),rgba(248,246,255,.52));border:1px solid rgba(255,255,255,.75);border-radius:24px;box-shadow:0 18px 40px rgba(90,70,160,.14), inset 0 1px 0 rgba(255,255,255,.9)}
+    html[data-style="glass"] .glass{--panel:rgba(255,255,255,.62);--panel2:rgba(248,246,255,.48);background:linear-gradient(155deg,rgba(255,255,255,.68),rgba(248,246,255,.52));border:1px solid rgba(255,255,255,.75);border-radius:24px;box-shadow:0 18px 40px rgba(90,70,160,.14), inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 1px rgba(124,92,255,.07)}
     html[data-style="glass"] .glass.light{background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(246,242,253,.85));border-color:rgba(124,92,255,.12)}
     html[data-style="glass"] .glass.light h2, html[data-style="glass"] .glass.light h3{color:#23263a}
     html[data-style="glass"] .glass.light p, html[data-style="glass"] .glass.light .pmeta{color:#5a5f78}
-    html[data-style="glass"] .glass.light .chart-note{color:#8a8fa8}
+    html[data-style="glass"] .glass.light .chart-note{color:#6b7086}
     html[data-style="glass"] .stat.light .lbl{color:#5a5f78}
-    html[data-style="glass"] .stat.light .hint{color:#8a8fa8}
-    html[data-style="glass"] .ann .when{color:#8a8fa8}
+    html[data-style="glass"] .stat.light .hint{color:#6b7086}
+    html[data-style="glass"] .ann .when{color:#6b7086}
     html[data-style="glass"] .nav a{color:#5a5f78}
     html[data-style="glass"] .nav a.on{color:#23263a;background:linear-gradient(120deg,rgba(139,92,246,.24),rgba(139,92,246,.10));border-color:rgba(124,92,255,.25)}
-    html[data-style="glass"] .nav a:hover{color:#23263a}
+    html[data-style="glass"] .nav a:hover{color:#23263a;background:rgba(139,92,246,.08)}
+    html[data-style="glass"] .nav a.on{box-shadow:inset 3px 0 0 #8b5cf6}
+    html[data-style="glass"] .card h2{border-bottom:1px solid rgba(124,92,255,.12);padding-bottom:.6rem}
     html[data-style="glass"] .nav a .cnt{background:rgba(124,92,255,.10)}
     html[data-style="glass"] .chip{background:rgba(255,255,255,.65);color:#5a5f78}
     html[data-style="glass"] .chip b{color:#23263a}
@@ -410,6 +429,9 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="glass"] .bars .bar.zero, html[data-style="glass"] .bigbars .bar.zero{background:rgba(124,92,255,.14)}
     html[data-style="glass"] .bars .bar{background:linear-gradient(180deg,#c4b5fd,#8b5cf6)}
     html[data-style="glass"] .bigbars .bar{background:linear-gradient(180deg,#a78bfa,#7c5cff)}
+    html[data-style="glass"] .bars .bar, html[data-style="glass"] .bigbars .bar{box-shadow:0 4px 10px rgba(124,92,255,.28)}
+    html[data-style="glass"] .gauge svg circle:nth-child(2){filter:drop-shadow(0 2px 5px rgba(124,92,255,.35))}
+    html[data-style="glass"] #donutSegs circle{filter:drop-shadow(0 1px 3px rgba(90,70,160,.18))}
     html[data-style="glass"] button{background:linear-gradient(92deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 6px 18px rgba(124,92,255,.35)}
     html[data-style="glass"] .qa a, html[data-style="glass"] .qa button{background:rgba(255,255,255,.65);color:#23263a}
     html[data-style="glass"] .feat button{background:rgba(255,255,255,.65);color:#23263a}
@@ -429,10 +451,10 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     html[data-style="glass"] .plan .bar i{background:linear-gradient(90deg,#a78bfa,#e9d5ff)}
     html[data-style="glass"] .gauge svg circle:first-child{stroke:rgba(124,92,255,.16)}
     html[data-style="glass"] .gauge text{fill:#23263a}
-    html[data-style="glass"] .gauge .gl{color:#8a8fa8}
+    html[data-style="glass"] .gauge .gl{color:#6b7086}
     html[data-style="glass"] .gauge .gv{color:#23263a}
     html[data-style="glass"] .donut-wrap svg circle:first-child{stroke:rgba(124,92,255,.16)}
-    html[data-style="glass"] .donut-wrap svg text{fill:#8a8fa8}
+    html[data-style="glass"] .donut-wrap svg text{fill:#6b7086}
     html[data-style="glass"] .donut-wrap #donutTotal{fill:#23263a}
     html[data-style="glass"] .legend{color:#5a5f78}
     /* Glass in Night mode — darkened frosted panels, same layout & accents */
@@ -532,6 +554,9 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
     #donutSegs circle{transition:stroke-dasharray .8s cubic-bezier(.22,.61,.36,1),stroke-dashoffset .8s cubic-bezier(.22,.61,.36,1)}
     /* Dark Free-plan card: slow glowing pulse, echoing the reference's glowing promo card */
     html[data-style="glass"] .plan{animation:planGlow 3.2s ease-in-out infinite}
+    /* Focus + press states */
+    :focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+    button:active,.qa a:active,.qa button:active,.feat button:active,.tabs a:active,.stylebar button:active,.btn-dark:active,.btn-ghost:active,#themeToggle:active{transform:translateY(0) scale(.97)}
   </style>
 </head>
 <body>
@@ -789,7 +814,7 @@ const hidden = (store.products as any[]).filter(p => !p.visible);
 
       <section class="glass card" id="activity" aria-label="Admin activity">
         <h2><i>🧾</i> Admin Activity Log</h2>
-        <table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table>
+        <div class="tblwrap"><table id="logTable"><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Detail</th><th>Result</th></tr><tr><td colspan="5"><span class="unavail">NOT CONNECTED</span></td></tr></table></div>
         <p>Once the Access lock is configured, login sessions and every dashboard action are recorded here from the D1 database (Cloudflare's own Access log, in the Zero Trust dashboard, keeps only 24 hours on the free plan — this D1 log is the durable record). In the current no-lock mode, no sessions are recorded.</p>
       </section>
     </main>
