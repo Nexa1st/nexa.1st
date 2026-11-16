@@ -8,6 +8,7 @@ const CATS: Record<string, string> = {
   'wireless-charging': 'Wireless Charging',
   'computer-accessories': 'Computer Accessories',
   'creator-equipment': 'Creator Equipment',
+  'smart-gadgets': 'Smart Gadgets',
 };
 const all = (store.products as any[]).map(p => ({ ...p, off: Math.round((1 - p.price / p.oldPrice) * 100), catLabels: (p.categories || []).map((c: string) => CATS[c] || c).join(' · ') }));
 const vis = all.filter(p => p.visible);
